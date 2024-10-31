@@ -1,113 +1,79 @@
 "use client";
 
 import { useState } from "react";
-import { useTransition } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 import emailjs from "emailjs-com";
 
+const formSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  email: z.string().email("Invalid email address"),
+  phone: z.string().regex(/^(?:0|\+44)(?:\d\s?){9,10}$/, "Invalid UK phone number"),
+  message: z.string().min(1, "Message is required"),
+});
+
+const InputField = ({ id, type = "text", placeholder, register, error }) => (
+  <>
+    <label htmlFor={id} className="sr-only">{placeholder}</label>
+    <input
+      {...register(id)}
+      id={id}
+      placeholder={placeholder}
+      type={type}
+      className="w-full mt-1 p-3 text-black border border-gray-300 rounded-md focus:ring-rose-600 focus:border-rose-600"
+    />
+    {error && <p className="text-red-200 text-sm mt-1">{error.message}</p>}
+  </>
+);
+
 const EnquiryForm = () => {
-  const [isPending, startTransition] = useTransition();
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    message: "",
-  });
-  const [errors, setErrors] = useState({});
   const [status, setStatus] = useState("");
+  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm({
+    resolver: zodResolver(formSchema),
+  });
 
-  const validators = {
-    email: (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value),
-    phone: (value) => /^(?:0|\+44)(?:\d\s?){9,10}$/.test(value),
-  };
-
-  const handleChange = ({ target: { name, value } }) => {
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
-    if (validators[name]) {
-      setErrors((prevErrors) => ({
-        ...prevErrors,
-        [name]: validators[name](value) ? "" : `Please enter a valid ${name}.`,
-      }));
+  const onSubmit = async (formData) => {
+    try {
+      await emailjs.send(
+        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID,
+        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID,
+        formData,
+        process.env.NEXT_PUBLIC_EMAILJS_USER_ID
+      );
+      setStatus("Message sent successfully!");
+    } catch (error) {
+      setStatus("Failed to send message. Please try again.");
+      console.error("EmailJS Error:", error);
     }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (Object.values(errors).some(Boolean)) return;
-
-    startTransition(() => {
-      emailjs
-        .send(
-          process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID,
-          process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID,
-          formData,
-          process.env.NEXT_PUBLIC_EMAILJS_USER_ID
-        )
-        .then(
-          () => {
-            setStatus("Message sent successfully!");
-            setFormData({ name: "", email: "", phone: "", message: "" });
-          },
-          (error) => {
-            setStatus("Failed to send message. Please try again.");
-            console.error("EmailJS Error:", error);
-          }
-        );
-    });
-  };
-
-  const renderInput = (id, type, placeholder, autoComplete = "on") => (
-    <>
-      <label htmlFor={id} className="sr-only">
-        {placeholder}
-      </label>
-      <input
-        id={id}
-        type={type}
-        name={id}
-        value={formData[id]}
-        onChange={handleChange}
-        className="w-full mt-1 p-3 text-black border border-gray-300 rounded-md focus:ring-rose-600 focus:border-rose-600"
-        placeholder={placeholder}
-        required
-        autoComplete={autoComplete}
-      />
-      {errors[id] && <p className="text-red-200 text-sm mt-1">{errors[id]}</p>}
-    </>
-  );
-
   return (
     <form
-      onSubmit={handleSubmit}
-      className="flex flex-col w-full max-w-md space-y-4 bg-rose-800 p-6 rounded-lg shadow-md"
+      onSubmit={handleSubmit(onSubmit)}
+      className="flex flex-col w-full h-full max-w-md space-y-4 bg-rose-800 p-6 rounded-lg shadow-md"
     >
-      {renderInput("name", "text", "Name", "name")}
-      {renderInput("email", "email", "Email", "email")}
-      {renderInput("phone", "tel", "Contact number", "tel")}
-
-      <label htmlFor="message" className="sr-only">
-        Message
-      </label>
+      <InputField id="name" placeholder="Name" register={register} error={errors.name} />
+      <InputField id="email" type="email" placeholder="Email" register={register} error={errors.email} />
+      <InputField id="phone" type="tel" placeholder="Contact number" register={register} error={errors.phone} />
+      
+      <label htmlFor="message" className="sr-only">Message</label>
       <textarea
+        {...register("message")}
         id="message"
-        name="message"
-        value={formData.message}
-        onChange={handleChange}
-        rows="4"
-        className="w-full mt-1 p-3 text-black border border-gray-300 rounded-md focus:ring-rose-600 focus:border-rose-600"
         placeholder="Message..."
-        required
+        className="w-full h-32 mt-1 p-3 text-black border border-gray-300 rounded-md focus:ring-rose-600 focus:border-rose-600"
       />
+      {errors.message && <p className="text-red-200 text-sm mt-1">{errors.message.message}</p>}
 
       {status && <p className="text-green-200 text-sm">{status}</p>}
 
       <button
         type="submit"
-        className={`w-full py-3 mt-4 bg-rose-600 text-white rounded-md font-semibold hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-rose-600 focus:ring-opacity-50 ${
-          isPending && "opacity-70 cursor-not-allowed"
-        }`}
-        disabled={isPending}
+        className={`w-full py-3 mt-4 bg-rose-600 text-white rounded-md font-semibold hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-rose-600 focus:ring-opacity-50 ${isSubmitting && "opacity-70 cursor-not-allowed"}`}
+        disabled={isSubmitting}
       >
-        {isPending ? "Sending..." : "Submit Enquiry"}
+        {isSubmitting ? "Sending..." : "Submit Enquiry"}
       </button>
     </form>
   );

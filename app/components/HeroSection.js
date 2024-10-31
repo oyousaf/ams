@@ -25,7 +25,7 @@ const HeroSection = () => {
         to="about"
         smooth={true}
         duration={500}
-        className="z-20 mt-4 flex items-center justify-center bg-rose-900 text-white hover:bg-white hover:text-rose-900 p-4 rounded-full transition duration-200 cursor-pointer"
+        className="z-20 mt-4 flex items-center justify-center bg-rose-900 text-white hover:bg-rose-700 p-4 rounded-full transition duration-200 cursor-pointer"
         aria-label="Scroll to About section"
       >
         <FaArrowDown className="animate-bounce text-3xl" />

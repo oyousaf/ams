@@ -3,7 +3,7 @@ import { FaHandshake, FaCar, FaHistory, FaShieldAlt } from "react-icons/fa";
 
 const About = () => {
   const [currentYear] = useState(new Date().getFullYear());
-  const establishedYear = 2019;
+  const establishedYear = 2022;
   const yearsEstablished = currentYear - establishedYear;
 
   const about = [

@@ -6,8 +6,7 @@ export const navLinks = [
   { id: 5, href: "contact", name: "Contact" },
 ];
 
-import { FaInstagram, FaFacebook } from "react-icons/fa";
-import { BsFillTelephoneFill } from "react-icons/bs";
+import { FaInstagram, FaFacebook, FaPhone } from "react-icons/fa";
 import { IoMail } from "react-icons/io5";
 
 export const socialLinks = [
@@ -36,7 +35,7 @@ export const socialLinks = [
     id: 4,
     href: "tel:07809107655",
     icon: (
-      <BsFillTelephoneFill className="text-3xl hover:text-rose-600 transition-all ease-in-out duration-300" />
+      <FaPhone className="text-3xl hover:text-rose-600 transition-all ease-in-out duration-300" />
     ),
   },
 ];

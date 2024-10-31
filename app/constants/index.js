@@ -42,6 +42,16 @@ export const socialLinks = [
 
 export const reviews = [
   {
+    name: "Taylor Hargreaves",
+    feedback:
+      "Bought a Ford Fiesta. Pleasure to deal with and car was ready to collect within a few days and the one issue we had was rectified very quickly and without any arguments. Bought another car today; once again, absolutely amazing service! Made the process easy and simple from start to finish. Highly recommend!",
+  },
+  {
+    name: "Awix A",
+    feedback:
+      "Bought my BMW 320D from Ace Motor Sales a few months back now and what an amazing experience it has been throughout the whole process. Can't recommend this dealership enough! Faisal was very transparent with everything. Even after taking delivery, I received a call from the dealer to ensure I was happy with the purchase. Wish you all the best guys!",
+  },
+  {
     name: "Donna Rose",
     feedback:
       "Went to go have a look at an Audi A1 with my husband and father-in-law. Car was in great condition, great price, and the service we were given was outstanding. Very polite & helpful - to the point my father-in-law didn't come with the intention of buying a new car but we went away with 2! Highly recommend - couldn't do enough for us! Had the cars around 7 months and so far so good; no problems whatsoever!",
@@ -72,15 +82,6 @@ export const reviews = [
   {
     name: "Khaalid Mulla",
     feedback: `Great vehicle and exactly as described at a very reasonable price. Fantastic service and vehicle was ready to go. A very smooth process with the paperwork and an overall great purchasing experience with helpful staff. Definitely will be returning to purchase another vehicle in the future. Best of luck to the owner.`,
-  },
-  {
-    name: "Donna Scott",
-    feedback: `Brilliant service! Car was delivered to my door the day after I enquired and I was given a good deal on my part-ex. Thank you so much for everything! Highly recommended 5*`,
-  },
-  {
-    name: "Denisa",
-    feedback:
-      "Good car and good price. Nice staff too, helpful with everything. Even came out on a Sunday for us to buy the car.",
   },
 ];
 

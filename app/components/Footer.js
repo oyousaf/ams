@@ -4,7 +4,7 @@ import EnquiryForm from "./EnquiryForm";
 
 const ContactInfo = () => (
   <div className="flex flex-col items-center mt-20 text-center space-y-2">
-    <h4 className="text-xl font-semibold">
+    <h4 className="text-2xl font-semibold">
       © {new Date().getFullYear()} Ace Motor Sales
     </h4>
     <p className="text-lg">4 Westgate, Heckmondwike, WF16 0EH</p>

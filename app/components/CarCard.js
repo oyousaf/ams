@@ -93,4 +93,6 @@ const CarCard = React.memo(({ car, logo }) => {
   );
 });
 
-export default React.memo(CarCard);
+CarCard.displayName = "CarCard";
+
+export default CarCard;

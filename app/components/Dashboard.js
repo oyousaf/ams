@@ -105,7 +105,7 @@ const Dashboard = () => {
     <div className="fixed inset-0 p-4 w-full flex flex-col justify-between bg-rose-800 text-gray-200 z-50">
       <ToastContainer />
       <div className="flex flex-col items-center">
-        <h2 className="text-5xl font-bold text-gray-200 text-center mb-2">
+        <h2 className="text-5xl font-bold text-gray-200 text-center mb-2 mt-4">
           Dashboard
         </h2>
         <Tabs activeTab={activeTab} setActiveTab={setActiveTab} />

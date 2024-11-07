@@ -12,7 +12,7 @@ const CarListItem = ({ car, onDelete }) => {
   const formattedMileage = car.mileage.toLocaleString("en-GB");
 
   return (
-    <li className="border border-rose-600 rounded-md p-4 flex flex-col sm:flex-row items-start bg-rose-900 text-gray-200">
+    <li className="border border-rose-200 rounded-md p-4 flex flex-col sm:flex-row items-start bg-rose-900 text-gray-200">
       <div className="w-full sm:w-1/3 mr-4 mb-4 sm:mb-0">
         <img
           src={displayImage}

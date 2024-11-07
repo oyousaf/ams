@@ -91,11 +91,20 @@ const Dashboard = () => {
     fetchCars();
   }, [fetchCars]);
 
+  // Disable body scrolling when Dashboard is open
+  useEffect(() => {
+    document.body.classList.add("overflow-hidden");
+
+    return () => {
+      document.body.classList.remove("overflow-hidden");
+    };
+  }, []);
+
   return (
     <div className="fixed inset-0 p-4 w-full flex flex-col justify-between bg-rose-800 text-gray-200 z-50">
       <ToastContainer />
       <div className="flex flex-col items-center">
-        <h2 className="text-5xl font-bold text-gray-200 text-center mb-4">
+        <h2 className="text-5xl font-bold text-gray-200 text-center mb-2">
           Dashboard
         </h2>
         <Tabs activeTab={activeTab} setActiveTab={setActiveTab} />
@@ -116,7 +125,7 @@ const Dashboard = () => {
       )}
 
       {activeTab === "addCar" && (
-        <div id="panel-addCar" className="mt-6" role="tabpanel">
+        <div id="panel-addCar" role="tabpanel">
           <AddCarForm setCars={setCars} fetchCars={fetchCars} />
         </div>
       )}

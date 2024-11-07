@@ -25,7 +25,6 @@ const AddCarForm = ({ setCars, fetchCars }) => {
     setError("");
     setLoading(true);
 
-    // Validate inputs
     if (
       !newCar.title ||
       !newCar.price ||
@@ -36,16 +35,13 @@ const AddCarForm = ({ setCars, fetchCars }) => {
       isNaN(newCar.mileage) ||
       newCar.images.length === 0
     ) {
-      setError(
-        "Please fill in all required fields correctly, including at least one image."
-      );
+      setError("Please fill in all required fields correctly, including at least one image.");
       setLoading(false);
       return;
     }
 
     let imageUrls = [];
 
-    // Handle image uploads
     try {
       for (const image of newCar.images) {
         const file = await storage.createFile(
@@ -54,7 +50,6 @@ const AddCarForm = ({ setCars, fetchCars }) => {
           image
         );
 
-        // Construct the image URL for storing in the database
         const imageUrl = `${process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT}/storage/buckets/${process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID}/files/${file.$id}/view?project=${process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID}&mode=admin`;
         imageUrls.push(imageUrl);
       }
@@ -65,7 +60,6 @@ const AddCarForm = ({ setCars, fetchCars }) => {
       return;
     }
 
-    // Create the document in the database
     try {
       const carData = await databases.createDocument(
         process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID,
@@ -87,8 +81,8 @@ const AddCarForm = ({ setCars, fetchCars }) => {
       toast.success("Car added successfully!");
 
       fetchCars();
-
       setCars((prevCars) => [...prevCars, carData]);
+
       setNewCar({
         title: "",
         description: "",
@@ -108,138 +102,135 @@ const AddCarForm = ({ setCars, fetchCars }) => {
   };
 
   return (
-    <div className="p-4 w-full flex flex-col justify-between">
+    <div className="w-full flex flex-col items-center py-8">
       <ToastContainer />
-      <form
-        id="addCar"
-        name="addCar"
-        onSubmit={handleAddCar}
-        className="space-y-4 mt-6 mb-6 flex flex-col items-center w-full max-w-md mx-auto"
-      >
-        <input
-          id="title"
-          name="title"
-          type="text"
-          value={newCar.title}
-          onChange={(e) => setNewCar({ ...newCar, title: e.target.value })}
-          placeholder="Title"
-          required
-          className="w-full border border-rose-300 text-rose-800 rounded-md px-3 py-2"
-          autoComplete="on"
-        />
-        <textarea
-          id="description"
-          name="description"
-          value={newCar.description}
-          onChange={(e) =>
-            setNewCar({ ...newCar, description: e.target.value })
-          }
-          placeholder="Description"
-          required
-          className="w-full border border-rose-300 text-rose-800 rounded-md px-3 py-2"
-          autoComplete="on"
-        />
-        <input
-          id="price"
-          name="price"
-          type="text"
-          value={newCar.price}
-          onChange={(e) => setNewCar({ ...newCar, price: e.target.value })}
-          placeholder="Price"
-          required
-          className="w-full border border-rose-300 text-rose-800 rounded-md px-3 py-2"
-          autoComplete="on"
-        />
-
-        <div className="flex space-x-4 w-full">
-          <select
-            id="engineType"
-            name="engineType"
-            value={newCar.engineType}
-            onChange={(e) =>
-              setNewCar({ ...newCar, engineType: e.target.value })
-            }
-            className="w-full border border-rose-300 text-rose-800 rounded-md px-3 py-2"
-            autoComplete="on"
-          >
-            <option value="Electric">Electric</option>
-            <option value="Diesel">Diesel</option>
-            <option value="Hybrid">Hybrid</option>
-            <option value="Petrol">Petrol</option>
-          </select>
-          <select
-            id="transmission"
-            name="transmission"
-            value={newCar.transmission}
-            onChange={(e) =>
-              setNewCar({ ...newCar, transmission: e.target.value })
-            }
-            className="w-full border border-rose-300 text-rose-800 rounded-md px-3 py-2"
-            autoComplete="on"
-          >
-            <option value="Automatic">Automatic</option>
-            <option value="Manual">Manual</option>
-          </select>
-        </div>
-
-        <div className="flex space-x-4 w-full">
-          <input
-            id="engineSize"
-            name="engineSize"
-            type="text"
-            value={newCar.engineSize}
-            onChange={(e) =>
-              setNewCar({ ...newCar, engineSize: e.target.value })
-            }
-            placeholder="Engine Size"
-            required
-            className="w-full border border-rose-300 text-rose-800 rounded-md px-3 py-2"
-            autoComplete="on"
-          />
-          <input
-            id="mileage"
-            name="mileage"
-            type="text"
-            value={newCar.mileage}
-            onChange={(e) => setNewCar({ ...newCar, mileage: e.target.value })}
-            placeholder="Mileage"
-            required
-            className="w-full border border-rose-300 text-rose-800 rounded-md px-3 py-2"
-            autoComplete="on"
-          />
-        </div>
-
-        <input
-          id="images"
-          name="images"
-          type="file"
-          accept="image/*"
-          onChange={(e) => {
-            const files = Array.from(e.target.files);
-            if (files.length > 0) {
-              setNewCar({ ...newCar, images: files });
-            }
-          }}
-          required
-          className="w-full border border-rose-300 text-white rounded-md px-3 py-2"
-          autoComplete="off"
-          multiple
-        />
-        {error && <p className="text-red-600">{error}</p>}
-        <button
-          type="submit"
-          className={`bg-rose-600 text-white px-4 py-2 rounded-md ${
-            loading ? "opacity-50 cursor-not-allowed" : ""
-          }`}
-          disabled={loading}
+      <div className="w-full max-w-xl p-6 bg-rose-900 shadow-lg rounded-lg border border-rose-200">
+        <form
+          id="addCar"
+          name="addCar"
+          onSubmit={handleAddCar}
+          className="space-y-4 flex flex-col items-center"
         >
-          {loading ? (
-            <AiOutlineLoading className="animate-spin inline-block" />
-          ) : (
-            "Add Car"
-          )}
-        </button>
-      </form>
+
+          <input
+            id="title"
+            name="title"
+            type="text"
+            value={newCar.title}
+            onChange={(e) => setNewCar({ ...newCar, title: e.target.value })}
+            placeholder="Title"
+            required
+            className="w-full border border-rose-300 text-rose-800 rounded-md px-3 py-2"
+            autoComplete="on"
+          />
+
+          <textarea
+            id="description"
+            name="description"
+            value={newCar.description}
+            onChange={(e) => setNewCar({ ...newCar, description: e.target.value })}
+            placeholder="Description"
+            required
+            className="w-full border border-rose-300 text-rose-800 rounded-md px-3 py-2"
+            autoComplete="on"
+          />
+
+          <input
+            id="price"
+            name="price"
+            type="text"
+            value={newCar.price}
+            onChange={(e) => setNewCar({ ...newCar, price: e.target.value })}
+            placeholder="Price"
+            required
+            className="w-full border border-rose-300 text-rose-800 rounded-md px-3 py-2"
+            autoComplete="on"
+          />
+
+          <div className="flex space-x-4 w-full">
+            <select
+              id="engineType"
+              name="engineType"
+              value={newCar.engineType}
+              onChange={(e) => setNewCar({ ...newCar, engineType: e.target.value })}
+              className="w-full border border-rose-300 text-rose-800 rounded-md px-3 py-2"
+              autoComplete="on"
+            >
+              <option value="Electric">Electric</option>
+              <option value="Diesel">Diesel</option>
+              <option value="Hybrid">Hybrid</option>
+              <option value="Petrol">Petrol</option>
+            </select>
+
+            <select
+              id="transmission"
+              name="transmission"
+              value={newCar.transmission}
+              onChange={(e) => setNewCar({ ...newCar, transmission: e.target.value })}
+              className="w-full border border-rose-300 text-rose-800 rounded-md px-3 py-2"
+              autoComplete="on"
+            >
+              <option value="Automatic">Automatic</option>
+              <option value="Manual">Manual</option>
+            </select>
+          </div>
+
+          <div className="flex space-x-4 w-full">
+            <input
+              id="engineSize"
+              name="engineSize"
+              type="text"
+              value={newCar.engineSize}
+              onChange={(e) => setNewCar({ ...newCar, engineSize: e.target.value })}
+              placeholder="Engine Size"
+              required
+              className="w-full border border-rose-300 text-rose-800 rounded-md px-3 py-2"
+              autoComplete="on"
+            />
+
+            <input
+              id="mileage"
+              name="mileage"
+              type="text"
+              value={newCar.mileage}
+              onChange={(e) => setNewCar({ ...newCar, mileage: e.target.value })}
+              placeholder="Mileage"
+              required
+              className="w-full border border-rose-300 text-rose-800 rounded-md px-3 py-2"
+              autoComplete="on"
+            />
+          </div>
+
+          <input
+            id="images"
+            name="images"
+            type="file"
+            accept="image/*"
+            onChange={(e) => {
+              const files = Array.from(e.target.files);
+              if (files.length > 0) {
+                setNewCar({ ...newCar, images: files });
+              }
+            }}
+            required
+            className="w-full border border-rose-300 text-rose-800 rounded-md px-3 py-2"
+            autoComplete="off"
+            multiple
+          />
+
+          {error && <p className="text-red-600">{error}</p>}
+
+          <button
+            type="submit"
+            className={`w-full bg-rose-600 text-white px-4 py-2 rounded-md mt-4 ${
+              loading ? "opacity-50 cursor-not-allowed" : ""
+            }`}
+            disabled={loading}
+          >
+            {loading ? <AiOutlineLoading className="animate-spin inline-block" /> : "Add Car"}
+          </button>
+        </form>
+      </div>
     </div>
   );
 };

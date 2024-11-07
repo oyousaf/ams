@@ -1,4 +1,4 @@
-import DashboardWrapper from "../components/DashboardWrapper";
+import DashboardWrapper from "./DashboardWrapper";
 
 const DashboardPage = () => {
   return <DashboardWrapper />;

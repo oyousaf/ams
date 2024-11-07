@@ -1,7 +1,7 @@
-import DashboardWrapper from "./DashboardWrapper";
+import Dashboard from "./Dashboard";
 
 const DashboardPage = () => {
-  return <DashboardWrapper />;
+  return <Dashboard />;
 };
 
 export default DashboardPage;

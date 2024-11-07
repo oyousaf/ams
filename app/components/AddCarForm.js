@@ -213,7 +213,7 @@ const AddCarForm = ({ setCars, fetchCars }) => {
               }
             }}
             required
-            className="w-full border border-rose-300 text-rose-800 rounded-md px-3 py-2"
+            className="w-full border border-rose-300 text-rose-200 rounded-md px-3 py-2"
             autoComplete="off"
             multiple
           />

@@ -13,7 +13,7 @@ const Reviews = () => {
             className="bg-rose-800 p-4 shadow-md rounded-lg text-center" 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }} 
-            transition={{ duration: 0.3 }} 
+            transition={{ duration: 0.5 }} 
             whileHover={{ scale: 1.05 }} 
           >
             <div className="flex justify-center mb-2">

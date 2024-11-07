@@ -113,7 +113,7 @@ const Dashboard = () => {
       {activeTab === "carList" && (
         <div
           id="panel-carList"
-          className="mt-6 flex-grow overflow-auto"
+          className="mt-6 flex-grow"
           role="tabpanel"
         >
           {loadingCars ? (

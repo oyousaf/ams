@@ -3,6 +3,7 @@ import { databases } from "../lib/appwrite";
 import { carLogos, carMakes } from "../constants";
 import CarCard from "./CarCard";
 import { SiPorsche } from "react-icons/si";
+import { motion } from "framer-motion";
 
 const LatestCars = () => {
   const [cars, setCars] = useState([]);
@@ -51,8 +52,16 @@ const LatestCars = () => {
 
   return (
     <section className="p-8" id="cars">
-      <h2 className="text-4xl md:text-5xl font-bold text-center mb-4">Latest Cars</h2>
-      <div className="flex items-center justify-center mb-4 mt-8">
+      <h2 className="text-4xl md:text-5xl font-bold text-center mb-4">
+        Latest Cars
+      </h2>
+
+      <motion.div
+        className="flex items-center justify-center mb-4 mt-8"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+      >
         <label htmlFor="sort" className="mr-2 text-lg md:text-2xl">
           Sort By:
         </label>
@@ -67,17 +76,41 @@ const LatestCars = () => {
           <option value="priceLow">Price: Low to High</option>
           <option value="priceHigh">Price: High to Low</option>
         </select>
-      </div>
+      </motion.div>
 
       {loading && (
-        <div className="flex justify-center items-center h-48">
+        <motion.div
+          className="flex justify-center items-center h-48"
+          animate={{ rotate: 360 }}
+          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+        >
           <SiPorsche className="text-4xl animate-spin" />
-        </div>
+        </motion.div>
       )}
-      {error && <p className="text-center text-red-500">{error}</p>}
+
+      {error && (
+        <motion.p
+          className="text-center text-red-500"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+        >
+          {error}
+        </motion.p>
+      )}
+
       {!loading && cars.length === 0 && (
-        <p className="text-center text-xl">No cars available at the moment.</p>
+        <motion.p
+          className="text-center text-xl"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+        >
+          No cars available at the moment.
+        </motion.p>
       )}
+
+      {/* Cars grid with lazy loading and hover effect */}
       {!loading && cars.length > 0 && (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 transition-all duration-300">
           {sortedCars.map((car) => {
@@ -86,7 +119,18 @@ const LatestCars = () => {
             );
             const logo = make ? carLogos[make] : null;
 
-            return <CarCard key={car.$id} car={car} logo={logo} />;
+            return (
+              <motion.div
+                key={car.$id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                whileHover={{ scale: 1.05 }}
+                transition={{ duration: 0.5 }}
+                viewport={{ once: true, amount: 0.3 }}
+              >
+                <CarCard car={car} logo={logo} />
+              </motion.div>
+            );
           })}
         </div>
       )}

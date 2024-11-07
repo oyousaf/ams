@@ -40,6 +40,16 @@ export const socialLinks = [
   },
 ];
 
+export const gallery = [
+  "/forecourt1.jpg",
+  "/forecourt2.jpg",
+  "/forecourt3.jpg",
+  "/forecourt4.jpg",
+  "/forecourt5.jpg",
+  "/forecourt6.jpg",
+];
+
+
 export const reviews = [
   {
     name: "Taylor Hargreaves",

@@ -1,20 +1,21 @@
-import React, { useState} from "react";
+import React, { useState } from "react";
 import { IoTrash } from "react-icons/io5";
 
 const CarListItem = ({ car, onDelete }) => {
   const [imageError, setImageError] = useState(false);
-  const placeholderImage =
-    "https://ev-database.org/img/auto/Porsche_Taycan_Turbo_S/Porsche_Taycan_Turbo_S-01@2x.jpg";
 
-  const imageUrl = car.imageUrl;
+  const displayImage = imageError
+    ? "https://ev-database.org/img/auto/Porsche_Taycan_Turbo_S/Porsche_Taycan_Turbo_S-01@2x.jpg"
+    : car.imageUrl;
 
   const formattedPrice = car.price.toLocaleString("en-GB");
+  const formattedMileage = car.mileage.toLocaleString("en-GB");
 
   return (
     <li className="border border-rose-600 rounded-md p-4 flex flex-col sm:flex-row items-start bg-rose-900 text-gray-200">
       <div className="w-full sm:w-1/3 mr-4 mb-4 sm:mb-0">
         <img
-          src={imageUrl}
+          src={displayImage}
           alt={car.title || "Car image"}
           width={500}
           height={500}
@@ -53,20 +54,15 @@ const CarListItem = ({ car, onDelete }) => {
           <p>
             Mileage:{" "}
             <span className="font-semibold md:text-xl text-rose-300">
-              {car.mileage.toLocaleString("en-GB")} miles
+              {formattedMileage} miles
             </span>
           </p>
         </div>
       </div>
-
       <button
         className="self-center sm:self-start mt-4 sm:mt-0 text-red-300 hover:text-red-500 transition-colors"
-        onClick={() => {
-          if (window.confirm(`Are you sure you want to delete ${car.title}?`)) {
-            onDelete(car.$id);
-          }
-        }}
-        aria-label="Delete car"
+        onClick={() => onDelete(car.$id, car.title)}
+        aria-label={`Delete ${car.title}`}
       >
         <IoTrash size={30} />
       </button>

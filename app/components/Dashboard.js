@@ -69,8 +69,10 @@ const Dashboard = () => {
     }
   }, []);
 
-  // Function to handle car deletion
-  const handleDeleteCar = useCallback(async (carId) => {
+  // Function to handle car deletion with confirmation
+  const handleDeleteCar = useCallback(async (carId, carTitle) => {
+    if (!window.confirm(`Are you sure you want to delete ${carTitle}?`)) return;
+
     try {
       await databases.deleteDocument(
         process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID,
@@ -90,7 +92,7 @@ const Dashboard = () => {
   }, [fetchCars]);
 
   return (
-    <div className="p-4 w-full flex flex-col justify-between">
+    <div className="fixed inset-0 p-4 w-full flex flex-col justify-between bg-rose-800 text-gray-200 z-50">
       <ToastContainer />
       <div className="flex flex-col items-center">
         <h2 className="text-5xl font-bold text-gray-200 text-center mb-4">
@@ -100,7 +102,11 @@ const Dashboard = () => {
       </div>
 
       {activeTab === "carList" && (
-        <div id="panel-carList" className="mt-6" role="tabpanel">
+        <div
+          id="panel-carList"
+          className="mt-6 flex-grow overflow-auto"
+          role="tabpanel"
+        >
           {loadingCars ? (
             <LoadingIndicator />
           ) : (

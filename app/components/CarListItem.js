@@ -25,7 +25,7 @@ const CarListItem = ({ car, onDelete }) => {
       </div>
       <div className="w-full sm:w-2/3 mb-4 sm:mb-0">
         <h3 className="font-bold text-white text-2xl mb-2">{car.title}</h3>
-        <p className="text-gray-300 mb-2">{car.description}</p>
+        <p className="text-gray-300 mb-2 md:text-xl">{car.description}</p>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1 text-white md:text-lg">
           <p>
             Price:{" "}

@@ -12,10 +12,12 @@ export const metadata = {
   },
   keywords:
     "Ace Motor Sales, Ace Motor Sales Ltd, Heckmondwike, Heckmondwike car dealer, used cars West Yorkshire, pre-owned vehicles, second-hand vehicles UK, certified used cars, reliable cars, family cars, petrol cars, diesel cars, affordable financing, inspected cars, trusted dealership, reliable car sales Heckmondwike",
-  viewport: {
-    width: "device-width",
-    initialScale: 1.0,
-  },
+};
+
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
 };
 
 export default function RootLayout({ children }) {

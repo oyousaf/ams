@@ -8,6 +8,7 @@ import AddCarForm from "./AddCarForm";
 import CarList from "./CarList";
 import { databases } from "../lib/appwrite";
 import { SiPorsche } from "react-icons/si";
+import { motion, AnimatePresence } from "framer-motion";
 
 const LoadingIndicator = () => (
   <div className="flex justify-center items-center h-48">
@@ -30,10 +31,10 @@ const Tabs = ({ activeTab, setActiveTab }) => {
         <button
           key={tab.id}
           onClick={() => setActiveTab(tab.id)}
-          className={`px-4 py-2 rounded-md ${
+          className={`px-4 py-2 rounded-md transition-colors duration-200 ${
             activeTab === tab.id
               ? "bg-rose-600 text-white font-semibold shadow-md"
-              : "bg-rose-200 text-gray-700 hover:bg-rose-300 hover:text-gray-900 transition-colors duration-200"
+              : "bg-rose-200 text-gray-700 hover:bg-rose-300 hover:text-gray-900"
           }`}
           aria-pressed={activeTab === tab.id}
           aria-controls={`panel-${tab.id}`}
@@ -110,25 +111,42 @@ const Dashboard = () => {
         <Tabs activeTab={activeTab} setActiveTab={setActiveTab} />
       </div>
 
-      {activeTab === "carList" && (
-        <div
-          id="panel-carList"
-          className="mt-6 flex-grow"
-          role="tabpanel"
-        >
-          {loadingCars ? (
-            <LoadingIndicator />
-          ) : (
-            <CarList cars={cars} onDelete={handleDeleteCar} />
+      <div className="flex-grow mt-6">
+        <AnimatePresence mode="wait">
+          {activeTab === "carList" && (
+            <motion.div
+              key="carList"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 20 }}
+              transition={{ duration: 0.3 }}
+              className="h-full"
+              role="tabpanel"
+              id="panel-carList"
+            >
+              {loadingCars ? (
+                <LoadingIndicator />
+              ) : (
+                <CarList cars={cars} onDelete={handleDeleteCar} />
+              )}
+            </motion.div>
           )}
-        </div>
-      )}
-
-      {activeTab === "addCar" && (
-        <div id="panel-addCar" role="tabpanel">
-          <AddCarForm setCars={setCars} fetchCars={fetchCars} />
-        </div>
-      )}
+          {activeTab === "addCar" && (
+            <motion.div
+              key="addCar"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.3 }}
+              className="h-full"
+              role="tabpanel"
+              id="panel-addCar"
+            >
+              <AddCarForm setCars={setCars} fetchCars={fetchCars} />
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
 
       <div className="flex justify-center mt-4">
         <Link

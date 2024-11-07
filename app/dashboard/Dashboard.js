@@ -174,12 +174,15 @@ const Dashboard = () => {
               </AnimatePresence>
             </div>
             <div className="flex justify-center mt-4">
-              <Link
-                href="/"
-                className="text-gray-200 hover:text-white"
-                aria-label="Go to Home"
-              >
-                <GoHomeFill className="mr-2" size={40} />
+              <Link href="/" aria-label="Go to Home">
+                <motion.div
+                  className="text-gray-200 hover:text-white"
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9, rotate: -10 }} 
+                  transition={{ type: "spring", stiffness: 300 }}
+                >
+                  <GoHomeFill className="mr-2" size={40} />
+                </motion.div>
               </Link>
             </div>
           </div>

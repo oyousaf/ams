@@ -211,7 +211,7 @@ const Dashboard = () => {
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
             >
-              <IoIosReturnRight className="text-bold" size={30} />
+              <IoIosReturnRight size={30} />
             </motion.button>
           </motion.form>
         )}

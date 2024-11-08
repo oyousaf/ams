@@ -3,7 +3,6 @@ import { databases } from "../lib/appwrite";
 import { carLogos, carMakes } from "../constants";
 import CarCard from "./CarCard";
 import { motion } from "framer-motion";
-
 import LoadingSpinner from "../dashboard/LoadingSpinner";
 
 const LatestCars = () => {

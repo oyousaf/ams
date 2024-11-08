@@ -220,4 +220,6 @@ const Dashboard = () => {
   );
 };
 
+Dashboard.displayName = "Dashboard";
+
 export default Dashboard;

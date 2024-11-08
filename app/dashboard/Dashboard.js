@@ -11,7 +11,7 @@ import AddCarForm from "./AddCarForm";
 import CarList from "./CarList";
 import { databases } from "../lib/appwrite";
 
-import LoadingIndicator from "./LoadingSpinner";
+import LoadingSpinner from "./LoadingSpinner";
 
 const Tabs = React.memo(({ activeTab, setActiveTab }) => {
   const tabs = useMemo(
@@ -145,7 +145,7 @@ const Dashboard = () => {
                     id="panel-carList"
                   >
                     {loadingCars ? (
-                      <LoadingIndicator />
+                      <LoadingSpinner />
                     ) : (
                       <CarList cars={cars} onDelete={handleDeleteCar} />
                     )}

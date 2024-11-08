@@ -1,8 +1,6 @@
 "use client";
 
-/* eslint-disable react/display-name */
-
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import { GoHomeFill } from "react-icons/go";
 import { IoIosReturnRight } from "react-icons/io";
@@ -12,38 +10,41 @@ import Link from "next/link";
 import AddCarForm from "./AddCarForm";
 import CarList from "./CarList";
 import { databases } from "../lib/appwrite";
-
 import LoadingSpinner from "./LoadingSpinner";
 
-const Tabs = React.memo(({ activeTab, setActiveTab }) => {
-  const tabs = useMemo(
-    () => [
-      { id: "carList", label: "Current Cars" },
-      { id: "addCar", label: "Add Car" },
-    ],
-    []
-  );
+const TabButton = ({ isActive, onClick, label }) => (
+  <button
+    onClick={onClick}
+    className={`px-4 py-2 rounded-md transition-colors duration-200 ${
+      isActive
+        ? "bg-rose-600 text-white font-semibold shadow-md"
+        : "bg-rose-200 text-gray-700 hover:bg-rose-300 hover:text-gray-900"
+    }`}
+    aria-pressed={isActive}
+  >
+    {label}
+  </button>
+);
+
+const Tabs = ({ activeTab, setActiveTab }) => {
+  const tabs = [
+    { id: "carList", label: "Current Cars" },
+    { id: "addCar", label: "Add Car" },
+  ];
 
   return (
     <div className="flex justify-center mt-6 space-x-4">
       {tabs.map((tab) => (
-        <button
+        <TabButton
           key={tab.id}
+          isActive={activeTab === tab.id}
           onClick={() => setActiveTab(tab.id)}
-          className={`px-4 py-2 rounded-md transition-colors duration-200 ${
-            activeTab === tab.id
-              ? "bg-rose-600 text-white font-semibold shadow-md"
-              : "bg-rose-200 text-gray-700 hover:bg-rose-300 hover:text-gray-900"
-          }`}
-          aria-pressed={activeTab === tab.id}
-          aria-controls={`panel-${tab.id}`}
-        >
-          {tab.label}
-        </button>
+          label={tab.label}
+        />
       ))}
     </div>
   );
-});
+};
 
 const Dashboard = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -53,18 +54,15 @@ const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("carList");
   const [loadingCars, setLoadingCars] = useState(true);
 
-  const handlePasskeySubmit = useCallback(
-    (e) => {
-      e.preventDefault();
-      if (passkey === process.env.NEXT_PUBLIC_DASHBOARD_PASSKEY) {
-        setIsAuthenticated(true);
-        setError("");
-      } else {
-        setError("Incorrect passkey. Please try again.");
-      }
-    },
-    [passkey]
-  );
+  const handlePasskeySubmit = (e) => {
+    e.preventDefault();
+    if (passkey === process.env.NEXT_PUBLIC_DASHBOARD_PASSKEY) {
+      setIsAuthenticated(true);
+      setError("");
+    } else {
+      setError("Incorrect passkey. Please try again.");
+    }
+  };
 
   const fetchCars = useCallback(async () => {
     setLoadingCars(true);
@@ -76,9 +74,7 @@ const Dashboard = () => {
       setCars(response.documents);
     } catch (error) {
       console.error("Error fetching cars:", error);
-      toast.error(
-        "Could not load cars. Please check your connection and try again."
-      );
+      toast.error("Could not load cars. Please check your connection and try again.");
     } finally {
       setLoadingCars(false);
     }
@@ -102,17 +98,11 @@ const Dashboard = () => {
   }, []);
 
   useEffect(() => {
-    if (isAuthenticated) {
-      fetchCars();
-    }
+    if (isAuthenticated) fetchCars();
   }, [fetchCars, isAuthenticated]);
 
   useEffect(() => {
-    if (isAuthenticated || passkey) {
-      document.body.classList.add("overflow-hidden");
-    } else {
-      document.body.classList.remove("overflow-hidden");
-    }
+    document.body.classList.toggle("overflow-hidden", isAuthenticated || passkey);
     return () => document.body.classList.remove("overflow-hidden");
   }, [isAuthenticated, passkey]);
 
@@ -128,12 +118,10 @@ const Dashboard = () => {
         {isAuthenticated ? (
           <div className="fixed inset-0 p-4 w-full flex flex-col justify-between bg-rose-800 text-gray-200 z-50">
             <div className="flex flex-col items-center">
-              <h2 className="text-5xl font-bold text-gray-200 text-center mb-2">
-                Dashboard
-              </h2>
+              <h2 className="text-5xl font-bold text-gray-200 text-center mb-2">Dashboard</h2>
               <Tabs activeTab={activeTab} setActiveTab={setActiveTab} />
             </div>
-            <div className="flex-grow mt-6 overflow-auto scrollbar-none">
+            <div className="flex-grow mt-6 overflow-auto">
               <AnimatePresence mode="wait">
                 {activeTab === "carList" && (
                   <motion.div
@@ -144,13 +132,8 @@ const Dashboard = () => {
                     transition={{ duration: 0.3 }}
                     className="h-full"
                     role="tabpanel"
-                    id="panel-carList"
                   >
-                    {loadingCars ? (
-                      <LoadingSpinner />
-                    ) : (
-                      <CarList cars={cars} onDelete={handleDeleteCar} />
-                    )}
+                    {loadingCars ? <LoadingSpinner /> : <CarList cars={cars} onDelete={handleDeleteCar} />}
                   </motion.div>
                 )}
                 {activeTab === "addCar" && (
@@ -162,7 +145,6 @@ const Dashboard = () => {
                     transition={{ duration: 0.3 }}
                     className="h-full"
                     role="tabpanel"
-                    id="panel-addCar"
                   >
                     <AddCarForm setCars={setCars} fetchCars={fetchCars} />
                   </motion.div>
@@ -186,8 +168,6 @@ const Dashboard = () => {
           <motion.form
             onSubmit={handlePasskeySubmit}
             className="space-y-6 md:w-[50%] w-full flex flex-col items-center"
-            name="passkey-form"
-            id="passkey-form"
             autoComplete="off"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -196,7 +176,6 @@ const Dashboard = () => {
             <motion.input
               type="password"
               name="passkey"
-              id="passkey"
               value={passkey}
               maxLength={5}
               onChange={(e) => setPasskey(e.target.value)}
@@ -221,7 +200,5 @@ const Dashboard = () => {
     </div>
   );
 };
-
-/* eslint-enable react/display-name */
 
 export default Dashboard;

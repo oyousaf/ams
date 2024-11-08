@@ -43,7 +43,7 @@ const CarListItem = ({ car, onDelete }) => {
   const displayImage = imageError ? fallbackImageUrl : car.imageUrl;
 
   return (
-    <li className="border border-rose-200 rounded-md p-4 flex flex-col sm:flex-row items-start bg-rose-900 text-gray-200">
+    <li className="border border-rose-200 rounded-md p-4 mb-3 flex flex-col sm:flex-row items-start bg-rose-900 text-gray-200">
       <CarImage imageUrl={displayImage} title={car.title} setImageError={setImageError} />
       <CarDetails car={car} />
       <button

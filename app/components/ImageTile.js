@@ -1,10 +1,14 @@
+import Image from 'next/image';
+
 const ImageTile = ({ src, alt }) => {
   return (
-    <div className="relative w-full h-full">
-      <img
+    <div className="relative w-full h-[300px] md:h-[400px]">
+      <Image
         src={src}
         alt={alt}
-        className="object-cover w-full h-full rounded-lg"
+        layout="fill"
+        objectFit="cover"
+        className="rounded-lg"
       />
     </div>
   );

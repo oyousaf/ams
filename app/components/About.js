@@ -58,7 +58,7 @@ const About = () => {
       {/* Gallery */}
       <div className="mt-16 px-4 lg:px-8 max-w-7xl mx-auto">
         <motion.div
-          className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-4 gap-4"
+          className="grid grid-cols-1 md:grid-cols-4 gap-4"
           variants={{
             hidden: { opacity: 0 },
             visible: { opacity: 1, transition: { duration: 0.5 } },
@@ -66,95 +66,19 @@ const About = () => {
           initial="hidden"
           animate="visible"
         >
-          {/* Image 1 */}
-          <motion.div
-            className="flex justify-center"
-            variants={{
-              hidden: { opacity: 0, x: -100 },
-              visible: { opacity: 1, x: 0 },
-            }}
-          >
-            <ImageTile
-              src={gallery[0]}
-              alt="Image 1"
-              className="w-full object-cover h-[300px] md:h-[600px]"
-            />
-          </motion.div>
-
-          {/* Image 2 */}
-          <motion.div
-            className="flex justify-center md:col-span-2"
-            variants={{
-              hidden: { opacity: 0, x: 100 },
-              visible: { opacity: 1, x: 0 },
-            }}
-          >
-            <ImageTile
-              src={gallery[1]}
-              alt="Image 2"
-              className="w-full object-cover h-[300px] md:h-[600px] md:w-[800px]"
-            />
-          </motion.div>
-
-          {/* Image 3 */}
-          <motion.div
-            className="flex justify-center"
-            variants={{
-              hidden: { opacity: 0, x: -100 },
-              visible: { opacity: 1, x: 0 },
-            }}
-          >
-            <ImageTile
-              src={gallery[2]}
-              alt="Image 3"
-              className="w-full object-cover h-[300px] md:h-[600px]"
-            />
-          </motion.div>
-
-          {/* Image 4 */}
-          <motion.div
-            className="flex justify-center"
-            variants={{
-              hidden: { opacity: 0, x: 100 },
-              visible: { opacity: 1, x: 0 },
-            }}
-          >
-            <ImageTile
-              src={gallery[3]}
-              alt="Image 4"
-              className="w-full object-cover h-[300px] md:h-[600px]"
-            />
-          </motion.div>
-
-          {/* Image 5 */}
-          <motion.div
-            className="flex justify-center md:col-span-2"
-            variants={{
-              hidden: { opacity: 0, x: -100 },
-              visible: { opacity: 1, x: 0 },
-            }}
-          >
-            <ImageTile
-              src={gallery[4]}
-              alt="Image 5"
-              className="w-full object-cover h-[300px] md:h-full"
-            />
-          </motion.div>
-
-          {/* Image 6 */}
-          <motion.div
-            className="flex justify-center"
-            variants={{
-              hidden: { opacity: 0, x: 100 },
-              visible: { opacity: 1, x: 0 },
-            }}
-          >
-            <ImageTile
-              src={gallery[5]}
-              alt="Image 6"
-              className="w-full object-cover h-[300px] md:h-[600px]"
-            />
-          </motion.div>
+          {/* Images */}
+          {gallery.map((src, index) => (
+            <motion.div
+              key={index}
+              className={`flex justify-center ${index === 1 || index === 4 ? "md:col-span-2" : ""}`}
+              variants={{
+                hidden: { opacity: 0, x: index % 2 === 0 ? -100 : 100 },
+                visible: { opacity: 1, x: 0 },
+              }}
+            >
+              <ImageTile src={src} alt={`Image ${index + 1}`} />
+            </motion.div>
+          ))}
         </motion.div>
       </div>
     </section>

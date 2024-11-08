@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import { databases, storage, ID } from "../lib/appwrite";
 import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import { AiOutlineLoading } from "react-icons/ai";
 
 const AddCarForm = ({ setCars, fetchCars }) => {

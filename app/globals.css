@@ -29,3 +29,6 @@ body {
 /* React-Slick */
 @import "~slick-carousel/slick/slick.css";
 @import "~slick-carousel/slick/slick-theme.css";
+
+/* React-Toastify */
+@import "~react-toastify/dist/ReactToastify.css";

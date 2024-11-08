@@ -124,7 +124,7 @@ const LatestCars = () => {
                 key={car.$id}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                whileHover={{ scale: 1.05 }}
+                whileHover={{ scale: 1.03 }}
                 transition={{ duration: 0.3 }}
                 viewport={{ once: true, amount: 0.3 }}
               >

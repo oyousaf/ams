@@ -2,8 +2,9 @@ import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { databases } from "../lib/appwrite";
 import { carLogos, carMakes } from "../constants";
 import CarCard from "./CarCard";
-import { SiPorsche } from "react-icons/si";
 import { motion } from "framer-motion";
+
+import LoadingSpinner from "../dashboard/LoadingSpinner";
 
 const LatestCars = () => {
   const [cars, setCars] = useState([]);
@@ -84,7 +85,7 @@ const LatestCars = () => {
           animate={{ rotate: 360 }}
           transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
         >
-          <SiPorsche className="text-4xl animate-spin" />
+          <LoadingSpinner />
         </motion.div>
       )}
 

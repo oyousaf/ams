@@ -131,7 +131,7 @@ const Dashboard = () => {
               </h2>
               <Tabs activeTab={activeTab} setActiveTab={setActiveTab} />
             </div>
-            <div className="flex-grow mt-6">
+            <div className="flex-grow mt-6 overflow-auto scrollbar-none">
               <AnimatePresence mode="wait">
                 {activeTab === "carList" && (
                   <motion.div

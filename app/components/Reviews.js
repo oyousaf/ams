@@ -14,7 +14,7 @@ const Reviews = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }} 
             transition={{ duration: 0.5 }} 
-            whileHover={{ scale: 1.05 }} 
+            whileHover={{ scale: 1.05 }}
           >
             <div className="flex justify-center mb-2">
               <FaQuoteLeft className="text-3xl text-white mt-2" />

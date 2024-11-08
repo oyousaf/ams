@@ -4,20 +4,16 @@ import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import { GoHomeFill } from "react-icons/go";
 import { IoIosReturnRight } from "react-icons/io";
-import { SiPorsche } from "react-icons/si";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+
 import AddCarForm from "./AddCarForm";
 import CarList from "./CarList";
 import { databases } from "../lib/appwrite";
 
-const LoadingIndicator = () => (
-  <div className="flex justify-center items-center h-48">
-    <SiPorsche className="text-4xl animate-spin" />
-  </div>
-);
+import LoadingIndicator from "./LoadingSpinner";
 
-const Tabs = ({ activeTab, setActiveTab }) => {
+const Tabs = React.memo(({ activeTab, setActiveTab }) => {
   const tabs = useMemo(
     () => [
       { id: "carList", label: "Current Cars" },
@@ -45,28 +41,28 @@ const Tabs = ({ activeTab, setActiveTab }) => {
       ))}
     </div>
   );
-};
+});
 
 const Dashboard = () => {
-  // Authentication states
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [passkey, setPasskey] = useState("");
   const [error, setError] = useState("");
-
-  // Dashboard states
   const [cars, setCars] = useState([]);
   const [activeTab, setActiveTab] = useState("carList");
   const [loadingCars, setLoadingCars] = useState(true);
 
-  const handlePasskeySubmit = (e) => {
-    e.preventDefault();
-    if (passkey === process.env.NEXT_PUBLIC_DASHBOARD_PASSKEY) {
-      setIsAuthenticated(true);
-      setError("");
-    } else {
-      setError("Incorrect passkey. Please try again.");
-    }
-  };
+  const handlePasskeySubmit = useCallback(
+    (e) => {
+      e.preventDefault();
+      if (passkey === process.env.NEXT_PUBLIC_DASHBOARD_PASSKEY) {
+        setIsAuthenticated(true);
+        setError("");
+      } else {
+        setError("Incorrect passkey. Please try again.");
+      }
+    },
+    [passkey]
+  );
 
   const fetchCars = useCallback(async () => {
     setLoadingCars(true);
@@ -109,7 +105,6 @@ const Dashboard = () => {
     }
   }, [fetchCars, isAuthenticated]);
 
-  // Disable body scrolling when the dashboard or passkey form is shown
   useEffect(() => {
     if (isAuthenticated || passkey) {
       document.body.classList.add("overflow-hidden");
@@ -129,7 +124,6 @@ const Dashboard = () => {
         className="bg-rose-900 rounded-lg shadow-lg w-auto max-w-7xl p-8 flex flex-col items-center"
       >
         {isAuthenticated ? (
-          // Main Dashboard Content
           <div className="fixed inset-0 p-4 w-full flex flex-col justify-between bg-rose-800 text-gray-200 z-50">
             <div className="flex flex-col items-center">
               <h2 className="text-5xl font-bold text-gray-200 text-center mb-2">
@@ -178,7 +172,7 @@ const Dashboard = () => {
                 <motion.div
                   className="text-gray-200 hover:text-white"
                   whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9, rotate: -10 }} 
+                  whileTap={{ scale: 0.9, rotate: -10 }}
                   transition={{ type: "spring", stiffness: 300 }}
                 >
                   <GoHomeFill className="mr-2" size={40} />
@@ -187,7 +181,6 @@ const Dashboard = () => {
             </div>
           </div>
         ) : (
-          // Authentication Form
           <motion.form
             onSubmit={handlePasskeySubmit}
             className="space-y-6 md:w-[50%] w-full flex flex-col items-center"

@@ -55,10 +55,10 @@ const About = () => {
         ))}
       </div>
 
-      {/* Bento-style Mosaic Layout with framer-motion */}
+      {/* Gallery */}
       <div className="mt-16 px-4 lg:px-8 max-w-7xl mx-auto">
         <motion.div
-          className="grid grid-cols-1 md:grid-cols-4 gap-4"
+          className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-4 gap-4"
           variants={{
             hidden: { opacity: 0 },
             visible: { opacity: 1, transition: { duration: 0.5 } },
@@ -77,13 +77,13 @@ const About = () => {
             <ImageTile
               src={gallery[0]}
               alt="Image 1"
-              className="h-[600px] w-full object-cover"
+              className="w-full object-cover h-[300px] md:h-[600px]"
             />
           </motion.div>
 
           {/* Image 2 */}
           <motion.div
-            className="flex justify-center col-span-2"
+            className="flex justify-center md:col-span-2"
             variants={{
               hidden: { opacity: 0, x: 100 },
               visible: { opacity: 1, x: 0 },
@@ -92,7 +92,7 @@ const About = () => {
             <ImageTile
               src={gallery[1]}
               alt="Image 2"
-              className="h-[600px] w-[800px] object-cover"
+              className="w-full object-cover h-[300px] md:h-[600px] md:w-[800px]"
             />
           </motion.div>
 
@@ -107,7 +107,7 @@ const About = () => {
             <ImageTile
               src={gallery[2]}
               alt="Image 3"
-              className="h-[600px] w-full object-cover"
+              className="w-full object-cover h-[300px] md:h-[600px]"
             />
           </motion.div>
 
@@ -122,13 +122,13 @@ const About = () => {
             <ImageTile
               src={gallery[3]}
               alt="Image 4"
-              className="h-[600px] w-full object-cover"
+              className="w-full object-cover h-[300px] md:h-[600px]"
             />
           </motion.div>
 
           {/* Image 5 */}
           <motion.div
-            className="flex justify-center col-span-2"
+            className="flex justify-center md:col-span-2"
             variants={{
               hidden: { opacity: 0, x: -100 },
               visible: { opacity: 1, x: 0 },
@@ -137,7 +137,7 @@ const About = () => {
             <ImageTile
               src={gallery[4]}
               alt="Image 5"
-              className="h-full w-full object-cover"
+              className="w-full object-cover h-[300px] md:h-full"
             />
           </motion.div>
 
@@ -152,7 +152,7 @@ const About = () => {
             <ImageTile
               src={gallery[5]}
               alt="Image 6"
-              className="h-[600px] w-full object-cover"
+              className="w-full object-cover h-[300px] md:h-[600px]"
             />
           </motion.div>
         </motion.div>

@@ -2,9 +2,17 @@
 const nextConfig = {
   productionBrowserSourceMaps: false,
   images: {
-    domains: [
-      "ev-database.org",
-      "cloud.appwrite.io",
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'ev-database.org',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'cloud.appwrite.io',
+        pathname: '/**',
+      },
     ],
   },
 };

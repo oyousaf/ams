@@ -14,9 +14,10 @@ const AddCarForm = ({ setCars, fetchCars, setActiveTab }) => {
     engineSize: "",
     transmission: "Automatic",
     mileage: "",
-    images: [],
+    images: [], // To hold selected files
   });
 
+  const [imagePreviews, setImagePreviews] = useState([]); // State to store image previews
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -100,12 +101,22 @@ const AddCarForm = ({ setCars, fetchCars, setActiveTab }) => {
         mileage: "",
         images: [],
       });
+      setImagePreviews([]); // Clear the previews after submission
     } catch (insertError) {
       console.error("Error adding car:", insertError);
       toast.error("Error adding car. Please try again.");
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleImageChange = (e) => {
+    const files = Array.from(e.target.files);
+    setNewCar({ ...newCar, images: files });
+
+    // Generate image previews
+    const previewUrls = files.map((file) => URL.createObjectURL(file));
+    setImagePreviews(previewUrls);
   };
 
   return (
@@ -218,16 +229,24 @@ const AddCarForm = ({ setCars, fetchCars, setActiveTab }) => {
             name="images"
             type="file"
             accept="image/*"
-            onChange={(e) => {
-              const files = Array.from(e.target.files);
-              if (files.length > 0) {
-                setNewCar({ ...newCar, images: files });
-              }
-            }}
+            onChange={handleImageChange}
             required
             className="w-full border border-rose-300 text-rose-200 rounded-md px-3 py-2"
             multiple
           />
+
+          {imagePreviews.length > 0 && (
+            <div className="flex space-x-4 mt-4">
+              {imagePreviews.map((preview, index) => (
+                <img
+                  key={index}
+                  src={preview}
+                  alt={`Preview ${index}`}
+                  className="w-24 h-24 object-cover rounded-md"
+                />
+              ))}
+            </div>
+          )}
 
           {error && <p className="text-red-600">{error}</p>}
 

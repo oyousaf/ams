@@ -1,7 +1,5 @@
 "use client";
 
-/* eslint-disable react/display-name */
-
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import { GoHomeFill } from "react-icons/go";
@@ -225,7 +223,5 @@ const Dashboard = () => {
     </div>
   );
 };
-
-/* eslint-enable react/display-name */
 
 export default Dashboard;

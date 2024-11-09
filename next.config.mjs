@@ -5,7 +5,7 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'ev-database.org',
+        hostname: 'cdn.elferspot.com',
         pathname: '/**',
       },
       {

@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { IoTrash } from "react-icons/io5";
 
-const fallbackImage = "https://cdn.elferspot.com/wp-content/uploads/2021/12/269712451_4431790080281806_5749846471891286432_n-Kopie.jpeg";
+const fallbackImage =
+  "https://cdn.elferspot.com/wp-content/uploads/2021/12/269712451_4431790080281806_5749846471891286432_n-Kopie.jpeg";
 
 const CarImage = ({ imageUrl, title, setImageError }) => (
   <figure className="w-full sm:w-1/3 mr-4 mb-4 sm:mb-0">
@@ -26,14 +27,18 @@ const CarDetails = ({ car }) => (
       <Detail label="Engine Type" value={car.engineType} />
       <Detail label="Engine Size" value={`${car.engineSize}L`} />
       <Detail label="Transmission" value={car.transmission} />
-      <Detail label="Mileage" value={`${car.mileage.toLocaleString("en-GB")} miles`} />
+      <Detail
+        label="Mileage"
+        value={`${car.mileage.toLocaleString("en-GB")} miles`}
+      />
     </div>
   </div>
 );
 
 const Detail = ({ label, value }) => (
   <p>
-    {label}: <span className="font-semibold md:text-xl text-rose-300">{value}</span>
+    {label}:{" "}
+    <span className="font-semibold md:text-xl text-rose-300">{value}</span>
   </p>
 );
 
@@ -44,7 +49,11 @@ const CarListItem = ({ car, onDelete }) => {
 
   return (
     <li className="border border-rose-200 rounded-md p-4 mb-3 flex flex-col sm:flex-row items-start bg-rose-900 text-gray-200">
-      <CarImage imageUrl={displayImage} title={car.title} setImageError={setImageError} />
+      <CarImage
+        imageUrl={displayImage}
+        title={car.title}
+        setImageError={setImageError}
+      />
       <CarDetails car={car} />
       <button
         className="self-center sm:self-start mt-4 sm:mt-0 text-red-300 hover:text-red-500 transition-colors"

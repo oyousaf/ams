@@ -94,7 +94,7 @@ const CarCard = React.memo(({ car, logo }) => {
               </span>
             </div>
           </div>
-          <p className="font-bold text-2xl text-white text-center pt-2 hover:text-rose-500">
+          <p className="font-bold text-2xl text-gray-300 hover:text-white text-center pt-2">
             <a href="tel:07809107655">£{formattedPrice}</a>
           </p>
         </div>

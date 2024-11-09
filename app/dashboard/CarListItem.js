@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { IoTrash } from "react-icons/io5";
 
-const fallbackImageUrl = "https://cdn.elferspot.com/wp-content/uploads/2021/12/269712451_4431790080281806_5749846471891286432_n-Kopie.jpeg";
+const fallbackImage = "https://cdn.elferspot.com/wp-content/uploads/2021/12/269712451_4431790080281806_5749846471891286432_n-Kopie.jpeg";
 
 const CarImage = ({ imageUrl, title, setImageError }) => (
   <figure className="w-full sm:w-1/3 mr-4 mb-4 sm:mb-0">
@@ -40,7 +40,7 @@ const Detail = ({ label, value }) => (
 const CarListItem = ({ car, onDelete }) => {
   const [imageError, setImageError] = useState(false);
 
-  const displayImage = imageError ? fallbackImageUrl : car.imageUrl;
+  const displayImage = imageError ? fallbackImage : car.imageUrl;
 
   return (
     <li className="border border-rose-200 rounded-md p-4 mb-3 flex flex-col sm:flex-row items-start bg-rose-900 text-gray-200">

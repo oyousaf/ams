@@ -1,15 +1,14 @@
 import React, { useMemo } from "react";
 import Slider from "react-slick";
-import Image from "next/image"; // Import next/image
+import Image from "next/image";
 import { FaGasPump } from "react-icons/fa6";
 import { PiEngineFill } from "react-icons/pi";
 import { GiGearStickPattern } from "react-icons/gi";
 import { BiSolidTachometer } from "react-icons/bi";
-import Link from "next/link";
 
 const CarCard = React.memo(({ car, logo }) => {
-  const defaultImageUrl =
-    "https://ev-database.org/img/auto/Porsche_Taycan_Turbo_S/Porsche_Taycan_Turbo_S-01@2x.jpg";
+  const fallbackImage =
+    "https://cdn.elferspot.com/wp-content/uploads/2021/12/269712451_4431790080281806_5749846471891286432_n-Kopie.jpeg";
 
   const settings = useMemo(
     () => ({
@@ -53,7 +52,7 @@ const CarCard = React.memo(({ car, logo }) => {
             ))
           ) : (
             <Image
-              src={defaultImageUrl}
+              src={fallbackImage}
               alt={car.title}
               width={500}
               height={192}

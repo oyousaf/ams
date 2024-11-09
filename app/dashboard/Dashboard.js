@@ -13,6 +13,7 @@ import { databases } from "../lib/appwrite";
 
 import LoadingSpinner from "./LoadingSpinner";
 
+/* eslint-disable react/display-name */
 const Tabs = React.memo(({ activeTab, setActiveTab }) => {
   const tabs = useMemo(
     () => [
@@ -21,6 +22,7 @@ const Tabs = React.memo(({ activeTab, setActiveTab }) => {
     ],
     []
   );
+  /* eslint-enable react/display-name */
 
   return (
     <div className="flex justify-center mt-6 space-x-4">

@@ -5,7 +5,7 @@ import { databases, storage, ID } from "../lib/appwrite";
 import { ToastContainer, toast } from "react-toastify";
 import { AiOutlineLoading } from "react-icons/ai";
 
-const AddCarForm = ({ setCars, fetchCars }) => {
+const AddCarForm = ({ setCars, fetchCars, setActiveTab }) => {
   const [newCar, setNewCar] = useState({
     title: "",
     description: "",
@@ -16,6 +16,7 @@ const AddCarForm = ({ setCars, fetchCars }) => {
     mileage: "",
     images: [],
   });
+
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -24,6 +25,7 @@ const AddCarForm = ({ setCars, fetchCars }) => {
     setError("");
     setLoading(true);
 
+    // Basic validation checks
     if (
       !newCar.title ||
       !newCar.price ||
@@ -34,13 +36,15 @@ const AddCarForm = ({ setCars, fetchCars }) => {
       isNaN(newCar.mileage) ||
       newCar.images.length === 0
     ) {
-      setError("Please fill in all required fields correctly, including at least one image.");
+      setError(
+        "Please fill in all required fields correctly, including at least one image."
+      );
       setLoading(false);
       return;
     }
 
+    // Upload images to Appwrite storage
     let imageUrls = [];
-
     try {
       for (const image of newCar.images) {
         const file = await storage.createFile(
@@ -59,6 +63,7 @@ const AddCarForm = ({ setCars, fetchCars }) => {
       return;
     }
 
+    // Create car document in Appwrite database
     try {
       const carData = await databases.createDocument(
         process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID,
@@ -79,9 +84,12 @@ const AddCarForm = ({ setCars, fetchCars }) => {
 
       toast.success("Car added successfully!");
 
+      // Fetch and Set
       fetchCars();
       setCars((prevCars) => [...prevCars, carData]);
+      setActiveTab("carList");
 
+      // Reset the form after successful submission
       setNewCar({
         title: "",
         description: "",
@@ -110,7 +118,6 @@ const AddCarForm = ({ setCars, fetchCars }) => {
           onSubmit={handleAddCar}
           className="space-y-4 flex flex-col items-center"
         >
-
           <input
             id="title"
             name="title"
@@ -127,7 +134,9 @@ const AddCarForm = ({ setCars, fetchCars }) => {
             id="description"
             name="description"
             value={newCar.description}
-            onChange={(e) => setNewCar({ ...newCar, description: e.target.value })}
+            onChange={(e) =>
+              setNewCar({ ...newCar, description: e.target.value })
+            }
             placeholder="Description"
             required
             className="w-full border border-rose-300 text-rose-800 rounded-md px-3 py-2"
@@ -151,9 +160,10 @@ const AddCarForm = ({ setCars, fetchCars }) => {
               id="engineType"
               name="engineType"
               value={newCar.engineType}
-              onChange={(e) => setNewCar({ ...newCar, engineType: e.target.value })}
+              onChange={(e) =>
+                setNewCar({ ...newCar, engineType: e.target.value })
+              }
               className="w-full border border-rose-300 text-rose-800 rounded-md px-3 py-2"
-              autoComplete="on"
             >
               <option value="Electric">Electric</option>
               <option value="Diesel">Diesel</option>
@@ -165,9 +175,10 @@ const AddCarForm = ({ setCars, fetchCars }) => {
               id="transmission"
               name="transmission"
               value={newCar.transmission}
-              onChange={(e) => setNewCar({ ...newCar, transmission: e.target.value })}
+              onChange={(e) =>
+                setNewCar({ ...newCar, transmission: e.target.value })
+              }
               className="w-full border border-rose-300 text-rose-800 rounded-md px-3 py-2"
-              autoComplete="on"
             >
               <option value="Automatic">Automatic</option>
               <option value="Manual">Manual</option>
@@ -180,11 +191,12 @@ const AddCarForm = ({ setCars, fetchCars }) => {
               name="engineSize"
               type="text"
               value={newCar.engineSize}
-              onChange={(e) => setNewCar({ ...newCar, engineSize: e.target.value })}
+              onChange={(e) =>
+                setNewCar({ ...newCar, engineSize: e.target.value })
+              }
               placeholder="Engine Size"
               required
               className="w-full border border-rose-300 text-rose-800 rounded-md px-3 py-2"
-              autoComplete="on"
             />
 
             <input
@@ -192,11 +204,12 @@ const AddCarForm = ({ setCars, fetchCars }) => {
               name="mileage"
               type="text"
               value={newCar.mileage}
-              onChange={(e) => setNewCar({ ...newCar, mileage: e.target.value })}
+              onChange={(e) =>
+                setNewCar({ ...newCar, mileage: e.target.value })
+              }
               placeholder="Mileage"
               required
               className="w-full border border-rose-300 text-rose-800 rounded-md px-3 py-2"
-              autoComplete="on"
             />
           </div>
 
@@ -213,7 +226,6 @@ const AddCarForm = ({ setCars, fetchCars }) => {
             }}
             required
             className="w-full border border-rose-300 text-rose-200 rounded-md px-3 py-2"
-            autoComplete="off"
             multiple
           />
 
@@ -226,7 +238,11 @@ const AddCarForm = ({ setCars, fetchCars }) => {
             }`}
             disabled={loading}
           >
-            {loading ? <AiOutlineLoading className="animate-spin inline-block" /> : "Add Car"}
+            {loading ? (
+              <AiOutlineLoading className="animate-spin inline-block" />
+            ) : (
+              "Add Car"
+            )}
           </button>
         </form>
       </div>

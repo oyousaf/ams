@@ -36,7 +36,7 @@ const SocialIcons = () => (
 const Footer = () => {
   return (
     <footer className="py-8" id="contact">
-      <h2 className="text-4xl md:text-6xl font-bold text-center mb-8">Get in Touch</h2>
+      <h2 className="text-4xl md:text-5xl font-bold text-center mb-8">Get in Touch</h2>
 
       <div className="flex flex-col md:flex-row justify-center px-4 lg:px-8 space-y-8 md:space-y-0">
         <div className="flex-grow md:w-1/2 flex items-center justify-center mb-8 lg:mb-0">

@@ -108,13 +108,13 @@ const Dashboard = () => {
   }, [fetchCars, isAuthenticated]);
 
   useEffect(() => {
-    if (isAuthenticated || passkey) {
+    if (isAuthenticated) {
       document.body.classList.add("overflow-hidden");
     } else {
       document.body.classList.remove("overflow-hidden");
     }
     return () => document.body.classList.remove("overflow-hidden");
-  }, [isAuthenticated, passkey]);
+  }, [isAuthenticated]);
 
   return (
     <div className="h-screen flex items-center justify-center p-6">
@@ -164,7 +164,11 @@ const Dashboard = () => {
                     role="tabpanel"
                     id="panel-addCar"
                   >
-                    <AddCarForm setCars={setCars} fetchCars={fetchCars} />
+                    <AddCarForm
+                      setCars={setCars}
+                      fetchCars={fetchCars}
+                      setActiveTab={setActiveTab}
+                    />
                   </motion.div>
                 )}
               </AnimatePresence>

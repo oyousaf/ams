@@ -5,23 +5,34 @@ import { FaGasPump } from "react-icons/fa6";
 import { PiEngineFill } from "react-icons/pi";
 import { GiGearStickPattern } from "react-icons/gi";
 import { BiSolidTachometer } from "react-icons/bi";
+import Link from "next/link";
 
 const CarCard = React.memo(({ car, logo }) => {
-  const defaultImageUrl = "https://ev-database.org/img/auto/Porsche_Taycan_Turbo_S/Porsche_Taycan_Turbo_S-01@2x.jpg";
+  const defaultImageUrl =
+    "https://ev-database.org/img/auto/Porsche_Taycan_Turbo_S/Porsche_Taycan_Turbo_S-01@2x.jpg";
 
-  const settings = useMemo(() => ({
-    dots: false,
-    arrows: false,
-    infinite: car.imageUrl?.length > 1,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    autoplay: true,
-    autoplaySpeed: 5000,
-  }), [car.imageUrl]);
+  const settings = useMemo(
+    () => ({
+      dots: false,
+      arrows: false,
+      infinite: car.imageUrl?.length > 1,
+      speed: 500,
+      slidesToShow: 1,
+      slidesToScroll: 1,
+      autoplay: true,
+      autoplaySpeed: 5000,
+    }),
+    [car.imageUrl]
+  );
 
-  const formattedMileage = useMemo(() => car.mileage.toLocaleString("en-GB"), [car.mileage]);
-  const formattedPrice = useMemo(() => car.price.toLocaleString("en-GB"), [car.price]);
+  const formattedMileage = useMemo(
+    () => car.mileage.toLocaleString("en-GB"),
+    [car.mileage]
+  );
+  const formattedPrice = useMemo(
+    () => car.price.toLocaleString("en-GB"),
+    [car.price]
+  );
 
   return (
     <li className="rounded-md p-4 flex flex-col items-start bg-rose-800 text-gray-200">
@@ -84,8 +95,8 @@ const CarCard = React.memo(({ car, logo }) => {
               </span>
             </div>
           </div>
-          <p className="font-bold text-2xl text-white text-center pt-2">
-            £{formattedPrice}
+          <p className="font-bold text-2xl text-white text-center pt-2 hover:text-rose-500">
+            <a href="tel:07809107655">£{formattedPrice}</a>
           </p>
         </div>
       </div>

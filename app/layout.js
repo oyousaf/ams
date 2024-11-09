@@ -2,6 +2,8 @@ import "./globals.css";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 
+import { SpeedInsights } from '@vercel/speed-insights/next';
+
 export const viewport = {
   width: "device-width",
   initialScale: 1,
@@ -58,6 +60,7 @@ export default function RootLayout({ children }) {
         <div role="main" className="max-w-7xl mx-auto relative">
           <Navbar />
           <main>{children}</main>
+          <SpeedInsights />
           <Footer />
         </div>
       </body>

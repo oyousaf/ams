@@ -14,10 +14,10 @@ const AddCarForm = ({ setCars, fetchCars, setActiveTab }) => {
     engineSize: "",
     transmission: "Automatic",
     mileage: "",
-    images: [], // To hold selected files
+    images: [],
   });
 
-  const [imagePreviews, setImagePreviews] = useState([]); // State to store image previews
+  const [imagePreviews, setImagePreviews] = useState([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -101,7 +101,7 @@ const AddCarForm = ({ setCars, fetchCars, setActiveTab }) => {
         mileage: "",
         images: [],
       });
-      setImagePreviews([]); // Clear the previews after submission
+      setImagePreviews([]);
     } catch (insertError) {
       console.error("Error adding car:", insertError);
       toast.error("Error adding car. Please try again.");

@@ -63,10 +63,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en-gb" className="min-h-full antialiased">
       <head>
-        {/* Meta tags for SEO */}
         <meta name="application-name" content="Ace Motor Sales" />
-
-        {/* Structured Data for Google */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -77,8 +74,8 @@ export default function RootLayout({ children }) {
               url: "https://acemotorsales.uk",
               logo: "/apple-touch-icon.png",
               sameAs: [
-                "https://www.facebook.com/acemotorsales",
-                "https://www.instagram.com/acemotorsales",
+                "https://www.facebook.com/acemotorsales1",
+                "https://www.instagram.com/acemotorsltd",
               ],
             }),
           }}

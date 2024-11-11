@@ -49,8 +49,15 @@ export const gallery = [
   "/forecourt6.jpg",
 ];
 
-
 export const reviews = [
+  {
+    name: "Omar ♔",
+    feedback: `It was a pleasure dealing with AMS! They offered excellent service from start to finish, were attentive to all my needs, and provide a fantastic selection of quality vehicles. Fez was professional, friendly, and knowledgeable. Highly recommended!`,
+  },
+  {
+    name: "Ash X",
+    feedback: `Very pleased with the service from this company! I enquired about the car on Monday and by Wednesday my new car was delivered to my doorstep, with a fresh MOT and a complimentary service. The car is exactly as it was described. Great customer service and good prices too. Highly recommend!`,
+  },
   {
     name: "Taylor Hargreaves",
     feedback:
@@ -84,14 +91,6 @@ export const reviews = [
     name: "Julie Longworth",
     feedback:
       "An absolute gem of a used car dealer. Purchased my fabulous Nissan Juke 3 weeks ago and the service received from Ace Motors has been excellent. Had a little issue with the air-con but was quickly sorted. Many thanks for making this buying experience stress-free and a pleasure - can recommend with confidence.",
-  },
-  {
-    name: "Adil",
-    feedback: `Recently bought an Audi A3 from Ace Motor Sales. Great vehicle at a great price and was a very easy process buying the car. Staff were very accommodating and friendly and went out of their way to help me with anything I needed. Highly recommend buying a car from here and I will definitely be purchasing another in the future!`,
-  },
-  {
-    name: "Khaalid Mulla",
-    feedback: `Great vehicle and exactly as described at a very reasonable price. Fantastic service and vehicle was ready to go. A very smooth process with the paperwork and an overall great purchasing experience with helpful staff. Definitely will be returning to purchase another vehicle in the future. Best of luck to the owner.`,
   },
 ];
 

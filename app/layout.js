@@ -2,7 +2,7 @@ import "./globals.css";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 
-import { SpeedInsights } from '@vercel/speed-insights/next';
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export const viewport = {
   width: "device-width",
@@ -26,6 +26,13 @@ export const metadata = {
     "reliable cars",
     "pre-owned vehicles",
     "car dealership UK",
+    "affordable used cars",
+    "quality used cars",
+    "trusted car dealership",
+    "used car sales Heckmondwike",
+    "West Yorkshire car sales",
+    "pre-owned car dealership",
+    "second-hand cars UK",
   ],
   openGraph: {
     title: "Ace Motor Sales",

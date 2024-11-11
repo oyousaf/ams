@@ -56,7 +56,7 @@ export const reviews = [
   },
   {
     name: "Ash X",
-    feedback: `Very pleased with the service from this company! I enquired about the car on Monday and by Wednesday my new car was delivered to my doorstep, with a fresh MOT and a complimentary service. The car is exactly as it was described. Great customer service and good prices too. Highly recommend!`,
+    feedback: "Very pleased with the service from this company! I enquired about the car on Monday and by Wednesday my new car was delivered to my doorstep, with a fresh MOT and a complimentary service. The car is exactly as it was described. Great customer service and good prices too. Highly recommend!",
   },
   {
     name: "Taylor Hargreaves",

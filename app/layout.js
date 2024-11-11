@@ -1,7 +1,6 @@
 import "./globals.css";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export const viewport = {
@@ -10,7 +9,7 @@ export const viewport = {
 };
 
 export const metadata = {
-  title: "Ace Motor Sales",
+  title: "Ace Motor Sales - Quality Used Cars in Heckmondwike, UK",
   description:
     "Explore a selection of certified, pre-owned vehicles, each thoroughly inspected to ensure top quality, reliability, and performance.",
   icons: {
@@ -35,7 +34,7 @@ export const metadata = {
     "second-hand cars UK",
   ],
   openGraph: {
-    title: "Ace Motor Sales",
+    title: "Ace Motor Sales - Quality Used Cars in Heckmondwike, UK",
     description:
       "Explore certified, pre-owned vehicles with top quality, reliability, and performance.",
     url: "https://acemotorsales.uk",
@@ -53,7 +52,7 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Ace Motor Sales",
+    title: "Ace Motor Sales - Quality Used Cars in Heckmondwike, UK",
     description:
       "Explore certified, pre-owned vehicles with top quality, reliability, and performance.",
     images: ["/hero.jpg"],
@@ -63,6 +62,28 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en-gb" className="min-h-full antialiased">
+      <head>
+        {/* Meta tags for SEO */}
+        <meta name="application-name" content="Ace Motor Sales" />
+
+        {/* Structured Data for Google */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              name: "Ace Motor Sales",
+              url: "https://acemotorsales.uk",
+              logo: "/apple-touch-icon.png",
+              sameAs: [
+                "https://www.facebook.com/acemotorsales",
+                "https://www.instagram.com/acemotorsales",
+              ],
+            }),
+          }}
+        />
+      </head>
       <body className="min-h-screen bg-black/90 text-white">
         <div role="main" className="max-w-7xl mx-auto relative">
           <Navbar />

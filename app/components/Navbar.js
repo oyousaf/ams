@@ -12,9 +12,6 @@ const Navbar = () => {
 
   const toggleMenu = () => setMenuOpen((prev) => !prev);
 
-  // Close menu handler for named function
-  const handleCloseMenu = () => setMenuOpen(false);
-
   // Effect to toggle scroll-lock
   useEffect(() => {
     const body = document.body;
@@ -66,7 +63,7 @@ const Navbar = () => {
                 smooth={true}
                 duration={500}
                 className="text-xl hover:text-rose-600 transition-colors cursor-pointer"
-                onClick={handleCloseMenu}
+                onClick={() => setMenuOpen(false)}
               >
                 {name}
               </ScrollLink>
@@ -90,7 +87,7 @@ const Navbar = () => {
                   smooth={true}
                   duration={500}
                   className="text-3xl hover:text-rose-600 transition-colors ease-in-out duration-300 uppercase cursor-pointer"
-                  onClick={handleCloseMenu}
+                  onClick={() => setMenuOpen(false)}
                 >
                   {name}
                 </ScrollLink>

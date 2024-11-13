@@ -1,9 +1,16 @@
 "use client";
 
-import { Link as ScrollLink } from "react-scroll";
 import { FaArrowDown } from "react-icons/fa";
 
 const HeroSection = () => {
+  // Function to handle smooth scroll to the About section
+  const handleScrollToAbout = () => {
+    const aboutSection = document.getElementById("about");
+    if (aboutSection) {
+      aboutSection.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <section
       id="hero"
@@ -21,15 +28,15 @@ const HeroSection = () => {
           performance.
         </p>
       </div>
-      <ScrollLink
-        to="about"
-        smooth={true}
-        duration={500}
+
+      {/* Scroll Button */}
+      <button
+        onClick={handleScrollToAbout}
         className="z-20 mt-4 flex items-center justify-center bg-rose-900 text-white hover:bg-rose-700 p-4 rounded-full transition duration-200 cursor-pointer"
         aria-label="Scroll to About section"
       >
         <FaArrowDown className="animate-bounce text-3xl" />
-      </ScrollLink>
+      </button>
     </section>
   );
 };

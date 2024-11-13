@@ -1,16 +1,23 @@
-"use client";
+"use client"
 
 import { useState, useEffect } from "react";
 import { RiMenu3Line, RiCloseLine } from "react-icons/ri";
-import { Link as ScrollLink } from "react-scroll";
-import { navLinks, socialLinks } from "../constants/index";
 import Image from "next/image";
+import { navLinks, socialLinks } from "../constants/index";
 import logo from "@/public/logo.png";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const toggleMenu = () => setMenuOpen((prev) => !prev);
+
+  const handleScroll = (sectionId) => {
+    const section = document.getElementById(sectionId);
+    if (section) {
+      section.scrollIntoView({ behavior: "smooth" });
+      setMenuOpen(false);
+    }
+  };
 
   // Effect to toggle scroll-lock
   useEffect(() => {
@@ -27,19 +34,13 @@ const Navbar = () => {
   return (
     <nav className="bg-black text-white fixed top-0 left-0 right-0 p-4 z-50">
       <div className="flex container mx-auto justify-between items-center">
-        <ScrollLink
-          to="hero"
-          smooth={true}
-          duration={500}
-          className="cursor-pointer"
-        >
-          <Image
-            src={logo}
-            alt="logo"
-            priority={true}
-            className="w-[150px] md:w-[200px]"
-          />
-        </ScrollLink>
+        <Image
+          src={logo}
+          alt="logo"
+          priority={true}
+          className="w-[150px] md:w-[200px] cursor-pointer"
+          onClick={() => handleScroll("hero")}
+        />
 
         <button
           onClick={toggleMenu}
@@ -58,15 +59,12 @@ const Navbar = () => {
         <ul className="hidden md:flex space-x-4">
           {navLinks.map(({ id, href, name }) => (
             <li key={id}>
-              <ScrollLink
-                to={href}
-                smooth={true}
-                duration={500}
+              <button
+                onClick={() => handleScroll(href)}
                 className="text-xl hover:text-rose-600 transition-colors cursor-pointer"
-                onClick={() => setMenuOpen(false)}
               >
                 {name}
-              </ScrollLink>
+              </button>
             </li>
           ))}
         </ul>
@@ -82,15 +80,12 @@ const Navbar = () => {
           <ul className="space-y-8 text-center">
             {navLinks.map(({ id, href, name }) => (
               <li key={id}>
-                <ScrollLink
-                  to={href}
-                  smooth={true}
-                  duration={500}
+                <button
+                  onClick={() => handleScroll(href)}
                   className="text-3xl hover:text-rose-600 transition-colors ease-in-out duration-300 uppercase cursor-pointer"
-                  onClick={() => setMenuOpen(false)}
                 >
                   {name}
-                </ScrollLink>
+                </button>
               </li>
             ))}
           </ul>

@@ -51,6 +51,11 @@ export const gallery = [
 
 export const reviews = [
   {
+    name: "Paul Coates",
+    feedback:
+      "I bought a BMW 3 series last week and the car is spot on. The garage is friendly, helpful and great to deal with. Would totally recommend.",
+  },
+  {
     name: "Omar ♔",
     feedback: `It was a pleasure dealing with AMS! They offered excellent service from start to finish, were attentive to all my needs, and provide a fantastic selection of quality vehicles. Fez was professional, friendly, and knowledgeable. Highly recommend!`,
   },
@@ -86,11 +91,6 @@ export const reviews = [
     name: "Eddie Kahoro",
     feedback:
       "Very professional, helpful and genuine. Made sure that all our questions were answered before we chose to buy. Very reliable and polite.",
-  },
-  {
-    name: "Julie Longworth",
-    feedback:
-      "An absolute gem of a used car dealer. Purchased my fabulous Nissan Juke 3 weeks ago and the service received from Ace Motors has been excellent. Had a little issue with the air-con but was quickly sorted. Many thanks for making this buying experience stress-free and a pleasure - can recommend with confidence.",
   },
 ];
 

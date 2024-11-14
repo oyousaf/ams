@@ -230,6 +230,7 @@ export const carLogos = {
   tesla: <SiTesla className="w-[3rem] h-[3rem]" />,
   toyota: <SiToyota className="w-[3rem] h-[3rem]" />,
   volkswagen: <SiVolkswagen className="w-[3rem] h-[3rem]" />,
+  vw: <SiVolkswagen className="w-[3rem] h-[3rem]" />,
   volvo: <SiVolvo className="w-[3rem] h-[3rem]" />,
   vauxhall: <SiVauxhall className="w-[3rem] h-[3rem]" />,
 };

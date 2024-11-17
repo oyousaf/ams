@@ -9,7 +9,7 @@ export const viewport = {
 };
 
 export const metadata = {
-  title: "Ace Motor Sales - Quality Used Cars in Heckmondwike, UK",
+  title: "Ace Motor Sales - Quality Used Cars",
   description:
     "Explore a selection of certified, pre-owned vehicles, each thoroughly inspected to ensure top quality, reliability, and performance.",
   icons: {

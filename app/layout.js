@@ -34,7 +34,7 @@ export const metadata = {
     "second-hand cars UK",
   ],
   openGraph: {
-    title: "Ace Motor Sales - Quality Used Cars in Heckmondwike, UK",
+    title: "Ace Motor Sales - Quality Used Cars | Nationwide Delivery",
     description:
       "Explore certified, pre-owned vehicles with top quality, reliability, and performance.",
     url: "https://acemotorsales.uk",
@@ -52,7 +52,7 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Ace Motor Sales - Quality Used Cars in Heckmondwike, UK",
+    title: "Ace Motor Sales - Quality Used Cars | Nationwide Delivery",
     description:
       "Explore certified, pre-owned vehicles with top quality, reliability, and performance.",
     images: ["/hero.jpg"],

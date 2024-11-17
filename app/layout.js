@@ -64,6 +64,7 @@ export default function RootLayout({ children }) {
     <html lang="en-gb" className="min-h-full antialiased">
       <head>
         <meta name="application-name" content="Ace Motor Sales" />
+        <link rel="canonical" href="https://acemotorsales.uk" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

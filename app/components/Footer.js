@@ -8,6 +8,7 @@ const ContactInfo = () => (
       © {new Date().getFullYear()} Ace Motor Sales
     </h4>
     <p className="text-lg">4 Westgate, Heckmondwike, WF16 0EH</p>
+    <p className="text-lg">Available daily, 9am - 8pm</p>
     <Link
       href="tel:07809107655"
       className="text-2xl font-bold mt-1 hover:text-rose-600 transition-all ease-in-out duration-300"

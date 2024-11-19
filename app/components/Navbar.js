@@ -34,13 +34,17 @@ const Navbar = () => {
     <nav className="bg-black text-white fixed top-0 left-0 right-0 p-4 z-50 shadow-md">
       <div className="container mx-auto flex items-center justify-between">
         {/* Logo */}
-        <Image
-          src={logo}
-          alt="logo"
-          priority={true}
-          className="w-[120px] sm:w-[150px] md:w-[200px] cursor-pointer"
+        <div
+          className="cursor-pointer"
           onClick={() => handleScroll("hero")}
-        />
+        >
+          <Image
+            src={logo}
+            alt="logo"
+            priority={true}
+            className="w-[120px] sm:w-[150px] md:w-[200px]"
+          />
+        </div>
 
         {/* Desktop & Tablet Menu */}
         <ul className="hidden md:flex space-x-6 lg:space-x-8">
@@ -98,7 +102,7 @@ const Navbar = () => {
               <li key={id}>
                 <button
                   onClick={() => handleScroll(href)}
-                  className="text-2xl sm:text-3xl hover:text-rose-600 transition-colors duration-300 ease-in-out uppercase cursor-pointer"
+                  className="text-3xl hover:text-rose-600 transition-colors duration-300 ease-in-out uppercase cursor-pointer"
                 >
                   {name}
                 </button>

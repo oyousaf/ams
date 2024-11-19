@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useState, useEffect } from "react";
 import { RiMenu3Line, RiCloseLine } from "react-icons/ri";
@@ -19,7 +19,6 @@ const Navbar = () => {
     }
   };
 
-  // Effect to toggle scroll-lock
   useEffect(() => {
     const body = document.body;
     menuOpen
@@ -32,16 +31,47 @@ const Navbar = () => {
   }, [menuOpen]);
 
   return (
-    <nav className="bg-black text-white fixed top-0 left-0 right-0 p-4 z-50">
-      <div className="flex container mx-auto justify-between items-center">
+    <nav className="bg-black text-white fixed top-0 left-0 right-0 p-4 z-50 shadow-md">
+      <div className="container mx-auto flex items-center justify-between">
+        {/* Logo */}
         <Image
           src={logo}
           alt="logo"
           priority={true}
-          className="w-[150px] md:w-[200px] cursor-pointer"
+          className="w-[120px] sm:w-[150px] md:w-[200px] cursor-pointer"
           onClick={() => handleScroll("hero")}
         />
 
+        {/* Desktop & Tablet Menu */}
+        <ul className="hidden md:flex space-x-6 lg:space-x-8">
+          {navLinks.map(({ id, href, name }) => (
+            <li key={id}>
+              <button
+                onClick={() => handleScroll(href)}
+                className="text-xl lg:text-2xl hover:text-rose-600 transition-colors duration-300 ease-in-out cursor-pointer"
+              >
+                {name}
+              </button>
+            </li>
+          ))}
+        </ul>
+
+        {/* Social Media Icons (Desktop & Tablet) */}
+        <div className="hidden md:flex space-x-4 lg:space-x-6">
+          {socialLinks.map(({ id, href, icon }) => (
+            <a
+              key={id}
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-rose-600 transition-colors duration-300 ease-in-out"
+            >
+              {icon}
+            </a>
+          ))}
+        </div>
+
+        {/* Mobile Menu Button */}
         <button
           onClick={toggleMenu}
           className="text-white md:hidden z-10 focus:outline-none"
@@ -54,23 +84,9 @@ const Navbar = () => {
             <RiMenu3Line className="text-4xl" />
           )}
         </button>
-
-        {/* Desktop Menu */}
-        <ul className="hidden md:flex space-x-4">
-          {navLinks.map(({ id, href, name }) => (
-            <li key={id}>
-              <button
-                onClick={() => handleScroll(href)}
-                className="text-xl hover:text-rose-600 transition-colors cursor-pointer"
-              >
-                {name}
-              </button>
-            </li>
-          ))}
-        </ul>
       </div>
 
-      {/* Full-Screen Mobile Menu */}
+      {/* Mobile Full-Screen Menu */}
       <div
         className={`fixed inset-0 bg-black flex flex-col transition-transform duration-300 ease-in-out transform ${
           menuOpen ? "translate-x-0" : "translate-x-full"
@@ -82,7 +98,7 @@ const Navbar = () => {
               <li key={id}>
                 <button
                   onClick={() => handleScroll(href)}
-                  className="text-3xl hover:text-rose-600 transition-colors ease-in-out duration-300 uppercase cursor-pointer"
+                  className="text-2xl sm:text-3xl hover:text-rose-600 transition-colors duration-300 ease-in-out uppercase cursor-pointer"
                 >
                   {name}
                 </button>
@@ -91,10 +107,16 @@ const Navbar = () => {
           </ul>
         </div>
 
-        {/* Social Media Icons */}
+        {/* Social Media Icons (Mobile) */}
         <div className="flex space-x-6 mb-4 justify-center">
           {socialLinks.map(({ id, href, icon }) => (
-            <a key={id} href={href} target="_blank" rel="noopener noreferrer">
+            <a
+              key={id}
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-rose-600 transition-colors duration-300 ease-in-out"
+            >
               {icon}
             </a>
           ))}

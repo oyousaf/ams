@@ -16,12 +16,11 @@ const ContactInfo = () => (
       © {new Date().getFullYear()} Ace Motor Sales
     </h4>
     <p className="text-lg">4 Westgate, Heckmondwike, WF16 0EH</p>
-    <p className="text-lg">Available daily, 9am - 8pm</p>
+    <p className="text-lg">Available daily from 9:00 am to 8:00 pm</p>
 
-    {/* Adding shake effect on hover */}
     <motion.div
       whileHover={{
-        rotate: [0, -5, 5, -5, 5, 0], // Shake effect
+        rotate: [0, -5, 5, -5, 5, 0],
         transition: { repeat: Infinity, duration: 0.4 },
       }}
     >

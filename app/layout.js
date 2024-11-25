@@ -70,14 +70,33 @@ export default function RootLayout({ children }) {
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               "@context": "https://schema.org",
-              "@type": "Organization",
+              "@type": "CarDealer",
               name: "Ace Motor Sales",
+              alternateName: "Ace Motor Sales Ltd",
               url: "https://acemotorsales.uk",
               logo: "/apple-touch-icon.png",
+              image: "/hero.jpg",
+              description:
+                "Explore certified, pre-owned vehicles with top quality, reliability, and performance.",
+              address: {
+                "@type": "PostalAddress",
+                streetAddress: "4 Westgate",
+                addressLocality: "Heckmondwike",
+                addressRegion: "West Yorkshire",
+                postalCode: "WF16 0EH",
+                addressCountry: "UK",
+              },
+              telephone: "+447809107655",
               sameAs: [
                 "https://www.facebook.com/acemotorsales1",
                 "https://www.instagram.com/acemotorsltd",
               ],
+              openingHours: "Mo-Su 09:00-20:00",
+              geo: {
+                "@type": "GeoCoordinates",
+                latitude: 53.70825741357984,
+                longitude: -1.6782300556791774,
+              },
             }),
           }}
         />

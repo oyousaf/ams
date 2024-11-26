@@ -33,8 +33,12 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #be123c;
+  background-color: #9f1239;
   border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #be123c; 
 }
 
 ::-webkit-scrollbar-track {

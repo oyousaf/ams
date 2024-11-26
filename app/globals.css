@@ -17,13 +17,28 @@
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: 'GeistMono', monospace;
+  font-family: "GeistMono", monospace;
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #be123c;
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #000;
 }
 
 /* React-Slick */

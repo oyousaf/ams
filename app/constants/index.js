@@ -35,7 +35,7 @@ export const socialLinks = [
     id: 4,
     href: "tel:07809107655",
     icon: (
-      <FaPhone className="text-3xl hover:text-rose-600 transition-all ease-in-out duration-300" />
+      <FaPhone className="text-3xl hover:text-rose-700 transition-all ease-in-out duration-300" />
     ),
   },
 ];

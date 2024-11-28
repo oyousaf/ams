@@ -109,7 +109,7 @@ const Navbar = () => {
         transition={{
           type: "spring",
           stiffness: 200,
-          damping: 30, // Smooth transition with damping
+          damping: 30,
         }}
       >
         <div className="flex flex-col items-center justify-center flex-grow">

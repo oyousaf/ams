@@ -24,10 +24,14 @@ const CarCard = React.memo(({ car, logo }) => {
     [car.imageUrl]
   );
 
-  const formattedMileage = useMemo(
-    () => car.mileage.toLocaleString("en-GB"),
-    [car.mileage]
-  );
+  const formattedMileage = useMemo(() => {
+    if (car.mileage >= 1000) {
+      return `${(car.mileage / 1000).toFixed(0)}k`;
+    } else {
+      return car.mileage.toLocaleString("en-GB");
+    }
+  }, [car.mileage]);
+
   const formattedPrice = useMemo(
     () => car.price.toLocaleString("en-GB"),
     [car.price]

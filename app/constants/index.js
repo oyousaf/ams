@@ -51,6 +51,11 @@ export const gallery = [
 
 export const reviews = [
   {
+    name: "Hamza Nawaz",
+    feedback:
+      "I bought a stunning BMW from Faisal - very easy process definitely recommend to everyone to come here to buy a car; great customer service too! Look forward to coming again in the future!",
+  },
+  {
     name: "Paul Coates",
     feedback:
       "I bought a BMW 3 series last week and the car is spot on. The garage is friendly, helpful and great to deal with. Would totally recommend.",
@@ -86,11 +91,6 @@ export const reviews = [
     name: "VEYGO GROUPS",
     feedback:
       "Brilliant customer service by Fez! Brilliant deals; lovely motors so get your selves down!!!",
-  },
-  {
-    name: "Eddie Kahoro",
-    feedback:
-      "Very professional, helpful and genuine. Made sure that all our questions were answered before we chose to buy. Very reliable and polite.",
   },
 ];
 

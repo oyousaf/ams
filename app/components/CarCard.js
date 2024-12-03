@@ -73,13 +73,13 @@ const CarCard = React.memo(({ car, logo }) => {
           <div className="flex justify-between mb-4">
             <div className="flex flex-col items-center mx-auto">
               <PiEngineFill size={40} className="mb-2" />
-              <span className="font-bold text-xl text-rose-300">
+              <span className="font-bold text-xl text-rose-200">
                 {car.engineType}
               </span>
             </div>
             <div className="flex flex-col items-center mx-auto">
               <FaGasPump size={40} className="mb-2" />
-              <span className="font-bold text-xl text-rose-300">
+              <span className="font-bold text-xl text-rose-200">
                 {car.engineSize}L
               </span>
             </div>
@@ -87,13 +87,13 @@ const CarCard = React.memo(({ car, logo }) => {
           <div className="flex justify-between mb-4">
             <div className="flex flex-col items-center mx-auto">
               <GiGearStickPattern size={40} className="mb-2" />
-              <span className="font-bold text-xl text-rose-300">
+              <span className="font-bold text-xl text-rose-200">
                 {car.transmission}
               </span>
             </div>
             <div className="flex flex-col items-center mx-auto">
               <BiSolidTachometer size={40} className="mb-2" />
-              <span className="font-bold text-xl text-rose-300">
+              <span className="font-bold text-xl text-rose-200">
                 {formattedMileage} Miles
               </span>
             </div>

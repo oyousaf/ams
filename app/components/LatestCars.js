@@ -37,6 +37,8 @@ const LatestCars = () => {
           return a.price - b.price;
         case "priceHigh":
           return b.price - a.price;
+        case "mileage":
+          return a.mileage - b.mileage;
         case "oldest":
           return new Date(a.createdAt) - new Date(b.createdAt);
         case "newest":
@@ -73,6 +75,7 @@ const LatestCars = () => {
         >
           <option value="newest">Newest</option>
           <option value="oldest">Oldest</option>
+          <option value="mileage">Mileage</option>
           <option value="priceLow">Price: Low to High</option>
           <option value="priceHigh">Price: High to Low</option>
         </select>

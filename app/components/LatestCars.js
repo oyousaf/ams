@@ -75,7 +75,7 @@ const LatestCars = () => {
           id="sort"
           value={sortOption}
           onChange={handleSortChange}
-          className="border border-rose-700 bg-rose-800 md:text-xl font-bold rounded-lg p-2 shadow-md focus:outline-none focus:ring-2 focus:ring-rose-600"
+          className="text-center border border-rose-700 bg-rose-800 md:text-xl font-bold rounded-lg p-2 shadow-md focus:outline-none focus:ring-2 focus:ring-rose-600"
         >
           <option value="newest">Newest</option>
           <option value="oldest">Oldest</option>

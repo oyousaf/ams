@@ -39,6 +39,10 @@ const LatestCars = () => {
           return b.price - a.price;
         case "mileage":
           return a.mileage - b.mileage;
+        case "engineL":
+          return a.engineSize - b.engineSize;
+        case "engineH":
+          return b.engineSize - a.engineSize;
         case "oldest":
           return new Date(a.createdAt) - new Date(b.createdAt);
         case "newest":
@@ -75,6 +79,8 @@ const LatestCars = () => {
         >
           <option value="newest">Newest</option>
           <option value="oldest">Oldest</option>
+          <option value="engineL">Engine: Low to High</option>
+          <option value="engineH">Engine: High to Low</option>
           <option value="mileage">Mileage</option>
           <option value="priceLow">Price: Low to High</option>
           <option value="priceHigh">Price: High to Low</option>

@@ -41,9 +41,9 @@ const LatestCars = () => {
           return b.price - a.price;
         case "mileage":
           return a.mileage - b.mileage;
-        case "engineL":
+        case "engineLow":
           return a.engineSize - b.engineSize;
-        case "engineH":
+        case "engineHigh":
           return b.engineSize - a.engineSize;
         case "oldest":
           return new Date(a.createdAt) - new Date(b.createdAt);
@@ -83,7 +83,7 @@ const LatestCars = () => {
           </span>
         </button>
         {isDropdownOpen && (
-          <ul className="absolute w-64 mt-2 border border-rose-700 bg-rose-800 rounded-lg shadow-lg z-10">
+          <ul className="absolute w-64 mt-2 text-center border border-rose-700 bg-rose-800 rounded-lg shadow-lg z-10">
             <li
               onClick={() => handleSortChange("newest")}
               className="p-2 cursor-pointer hover:bg-rose-100 hover:text-rose-700 rounded-md flex items-center"
@@ -97,32 +97,28 @@ const LatestCars = () => {
               Oldest
             </li>
             <li
-              onClick={() => handleSortChange("engineL")}
+              onClick={() => handleSortChange("engineLow")}
               className="p-2 cursor-pointer hover:bg-rose-100 hover:text-rose-700 rounded-md flex items-center"
             >
               Engine: Ascending{" "}
-              <FaArrowUp className="ml-auto transition-transform duration-300 transform hover:scale-125 hover:text-rose-700" />
             </li>
             <li
-              onClick={() => handleSortChange("engineH")}
+              onClick={() => handleSortChange("engineHigh")}
               className="p-2 cursor-pointer hover:bg-rose-100 hover:text-rose-700 rounded-md flex items-center"
             >
               Engine: Descending{" "}
-              <FaArrowDown className="ml-auto transition-transform duration-300 transform hover:scale-125 hover:text-rose-700" />
             </li>
             <li
               onClick={() => handleSortChange("priceLow")}
               className="p-2 cursor-pointer hover:bg-rose-100 hover:text-rose-700 rounded-md flex items-center"
             >
               Price: Ascending{" "}
-              <FaArrowUp className="ml-auto transition-transform duration-300 transform hover:scale-125 hover:text-rose-700" />
             </li>
             <li
               onClick={() => handleSortChange("priceHigh")}
               className="p-2 cursor-pointer hover:bg-rose-100 hover:text-rose-700 rounded-md flex items-center"
             >
               Price: Descending{" "}
-              <FaArrowDown className="ml-auto transition-transform duration-300 transform hover:scale-125 hover:text-rose-700" />
             </li>
             <li
               onClick={() => handleSortChange("mileage")}

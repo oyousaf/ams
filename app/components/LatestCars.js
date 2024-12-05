@@ -61,7 +61,6 @@ const LatestCars = () => {
     setDropdownOpen(false);
   };
 
-  // Function to replace "Low" with FaArrowUp and "High" with FaArrowDown
   const getSortLabel = (option) => {
     if (option.includes("Low")) {
       return (

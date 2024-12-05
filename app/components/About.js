@@ -14,24 +14,24 @@ const About = () => {
       icon: FaHandshake,
       title: "Customer Satisfaction",
       description:
-        "Exceptional service is our priority. We ensure a seamless experience and satisfaction for every client, with nationwide door-to-door delivery.",
+        "We prioritise exceptional service, ensuring a seamless experience for every client. Our nationwide door-to-door delivery provides ultimate convenience.",
     },
     {
       icon: FaCar,
       title: "Quality Vehicles",
       description:
-        "Our certified, pre-owned vehicles undergo rigorous inspection, ensuring they meet the highest standards of quality and reliability.",
+        "Our meticulously inspected, certified pre-owned vehicles uphold the highest standards of quality, durability, and reliability, offering peace of mind to every customer.",
     },
     {
       icon: FaHistory,
       title: `Established ${yearsEstablished} Years`,
-      description: `Since ${establishedYear}, we’ve built a reputation for trust and reliability, serving customers with integrity and care.`,
+      description: `Since our inception in ${establishedYear}, we have built a reputation for trust, dependability, and a commitment to providing outstanding customer care.`,
     },
     {
       icon: FaShieldAlt,
       title: "Flexibility",
       description:
-        "Enjoy peace of mind with flexible warranty options, accessible financing, and the convenience of reserving any car for £99. Plus, part-exchange or sell your car with us.",
+        "Benefit from flexible warranty options, accessible financing, and the convenience of reserving any vehicle for just £99. We also offer part-exchange and car selling services for your ease.",
     },
   ];
 
@@ -70,7 +70,9 @@ const About = () => {
           {gallery.map((src, index) => (
             <motion.div
               key={index}
-              className={`flex justify-center ${index === 1 || index === 4 ? "md:col-span-2" : ""}`}
+              className={`flex justify-center ${
+                index === 1 || index === 4 ? "md:col-span-2" : ""
+              }`}
               variants={{
                 hidden: { opacity: 0, x: index % 2 === 0 ? -100 : 100 },
                 visible: { opacity: 1, x: 0 },

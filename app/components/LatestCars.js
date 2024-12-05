@@ -61,6 +61,25 @@ const LatestCars = () => {
     setDropdownOpen(false);
   };
 
+  // Function to replace "Low" with FaArrowUp and "High" with FaArrowDown
+  const getSortLabel = (option) => {
+    if (option.includes("Low")) {
+      return (
+        <>
+          {option.replace("Low", "")} <FaArrowUp className="inline" />
+        </>
+      );
+    }
+    if (option.includes("High")) {
+      return (
+        <>
+          {option.replace("High", "")} <FaArrowDown className="inline" />
+        </>
+      );
+    }
+    return option.replace(/([a-z])([A-Z])/g, "$1 $2");
+  };
+
   return (
     <section className="p-8" id="cars">
       <h2 className="text-4xl md:text-5xl font-bold text-center mb-4">
@@ -78,9 +97,7 @@ const LatestCars = () => {
           onClick={toggleDropdown}
         >
           Sort By:{" "}
-          <span className="capitalize">
-            {sortOption.replace(/([a-z])([A-Z])/g, "$1 $2")}
-          </span>
+          <span className="capitalize">{getSortLabel(sortOption)}</span>
         </button>
         {isDropdownOpen && (
           <ul className="absolute w-64 mt-2 text-center border border-rose-700 bg-rose-800 rounded-lg shadow-lg z-10">
@@ -100,25 +117,25 @@ const LatestCars = () => {
               onClick={() => handleSortChange("engineLow")}
               className="p-2 cursor-pointer hover:bg-rose-100 hover:text-rose-700 rounded-md flex items-center"
             >
-              Engine: Ascending{" "}
+              Engine: Ascending
             </li>
             <li
               onClick={() => handleSortChange("engineHigh")}
               className="p-2 cursor-pointer hover:bg-rose-100 hover:text-rose-700 rounded-md flex items-center"
             >
-              Engine: Descending{" "}
+              Engine: Descending
             </li>
             <li
               onClick={() => handleSortChange("priceLow")}
               className="p-2 cursor-pointer hover:bg-rose-100 hover:text-rose-700 rounded-md flex items-center"
             >
-              Price: Ascending{" "}
+              Price: Ascending
             </li>
             <li
               onClick={() => handleSortChange("priceHigh")}
               className="p-2 cursor-pointer hover:bg-rose-100 hover:text-rose-700 rounded-md flex items-center"
             >
-              Price: Descending{" "}
+              Price: Descending
             </li>
             <li
               onClick={() => handleSortChange("mileage")}

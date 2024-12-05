@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useState, useEffect } from "react";
 import { RiMenu3Line, RiCloseLine } from "react-icons/ri";
@@ -113,7 +113,7 @@ const Navbar = () => {
         }}
       >
         <div className="flex flex-col items-center justify-center flex-grow">
-          <ul className="space-y-8 text-center">
+          <ul className="space-y-8 text-center flex flex-col items-center">
             {navLinks.map(({ id, href, name }) => (
               <motion.li
                 key={id}
@@ -123,7 +123,7 @@ const Navbar = () => {
               >
                 <button
                   onClick={() => handleScroll(href)}
-                  className="text-3xl hover:text-rose-600 transition-colors duration-300 ease-in-out uppercase cursor-pointer"
+                  className="text-5xl font-bold hover:text-rose-600 transition-colors duration-300 ease-in-out uppercase cursor-pointer"
                 >
                   {name}
                 </button>
@@ -133,7 +133,7 @@ const Navbar = () => {
         </div>
 
         {/* Social Media Icons (Mobile) */}
-        <div className="flex space-x-6 mb-4 justify-center">
+        <div className="flex space-x-6 mb-20 justify-center">
           {socialLinks.map(({ id, href, icon }) => (
             <motion.a
               key={id}

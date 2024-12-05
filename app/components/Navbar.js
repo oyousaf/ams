@@ -94,9 +94,9 @@ const Navbar = () => {
           aria-label="Toggle navigation menu"
         >
           {menuOpen ? (
-            <RiCloseLine className="text-4xl" />
+            <RiCloseLine className="text-5xl" />
           ) : (
-            <RiMenu3Line className="text-4xl" />
+            <RiMenu3Line className="text-5xl" />
           )}
         </button>
       </div>

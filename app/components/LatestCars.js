@@ -79,11 +79,11 @@ const LatestCars = () => {
         >
           <option value="newest">Newest</option>
           <option value="oldest">Oldest</option>
+          <option value="engineL">Engine: Ascending</option>
+          <option value="engineH">Engine: Decending</option>
           <option value="mileage">Mileage</option>
-          <option value="engineL">Engine: Low to High</option>
-          <option value="engineH">Engine: High to Low</option>
-          <option value="priceLow">Price: Low to High</option>
-          <option value="priceHigh">Price: High to Low</option>
+          <option value="priceLow">Price: Ascending</option>
+          <option value="priceHigh">Price: Descending</option>
         </select>
       </motion.div>
 

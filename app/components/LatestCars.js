@@ -4,12 +4,14 @@ import { carLogos, carMakes } from "../constants";
 import CarCard from "./CarCard";
 import { motion } from "framer-motion";
 import LoadingSpinner from "../dashboard/LoadingSpinner";
+import { FaArrowUp, FaArrowDown } from "react-icons/fa";
 
 const LatestCars = () => {
   const [cars, setCars] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [sortOption, setSortOption] = useState("newest");
+  const [isDropdownOpen, setDropdownOpen] = useState(false);
 
   useEffect(() => {
     const fetchCars = async () => {
@@ -52,9 +54,12 @@ const LatestCars = () => {
     });
   }, [cars, sortOption]);
 
-  const handleSortChange = useCallback((e) => {
-    setSortOption(e.target.value);
-  }, []);
+  const toggleDropdown = () => setDropdownOpen((prev) => !prev);
+
+  const handleSortChange = (value) => {
+    setSortOption(value);
+    setDropdownOpen(false);
+  };
 
   return (
     <section className="p-8" id="cars">
@@ -63,28 +68,70 @@ const LatestCars = () => {
       </h2>
 
       <motion.div
-        className="flex items-center justify-center mb-4 mt-8"
+        className="relative flex items-center justify-center mb-4 mt-8"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
       >
-        <label htmlFor="sort" className="mr-2 text-lg md:text-2xl">
-          Sort By:
-        </label>
-        <select
-          id="sort"
-          value={sortOption}
-          onChange={handleSortChange}
-          className="text-center border border-rose-700 bg-rose-800 md:text-xl font-bold rounded-lg p-2 shadow-md focus:outline-none focus:ring-2 focus:ring-rose-600"
+        <button
+          className="w-64 text-center border border-rose-700 bg-rose-800 text-white md:text-xl font-bold rounded-lg p-3 shadow-md focus:outline-none focus:ring-2 focus:ring-rose-600"
+          onClick={toggleDropdown}
         >
-          <option value="newest">Newest</option>
-          <option value="oldest">Oldest</option>
-          <option value="engineL">Engine: Ascending</option>
-          <option value="engineH">Engine: Decending</option>
-          <option value="mileage">Mileage</option>
-          <option value="priceLow">Price: Ascending</option>
-          <option value="priceHigh">Price: Descending</option>
-        </select>
+          Sort By:{" "}
+          <span className="capitalize">
+            {sortOption.replace(/([a-z])([A-Z])/g, "$1 $2")}
+          </span>
+        </button>
+        {isDropdownOpen && (
+          <ul className="absolute w-64 mt-2 border border-rose-700 bg-rose-800 rounded-lg shadow-lg z-10">
+            <li
+              onClick={() => handleSortChange("newest")}
+              className="p-2 cursor-pointer hover:bg-rose-100 hover:text-rose-700 rounded-md flex items-center"
+            >
+              Newest
+            </li>
+            <li
+              onClick={() => handleSortChange("oldest")}
+              className="p-2 cursor-pointer hover:bg-rose-100 hover:text-rose-700 rounded-md flex items-center"
+            >
+              Oldest
+            </li>
+            <li
+              onClick={() => handleSortChange("engineL")}
+              className="p-2 cursor-pointer hover:bg-rose-100 hover:text-rose-700 rounded-md flex items-center"
+            >
+              Engine: Ascending{" "}
+              <FaArrowUp className="ml-auto transition-transform duration-300 transform hover:scale-125 hover:text-rose-700" />
+            </li>
+            <li
+              onClick={() => handleSortChange("engineH")}
+              className="p-2 cursor-pointer hover:bg-rose-100 hover:text-rose-700 rounded-md flex items-center"
+            >
+              Engine: Descending{" "}
+              <FaArrowDown className="ml-auto transition-transform duration-300 transform hover:scale-125 hover:text-rose-700" />
+            </li>
+            <li
+              onClick={() => handleSortChange("priceLow")}
+              className="p-2 cursor-pointer hover:bg-rose-100 hover:text-rose-700 rounded-md flex items-center"
+            >
+              Price: Ascending{" "}
+              <FaArrowUp className="ml-auto transition-transform duration-300 transform hover:scale-125 hover:text-rose-700" />
+            </li>
+            <li
+              onClick={() => handleSortChange("priceHigh")}
+              className="p-2 cursor-pointer hover:bg-rose-100 hover:text-rose-700 rounded-md flex items-center"
+            >
+              Price: Descending{" "}
+              <FaArrowDown className="ml-auto transition-transform duration-300 transform hover:scale-125 hover:text-rose-700" />
+            </li>
+            <li
+              onClick={() => handleSortChange("mileage")}
+              className="p-2 cursor-pointer hover:bg-rose-100 hover:text-rose-700 rounded-md flex items-center"
+            >
+              Mileage
+            </li>
+          </ul>
+        )}
       </motion.div>
 
       {loading && (
@@ -119,7 +166,6 @@ const LatestCars = () => {
         </motion.p>
       )}
 
-      {/* Cars grid with lazy loading and hover effect */}
       {!loading && cars.length > 0 && (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 transition-all duration-300">
           {sortedCars.map((car) => {

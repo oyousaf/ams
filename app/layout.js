@@ -52,6 +52,7 @@ export const metadata = {
       "Explore certified, pre-owned vehicles with top quality, reliability, and performance.",
     images: ["/hero.jpg"],
   },
+  canonicalUrl: "https://acemotorsales.uk"
 };
 
 const structuredData = {
@@ -59,7 +60,7 @@ const structuredData = {
   "@type": "CarDealer",
   name: "Ace Motor Sales",
   alternateName: "Ace Motor Sales Ltd",
-  url: "https://acemotorsales.uk",
+  url: metadata.canonicalUrl,
   logo: "/apple-touch-icon.png",
   image: "/hero.jpg",
   description:

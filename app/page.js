@@ -5,6 +5,7 @@ import About from "./components/About";
 import LatestCars from "./components/LatestCars";
 import Reviews from "./components/Reviews";
 import ScrollToTop from "./components/ScrollToTop";
+
 import Snowfall from "react-snowfall";
 
 const Home = () => {

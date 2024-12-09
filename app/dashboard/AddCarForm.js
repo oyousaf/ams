@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { databases, storage, ID } from "../lib/appwrite";
 import { ToastContainer, toast } from "react-toastify";
 import { AiOutlineLoading } from "react-icons/ai";
+import Image from "next/image"; // Import Image from next/image
 
 const AddCarForm = ({ setCars, fetchCars, setActiveTab }) => {
   const [newCar, setNewCar] = useState({
@@ -238,11 +239,13 @@ const AddCarForm = ({ setCars, fetchCars, setActiveTab }) => {
           {imagePreviews.length > 0 && (
             <div className="flex space-x-4 mt-4">
               {imagePreviews.map((preview, index) => (
-                <img
+                <Image
                   key={index}
                   src={preview}
                   alt={`Preview ${index}`}
-                  className="w-24 h-24 object-cover rounded-md"
+                  className="object-cover rounded-md"
+                  width={96}
+                  height={96}
                 />
               ))}
             </div>

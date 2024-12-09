@@ -7,6 +7,7 @@ export const metadata = {
   title: "Ace Motor Sales - Certified Used Cars with Nationwide Delivery",
   description:
     "Explore a selection of certified, pre-owned vehicles, each thoroughly inspected to ensure top quality, reliability, and performance.",
+  applicationName: "Ace Motor Sales",
   icons: {
     icon: "/favicon.ico",
     apple: "/apple-touch-icon.png",
@@ -90,7 +91,6 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en-gb" className="min-h-full antialiased">
       <head>
-        <meta name="application-name" content="Ace Motor Sales" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}

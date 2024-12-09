@@ -4,7 +4,7 @@ import Footer from "./components/Footer";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export const metadata = {
-  title: "Ace Motor Sales | Quality Used Cars | Nationwide Delivery",
+  title: "Ace Motor Sales - Certified Used Cars with Nationwide Delivery",
   description:
     "Explore a selection of certified, pre-owned vehicles, each thoroughly inspected to ensure top quality, reliability, and performance.",
   icons: {
@@ -29,7 +29,7 @@ export const metadata = {
     "nationwide car delivery",
   ],
   openGraph: {
-    title: "Ace Motor Sales | Quality Used Cars | Nationwide Delivery",
+    title: "Ace Motor Sales - Certified Used Cars with Nationwide Delivery",
     description:
       "Explore certified, pre-owned vehicles with top quality, reliability, and performance.",
     url: "https://acemotorsales.uk",
@@ -47,7 +47,7 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Ace Motor Sales | Quality Used Cars | Nationwide Delivery",
+    title: "Ace Motor Sales - Certified Used Cars with Nationwide Delivery",
     description:
       "Explore certified, pre-owned vehicles with top quality, reliability, and performance.",
     images: ["/hero.jpg"],

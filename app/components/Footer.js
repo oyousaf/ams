@@ -7,16 +7,16 @@ import EnquiryForm from "./EnquiryForm";
 
 const ContactInfo = () => (
   <motion.div
-    className="flex flex-col items-center mt-20 text-center space-y-2"
+    className="flex flex-col items-center mt-20 text-center space-y-2 text-xl"
     initial={{ opacity: 0 }}
     animate={{ opacity: 1 }}
     transition={{ duration: 0.6 }}
   >
-    <h4 className="text-2xl font-semibold">
+    <h4 className="text-3xl font-semibold">
       © {new Date().getFullYear()} Ace Motor Sales
     </h4>
-    <p className="text-lg">4 Westgate, Heckmondwike, WF16 0EH</p>
-    <p className="text-lg">Available daily from 9am to 8pm</p>
+    <p>4 Westgate, Heckmondwike, WF16 0EH</p>
+    <p>Available daily from 9am to 8pm</p>
     <motion.div whileHover={{ rotate: [0, -5, 5, -5, 5, 0], transition: { repeat: Infinity, duration: 0.4 } }}>
       <Link href="tel:07809107655" className="text-2xl font-bold hover:text-rose-600 transition duration-300">
         07809107655

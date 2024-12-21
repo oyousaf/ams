@@ -19,7 +19,7 @@ const HeroSection = () => {
     >
       <div className="absolute inset-0 bg-black/70" />
       <div className="relative z-10 text-white">
-        <p className="text-lg sm:text-xl md:text-2xl max-w-2xl mx-auto mb-6">
+        <p className="text-2xl md:text-3xl max-w-3xl mx-auto mb-6">
           Explore our selection of certified, pre-owned vehicles, each
           thoroughly inspected to ensure top quality, reliability, and
           performance.

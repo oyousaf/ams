@@ -7,12 +7,12 @@ import EnquiryForm from "./EnquiryForm";
 
 const ContactInfo = () => (
   <motion.div
-    className="flex flex-col items-center mt-20 text-center space-y-2 text-xl"
+    className="flex flex-col items-center mt-20 text-center space-y-2 md:text-xl text-lg"
     initial={{ opacity: 0 }}
     animate={{ opacity: 1 }}
     transition={{ duration: 0.6 }}
   >
-    <h4 className="text-3xl font-semibold">
+    <h4 className="md:text-3xl text-2xl font-semibold">
       © {new Date().getFullYear()} Ace Motor Sales
     </h4>
     <p>4 Westgate, Heckmondwike, WF16 0EH</p>

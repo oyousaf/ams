@@ -19,7 +19,7 @@ const Reviews = () => {
             <div className="flex justify-center mb-2">
               <FaQuoteLeft className="text-3xl text-white mt-2" />
             </div>
-            <p className="text-lg pt-2">{feedback}</p>
+            <p className="text-lg pt-2 italic">{feedback}</p>
             <h4 className="text-3xl font-bold mt-4">{name}</h4>
           </motion.div>
         ))}

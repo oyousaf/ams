@@ -92,53 +92,53 @@ const LatestCars = () => {
         transition={{ duration: 0.5 }}
       >
         <button
-          className="w-64 text-center border border-rose-700 bg-rose-800 text-white md:text-xl font-bold rounded-lg p-3 shadow-md focus:outline-none focus:ring-2 focus:ring-rose-600"
+          className="w-64 border border-rose-700 bg-rose-800 text-white md:text-xl font-bold rounded-lg p-3 shadow-md focus:outline-none focus:ring-2 focus:ring-rose-600"
           onClick={toggleDropdown}
         >
           Sort By:{" "}
           <span className="capitalize">{getSortLabel(sortOption)}</span>
         </button>
         {isDropdownOpen && (
-          <ul className="absolute w-64 mt-2 text-center border border-rose-700 bg-rose-800 rounded-lg shadow-lg z-10">
+          <ul className="absolute w-64 mt-2 border border-rose-700 bg-rose-800 rounded-lg shadow-lg z-10">
             <li
               onClick={() => handleSortChange("newest")}
-              className="p-2 cursor-pointer hover:bg-rose-100 hover:text-rose-700 rounded-md flex items-center"
+              className="p-2 cursor-pointer hover:bg-rose-100 hover:text-rose-700 rounded-md flex justify-center"
             >
               Newest
             </li>
             <li
               onClick={() => handleSortChange("oldest")}
-              className="p-2 cursor-pointer hover:bg-rose-100 hover:text-rose-700 rounded-md flex items-center"
+              className="p-2 cursor-pointer hover:bg-rose-100 hover:text-rose-700 rounded-md flex justify-center"
             >
               Oldest
             </li>
             <li
               onClick={() => handleSortChange("engineLow")}
-              className="p-2 cursor-pointer hover:bg-rose-100 hover:text-rose-700 rounded-md flex items-center"
+              className="p-2 cursor-pointer hover:bg-rose-100 hover:text-rose-700 rounded-md flex justify-center"
             >
               Engine: Ascending
             </li>
             <li
               onClick={() => handleSortChange("engineHigh")}
-              className="p-2 cursor-pointer hover:bg-rose-100 hover:text-rose-700 rounded-md flex items-center"
+              className="p-2 cursor-pointer hover:bg-rose-100 hover:text-rose-700 rounded-md flex justify-center"
             >
               Engine: Descending
             </li>
             <li
               onClick={() => handleSortChange("priceLow")}
-              className="p-2 cursor-pointer hover:bg-rose-100 hover:text-rose-700 rounded-md flex items-center"
+              className="p-2 cursor-pointer hover:bg-rose-100 hover:text-rose-700 rounded-md flex justify-center"
             >
               Price: Ascending
             </li>
             <li
               onClick={() => handleSortChange("priceHigh")}
-              className="p-2 cursor-pointer hover:bg-rose-100 hover:text-rose-700 rounded-md flex items-center"
+              className="p-2 cursor-pointer hover:bg-rose-100 hover:text-rose-700 rounded-md flex justify-center"
             >
               Price: Descending
             </li>
             <li
               onClick={() => handleSortChange("mileage")}
-              className="p-2 cursor-pointer hover:bg-rose-100 hover:text-rose-700 rounded-md flex items-center"
+              className="p-2 cursor-pointer hover:bg-rose-100 hover:text-rose-700 rounded-md flex justify-center"
             >
               Mileage
             </li>

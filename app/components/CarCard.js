@@ -70,48 +70,56 @@ const CarCard = React.memo(({ car, logo }) => {
         <h3 className="font-bold text-white text-3xl mb-2">{car.title}</h3>
         <p className="text-gray-300 mb-4 md:text-xl">{car.description}</p>
         <div className="grid grid-cols-1 gap-y-1 text-white md:text-lg mt-8">
-          <div className="flex justify-between mb-4">
-            <div className="flex flex-col items-center mx-auto">
+          <div className="grid grid-cols-2 gap-4 mb-4">
+            {/* Engine Type */}
+            <div className="flex flex-col items-center justify-center">
               <PiEngineFill size={40} className="mb-2" />
               <span className="font-bold text-xl text-rose-200">
                 {car.engineType}
               </span>
             </div>
-            <div className="flex flex-col items-center mx-auto">
+
+            {/* Engine Size */}
+            <div className="flex flex-col items-center justify-center">
               <FaGasPump size={40} className="mb-2" />
               <span className="font-bold text-xl text-rose-200">
                 {car.engineSize}L
               </span>
             </div>
-          </div>
-          <div className="flex justify-between mb-4">
-            <div className="flex flex-col items-center mx-auto">
+
+            {/* Transmission */}
+            <div className="flex flex-col items-center justify-center">
               <GiGearStickPattern size={40} className="mb-2" />
               <span className="font-bold text-xl text-rose-200">
                 {car.transmission}
               </span>
             </div>
-            <div className="flex flex-col items-center mx-auto">
+
+            {/* Mileage */}
+            <div className="flex flex-col items-center justify-center">
               <BiSolidTachometer size={40} className="mb-2" />
               <span className="font-bold text-xl text-rose-200">
                 {formattedMileage} Miles
               </span>
             </div>
-          </div>
-          <div className="flex justify-between mb-4">
-            <div className="flex flex-col items-center mx-auto">
+
+            {/* Year */}
+            <div className="flex flex-col items-center justify-center">
               <FaRegCalendarAlt size={40} className="mb-2" />
               <span className="font-bold text-xl text-rose-200">
                 {car.year}
               </span>
             </div>
-            <div className="flex flex-col items-center mx-auto">
+
+            {/* Car Type */}
+            <div className="flex flex-col items-center justify-center">
               <FaCarSide size={40} className="mb-2" />
               <span className="font-bold text-xl text-rose-200">
                 {car.carType}
               </span>
             </div>
           </div>
+
           <p className="font-bold text-3xl text-gray-300 hover:text-white text-center pt-2">
             <a href="tel:07809107655">£{formattedPrice}</a>
           </p>

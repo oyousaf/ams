@@ -16,7 +16,24 @@ const AddCarForm = ({ setCars, fetchCars, setActiveTab }) => {
     transmission: "Automatic",
     mileage: "",
     images: [],
+    year: "",
+    carType: "",
   });
+
+  const carTypes = [
+    "Convertible",
+    "Coupe",
+    "Crossover",
+    "Estate",
+    "Hatchback",
+    "Minivan",
+    "Pickup",
+    "Saloon",
+    "Sports",
+    "SUV",
+    "Truck",
+    "Van",
+  ].sort();
 
   const [imagePreviews, setImagePreviews] = useState([]);
   const [error, setError] = useState("");
@@ -36,10 +53,12 @@ const AddCarForm = ({ setCars, fetchCars, setActiveTab }) => {
       isNaN(newCar.engineSize) ||
       !newCar.mileage ||
       isNaN(newCar.mileage) ||
+      !newCar.year ||
+      !/^(19|20)\d{2}$/.test(newCar.year) ||
       newCar.images.length === 0
     ) {
       setError(
-        "Please fill in all required fields correctly, including at least one image."
+        "Please fill in all required fields correctly, including at least one image and a valid year (1900-2099)."
       );
       setLoading(false);
       return;
@@ -81,6 +100,8 @@ const AddCarForm = ({ setCars, fetchCars, setActiveTab }) => {
           mileage: parseFloat(newCar.mileage),
           imageUrl: imageUrls,
           createdAt: new Date().toISOString(),
+          year: parseInt(newCar.year),
+          carType: newCar.carType,
         }
       );
 
@@ -223,6 +244,35 @@ const AddCarForm = ({ setCars, fetchCars, setActiveTab }) => {
               required
               className="w-full border border-rose-300 text-rose-800 rounded-md px-3 py-2"
             />
+          </div>
+
+          <div className="flex space-x-4 w-full">
+            <input
+              id="year"
+              name="year"
+              type="text"
+              value={newCar.year}
+              onChange={(e) => setNewCar({ ...newCar, year: e.target.value })}
+              placeholder="Year"
+              required
+              className="w-full border border-rose-300 text-rose-800 rounded-md px-3 py-2"
+            />
+
+            <select
+              id="carType"
+              name="carType"
+              value={newCar.carType}
+              onChange={(e) =>
+                setNewCar({ ...newCar, carType: e.target.value })
+              }
+              className="w-full border border-rose-300 text-rose-800 rounded-md px-3 py-2"
+            >
+              {carTypes.map((type) => (
+                <option key={type} value={type}>
+                  {type}
+                </option>
+              ))}
+            </select>
           </div>
 
           <input

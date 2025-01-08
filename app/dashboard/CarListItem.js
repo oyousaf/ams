@@ -31,6 +31,8 @@ const CarDetails = ({ car }) => (
         label="Mileage"
         value={`${car.mileage.toLocaleString("en-GB")} miles`}
       />
+      <Detail label="Year" value={car.year} />
+      <Detail label="Type" value={car.carType} />
     </div>
   </div>
 );

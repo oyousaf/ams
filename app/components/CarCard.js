@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import Slider from "react-slick";
 import Image from "next/image";
-import { FaGasPump } from "react-icons/fa6";
+import { FaGasPump, FaRegCalendarAlt, FaCarSide } from "react-icons/fa";
 import { PiEngineFill } from "react-icons/pi";
 import { GiGearStickPattern } from "react-icons/gi";
 import { BiSolidTachometer } from "react-icons/bi";
@@ -95,6 +95,20 @@ const CarCard = React.memo(({ car, logo }) => {
               <BiSolidTachometer size={40} className="mb-2" />
               <span className="font-bold text-xl text-rose-200">
                 {formattedMileage} Miles
+              </span>
+            </div>
+          </div>
+          <div className="flex justify-between mb-4">
+            <div className="flex flex-col items-center mx-auto">
+              <FaRegCalendarAlt size={40} className="mb-2" />
+              <span className="font-bold text-xl text-rose-200">
+                {car.year}
+              </span>
+            </div>
+            <div className="flex flex-col items-center mx-auto">
+              <FaCarSide size={40} className="mb-2" />
+              <span className="font-bold text-xl text-rose-200">
+                {car.carType}
               </span>
             </div>
           </div>

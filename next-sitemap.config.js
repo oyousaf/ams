@@ -4,7 +4,7 @@ const config = {
     generateRobotsTxt: true,
     sitemapSize: 5000,
     exclude: ["/dashboard"],
-    changefreq: "weekly",
+    changefreq: "monthly",
     priority: 0.7,
   };
   

@@ -67,7 +67,7 @@ const CarCard = React.memo(({ car, logo }) => {
         </Slider>
 
         <div className="w-full mb-4 mt-4 flex justify-center">{logo}</div>
-        <h3 className="font-bold text-white text-2xl mb-2">{car.title}</h3>
+        <h3 className="font-bold text-white text-3xl mb-2">{car.title}</h3>
         <p className="text-gray-300 mb-4 md:text-xl">{car.description}</p>
         <div className="grid grid-cols-1 gap-y-1 text-white md:text-lg mt-8">
           <div className="flex justify-between mb-4">
@@ -112,7 +112,7 @@ const CarCard = React.memo(({ car, logo }) => {
               </span>
             </div>
           </div>
-          <p className="font-bold text-2xl text-gray-300 hover:text-white text-center pt-2">
+          <p className="font-bold text-3xl text-gray-300 hover:text-white text-center pt-2">
             <a href="tel:07809107655">£{formattedPrice}</a>
           </p>
         </div>

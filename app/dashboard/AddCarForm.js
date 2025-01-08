@@ -17,7 +17,7 @@ const AddCarForm = ({ setCars, fetchCars, setActiveTab }) => {
     mileage: "",
     images: [],
     year: "",
-    carType: "",
+    carType: "Convertible",
   });
 
   const carTypes = [

@@ -59,7 +59,7 @@ const CarListItem = ({ car, onDelete }) => {
       <CarDetails car={car} />
       <button
         className="self-center sm:self-start mt-4 sm:mt-0 text-red-300 hover:text-red-500 transition-colors"
-        onClick={() => onDelete(car.$id, car.title)}
+        onClick={() => onDelete(car.$id, car.title, car.imageFileIds)}
         aria-label={`Delete ${car.title}`}
       >
         <IoTrash size={30} />

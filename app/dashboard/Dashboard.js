@@ -9,7 +9,7 @@ import Link from "next/link";
 
 import AddCarForm from "./AddCarForm";
 import CarList from "./CarList";
-import { databases } from "../lib/appwrite";
+import { databases, storage } from "../lib/appwrite";
 
 import LoadingSpinner from "./LoadingSpinner";
 
@@ -84,15 +84,28 @@ const Dashboard = () => {
     }
   }, []);
 
-  const handleDeleteCar = useCallback(async (carId, carTitle) => {
+  const handleDeleteCar = useCallback(async (carId, carTitle, imageFileIds) => {
     if (!window.confirm(`Are you sure you want to delete ${carTitle}?`)) return;
 
     try {
+      // Delete images from Appwrite storage first
+      if (imageFileIds && imageFileIds.length > 0) {
+        for (const imageFileId of imageFileIds) {
+          await storage.deleteFile(
+            process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID,
+            imageFileId
+          );
+        }
+      }
+
+      // Now delete the car document from the database
       await databases.deleteDocument(
         process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID,
         process.env.NEXT_PUBLIC_APPWRITE_COLLECTION_ID,
         carId
       );
+
+      // Update the local state to reflect the deletion
       setCars((prevCars) => prevCars.filter((car) => car.$id !== carId));
       toast.success("Car deleted successfully!");
     } catch (error) {

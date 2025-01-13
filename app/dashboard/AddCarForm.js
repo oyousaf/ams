@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { databases, storage, ID } from "../lib/appwrite";
 import { ToastContainer, toast } from "react-toastify";
 import { AiOutlineLoading } from "react-icons/ai";
-import Image from "next/image"; // Import Image from next/image
+import Image from "next/image";
 
 const AddCarForm = ({ setCars, fetchCars, setActiveTab }) => {
   const [newCar, setNewCar] = useState({
@@ -64,8 +64,9 @@ const AddCarForm = ({ setCars, fetchCars, setActiveTab }) => {
       return;
     }
 
-    // Upload images to Appwrite storage
+    // Upload images to Appwrite storage using file IDs
     let imageUrls = [];
+    let imageFileIds = [];
     try {
       for (const image of newCar.images) {
         const file = await storage.createFile(
@@ -73,6 +74,9 @@ const AddCarForm = ({ setCars, fetchCars, setActiveTab }) => {
           ID.unique(),
           image
         );
+
+        // Store the file ID for future deletion
+        imageFileIds.push(file.$id);
 
         const imageUrl = `${process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT}/storage/buckets/${process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID}/files/${file.$id}/view?project=${process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID}&mode=admin`;
         imageUrls.push(imageUrl);
@@ -99,6 +103,7 @@ const AddCarForm = ({ setCars, fetchCars, setActiveTab }) => {
           transmission: newCar.transmission,
           mileage: parseFloat(newCar.mileage),
           imageUrl: imageUrls,
+          imageFileIds: imageFileIds,
           createdAt: new Date().toISOString(),
           year: parseInt(newCar.year),
           carType: newCar.carType,

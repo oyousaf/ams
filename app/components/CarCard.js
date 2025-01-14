@@ -95,11 +95,11 @@ const CarCard = React.memo(({ car, logo }) => {
               </span>
             </div>
 
-            {/* Mileage */}
+            {/* Car Type */}
             <div className="flex flex-col items-center justify-center">
-              <BiSolidTachometer size={40} className="mb-2" />
+              <FaCarSide size={40} className="mb-2" />
               <span className="font-bold text-xl text-rose-200">
-                {formattedMileage} Miles
+                {car.carType}
               </span>
             </div>
 
@@ -110,12 +110,12 @@ const CarCard = React.memo(({ car, logo }) => {
                 {car.year}
               </span>
             </div>
-
-            {/* Car Type */}
+            
+            {/* Mileage */}
             <div className="flex flex-col items-center justify-center">
-              <FaCarSide size={40} className="mb-2" />
+              <BiSolidTachometer size={40} className="mb-2" />
               <span className="font-bold text-xl text-rose-200">
-                {car.carType}
+                {formattedMileage} Miles
               </span>
             </div>
           </div>

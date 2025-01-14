@@ -18,6 +18,13 @@ const CarImage = ({ imageUrl, title, setImageError }) => (
   </figure>
 );
 
+const Detail = ({ label, value }) => (
+  <p>
+    {label}:{" "}
+    <span className="font-semibold md:text-xl text-rose-300">{value}</span>
+  </p>
+);
+
 const CarDetails = ({ car }) => (
   <div className="w-full sm:w-2/3 mb-4 sm:mb-0">
     <h3 className="font-bold text-white text-2xl mb-2">{car.title}</h3>
@@ -35,13 +42,6 @@ const CarDetails = ({ car }) => (
       <Detail label="Type" value={car.carType} />
     </div>
   </div>
-);
-
-const Detail = ({ label, value }) => (
-  <p>
-    {label}:{" "}
-    <span className="font-semibold md:text-xl text-rose-300">{value}</span>
-  </p>
 );
 
 const CarListItem = ({ car, onDelete }) => {

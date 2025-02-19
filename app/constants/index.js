@@ -51,12 +51,17 @@ export const gallery = [
 
 export const reviews = [
   {
-    name: "Hamza Nawaz",
+    name: "Kathryn J",
+    feedback:
+      "Great service from a very friendly and professional young man. Excellent communication throughout, and he followed through on everything he said he would. I would highly recommend him and would buy from him again if the right car became available. Thank you!",
+  },
+  {
+    name: "Hamza N",
     feedback:
       "I bought a stunning BMW from Faisal - very easy process definitely recommend to everyone to come here to buy a car; great customer service too! Look forward to coming again in the future!",
   },
   {
-    name: "Paul Coates",
+    name: "Paul C",
     feedback:
       "I bought a BMW 3 series last week and the car is spot on. The garage is friendly, helpful and great to deal with. Would totally recommend.",
   },
@@ -66,10 +71,11 @@ export const reviews = [
   },
   {
     name: "Ash X",
-    feedback: "Very pleased with the service from this company! I enquired about the car on Monday and by Wednesday my new car was delivered to my doorstep, with a fresh MOT and a complimentary service. The car is exactly as it was described. Great customer service and good prices too. Highly recommend!",
+    feedback:
+      "Very pleased with the service from this company! I enquired about the car on Monday and by Wednesday my new car was delivered to my doorstep, with a fresh MOT and a complimentary service. The car is exactly as it was described. Great customer service and good prices too. Highly recommend!",
   },
   {
-    name: "Taylor Hargreaves",
+    name: "Taylor H",
     feedback:
       "Bought a Ford Fiesta. Pleasure to deal with and car was ready to collect within a few days and the one issue we had was rectified very quickly and without any arguments. Bought another car today; once again, absolutely amazing service! Made the process easy and simple from start to finish. Highly recommend!",
   },
@@ -79,18 +85,13 @@ export const reviews = [
       "Bought my BMW 320D from Ace Motor Sales a few months back now and what an amazing experience it has been throughout the whole process. Can't recommend this dealership enough! Faisal was very transparent with everything. Even after taking delivery, I received a call from the dealer to ensure I was happy with the purchase. Wish you all the best guys!",
   },
   {
-    name: "Donna Rose",
+    name: "Donna R",
     feedback:
       "Went to go have a look at an Audi A1 with my husband and father-in-law. Car was in great condition, great price, and the service we were given was outstanding. Very polite & helpful - to the point my father-in-law didn't come with the intention of buying a new car but we went away with 2! Highly recommend - couldn't do enough for us! Had the cars around 7 months and so far so good; no problems whatsoever!",
   },
   {
-    name: "Tom Betts",
+    name: "Tom B",
     feedback: `Highly recommend. I purchased a BMW 320D. It was well presented, came fully serviced and valeted. The car also came with a 3-months warranty and just under 3 months I came across a fault that was taken care of with a local garage. Paid with no hassle by Ace Motor Sales. Would definitely buy from them again. 👍🏻`,
-  },
-  {
-    name: "VEYGO GROUPS",
-    feedback:
-      "Brilliant customer service by Fez! Brilliant deals; lovely motors so get your selves down!!!",
   },
 ];
 

@@ -14,18 +14,18 @@ const About = () => {
       icon: FaHandshake,
       title: "Customer Satisfaction",
       description:
-        "We prioritise exceptional service, ensuring a seamless experience for every client. Our nationwide door-to-door delivery provides ultimate convenience.",
+        "Enjoy a seamless experience with our exceptional service, including nationwide door-to-door delivery for your convenience.",
     },
     {
       icon: FaCar,
       title: "Quality Vehicles",
       description:
-        "Our meticulously inspected, certified pre-owned vehicles uphold the highest standards of quality, durability, and reliability, offering peace of mind to every customer.",
+        "Drive with confidence in our certified pre-owned vehicles, each meticulously inspected to ensure top-tier quality, durability, and reliability.",
     },
     {
       icon: FaHistory,
       title: `Established ${yearsEstablished} Years`,
-      description: `Since our inception in ${establishedYear}, we have built a reputation for trust, dependability, and a commitment to providing outstanding customer care.`,
+      description: `Since ${establishedYear}, we’ve built a trusted reputation for dependability and outstanding customer care.`,
     },
     {
       icon: FaShieldAlt,

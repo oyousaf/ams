@@ -51,6 +51,11 @@ export const gallery = [
 
 export const reviews = [
   {
+    name: "Erik A",
+    feedback:
+      "Great service, we bought a Volkswagen CC, it was a pleasure doing business with them. I would say, car wasn’t that clean on the inside but they took some money off to get it detailed back home. Worked out even better. Great garage, 2 months in and the car is solid.",
+  },
+  {
     name: "Kathryn J",
     feedback:
       "Great service from a very friendly and professional young man. Excellent communication throughout, and he followed through on everything he said he would. I would highly recommend him and would buy from him again if the right car became available. Thank you!",
@@ -88,10 +93,6 @@ export const reviews = [
     name: "Donna R",
     feedback:
       "Went to go have a look at an Audi A1 with my husband and father-in-law. Car was in great condition, great price, and the service we were given was outstanding. Very polite & helpful - to the point my father-in-law didn't come with the intention of buying a new car but we went away with 2! Highly recommend - couldn't do enough for us! Had the cars around 7 months and so far so good; no problems whatsoever!",
-  },
-  {
-    name: "Tom B",
-    feedback: `Highly recommend. I purchased a BMW 320D. It was well presented, came fully serviced and valeted. The car also came with a 3-months warranty and just under 3 months I came across a fault that was taken care of with a local garage. Paid with no hassle by Ace Motor Sales. Would definitely buy from them again. 👍🏻`,
   },
 ];
 

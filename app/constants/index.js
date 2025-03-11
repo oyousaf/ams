@@ -71,7 +71,7 @@ export const reviews = [
       "I bought a BMW 3 series last week and the car is spot on. The garage is friendly, helpful and great to deal with. Would totally recommend.",
   },
   {
-    name: "Omar ♔",
+    name: "Omar 🍉",
     feedback: `It was a pleasure dealing with AMS! They offered excellent service from start to finish, were attentive to all my needs, and provide a fantastic selection of quality vehicles. Fez was professional, friendly, and knowledgeable. Highly recommend!`,
   },
   {

@@ -96,54 +96,6 @@ export const reviews = [
   },
 ];
 
-export const mockData = [
-  {
-    id: 1,
-    image_url: "/porsche-taycan.jpg",
-    title: "Porsche Taycan Turbo S",
-    description: (
-      <>
-        {`
-          The all-electric Taycan Turbo S with Performance Battery Plus, high driving dynamics, and a flat flyline.
-        `}
-        <span className="block mt-3 font-bold text-xl">
-          Available from £161,400
-        </span>
-      </>
-    ),
-  },
-  {
-    id: 2,
-    image_url: "/hyundai-ioniq-5-pe.jpg",
-    title: "Hyundai IONIQ 5 PE",
-    description: (
-      <>
-        {`
-          The Hyundai IONIQ 5 is a fully-electric midsize CUV with 800V battery technology for ultra-fast charging and offers a driving range of up to 354 miles.
-        `}
-        <span className="block mt-3 font-bold text-xl">
-          Available from £39,900
-        </span>
-      </>
-    ),
-  },
-  {
-    id: 3,
-    image_url: "/tesla y 2025.jpg",
-    title: "Tesla Model Y Juniper Update",
-    description: (
-      <>
-        {`
-          Model Y is a fully electric, mid-size SUV with unparalleled protection and versatile cargo space.
-        `}
-        <span className="block mt-3 font-bold text-xl">
-          Available from £44,990
-        </span>
-      </>
-    ),
-  },
-];
-
 import {
   SiAlfaromeo,
   SiAstonmartin,

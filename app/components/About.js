@@ -11,16 +11,16 @@ const About = () => {
 
   const about = [
     {
+      icon: FaCar,
+      title: "Quality Vehicles",
+      description:
+      "Drive with confidence in our certified pre-owned vehicles, each meticulously inspected to ensure top-tier quality, durability, and reliability.",
+    },
+    {
       icon: FaHandshake,
       title: "Customer Satisfaction",
       description:
         "Enjoy a seamless experience with our exceptional service, including nationwide door-to-door delivery for your convenience.",
-    },
-    {
-      icon: FaCar,
-      title: "Quality Vehicles",
-      description:
-        "Drive with confidence in our certified pre-owned vehicles, each meticulously inspected to ensure top-tier quality, durability, and reliability.",
     },
     {
       icon: FaHistory,

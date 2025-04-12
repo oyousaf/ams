@@ -16,7 +16,7 @@ const ContactInfo = () => (
       © {new Date().getFullYear()} Ace Motor Sales
     </h4>
     <p>4 Westgate, Heckmondwike, WF16 0EH</p>
-    <p>Available daily from 9am to 8pm</p>
+    <p>Keys in the ignition from 9am to 8pm - cruise on in anytime!</p>
     <motion.div whileHover={{ rotate: [0, -5, 5, -5, 5, 0], transition: { repeat: Infinity, duration: 0.4 } }}>
       <Link href="tel:07809107655" className="text-2xl font-bold hover:text-rose-600 transition duration-300">
         07809107655

@@ -17,8 +17,16 @@ const ContactInfo = () => (
     </h4>
     <p>4 Westgate, Heckmondwike, WF16 0EH</p>
     <p>Keys in the ignition from 9am to 8pm - cruise on in anytime!</p>
-    <motion.div whileHover={{ rotate: [0, -5, 5, -5, 5, 0], transition: { repeat: Infinity, duration: 0.4 } }}>
-      <Link href="tel:07809107655" className="text-2xl font-bold hover:text-rose-600 transition duration-300">
+    <motion.div
+      whileHover={{
+        rotate: [0, -5, 5, -5, 5, 0],
+        transition: { repeat: Infinity, duration: 0.4 },
+      }}
+    >
+      <Link
+        href="tel:07809107655"
+        className="text-2xl font-bold hover:text-rose-600 transition duration-300"
+      >
         07809107655
       </Link>
     </motion.div>
@@ -45,7 +53,9 @@ const SocialIcons = () => (
 
 const Footer = () => (
   <footer className="py-8" id="contact">
-    <h2 className="text-4xl md:text-5xl font-bold text-center mb-8">Get in Touch</h2>
+    <h2 className="text-4xl md:text-5xl font-bold text-center mb-8">
+      Get in Touch
+    </h2>
     <div className="flex flex-col md:flex-row justify-center px-4 lg:px-8 space-y-8 md:space-y-0">
       <div className="md:w-1/2">
         <iframe

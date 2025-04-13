@@ -4,17 +4,19 @@ import { IoTrash } from "react-icons/io5";
 const fallbackImage =
   "https://cdn.elferspot.com/wp-content/uploads/2021/12/269712451_4431790080281806_5749846471891286432_n-Kopie.jpeg";
 
-const CarImage = ({ imageUrl, title, setImageError }) => (
+const CarImage = ({ imageUrl, title = "Car image", setImageError }) => (
   <figure className="w-full sm:w-1/3 mr-4 mb-4 sm:mb-0">
     <img
       src={imageUrl}
-      alt={title || "Car image"}
+      alt={title}
       width={500}
       height={500}
       className="rounded-md object-cover"
       onError={() => setImageError(true)}
     />
-    <figcaption className="sr-only">{title}</figcaption>
+    <figcaption className="sr-only">
+      {title ? `Image of ${title}` : "Car image"}
+    </figcaption>
   </figure>
 );
 
@@ -46,7 +48,6 @@ const CarDetails = ({ car }) => (
 
 const CarListItem = ({ car, onDelete }) => {
   const [imageError, setImageError] = useState(false);
-
   const displayImage = imageError ? fallbackImage : car.imageUrl;
 
   return (
@@ -58,7 +59,8 @@ const CarListItem = ({ car, onDelete }) => {
       />
       <CarDetails car={car} />
       <button
-        className="self-center sm:self-start mt-4 sm:mt-0 text-red-300 hover:text-red-500 transition-colors"
+        type="button"
+        className="self-center sm:self-start mt-4 sm:mt-0 text-red-300 hover:text-red-500 transition-colors cursor-pointer"
         onClick={() => onDelete(car.$id, car.title, car.imageFileIds)}
         aria-label={`Delete ${car.title}`}
       >

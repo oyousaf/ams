@@ -51,6 +51,16 @@ export const gallery = [
 
 export const reviews = [
   {
+    name: "Aron S",
+    feedback:
+      "From the first phone call to meeting in person first class service from AMS, I was lucky enough to pick up a brilliant car for a competitive price. Many thanks to Fes for being really informative ensuring I was satisfied and had everything I need. I would highly recommend and I'll be coming back for sure.",
+  },
+  {
+    name: "Caitlyn C",
+    feedback:
+      "It was my first time buying a car and the whole experience was brilliant! The car was exactly as described, really friendly service, even delivered to me. Would highly recommend to anyone buying a car! 10/10 service all around.",
+  },
+  {
     name: "Erik A",
     feedback:
       "Great service, we bought a Volkswagen CC, it was a pleasure doing business with them. I would say, car wasn’t that clean on the inside but they took some money off to get it detailed back home. Worked out even better. Great garage, 2 months in and the car is solid.",
@@ -83,16 +93,6 @@ export const reviews = [
     name: "Taylor H",
     feedback:
       "Bought a Ford Fiesta. Pleasure to deal with and car was ready to collect within a few days and the one issue we had was rectified very quickly and without any arguments. Bought another car today; once again, absolutely amazing service! Made the process easy and simple from start to finish. Highly recommend!",
-  },
-  {
-    name: "Awix A",
-    feedback:
-      "Bought my BMW 320D from Ace Motor Sales a few months back now and what an amazing experience it has been throughout the whole process. Can't recommend this dealership enough! Faisal was very transparent with everything. Even after taking delivery, I received a call from the dealer to ensure I was happy with the purchase. Wish you all the best guys!",
-  },
-  {
-    name: "Donna R",
-    feedback:
-      "Went to go have a look at an Audi A1 with my husband and father-in-law. Car was in great condition, great price, and the service we were given was outstanding. Very polite & helpful - to the point my father-in-law didn't come with the intention of buying a new car but we went away with 2! Highly recommend - couldn't do enough for us! Had the cars around 7 months and so far so good; no problems whatsoever!",
   },
 ];
 

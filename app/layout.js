@@ -104,7 +104,17 @@ export default function RootLayout({ children }) {
           <Navbar />
           <main>{children}</main>
           <SpeedInsights />
-          <ToastContainer position="top-right" autoClose={3000} />
+          <ToastContainer
+            position="top-right"
+            autoClose={3000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+          />
           <Footer />
         </div>
       </body>

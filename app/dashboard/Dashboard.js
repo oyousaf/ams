@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback, useMemo } from "react";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { GoHomeFill } from "react-icons/go";
 import { IoIosReturnRight } from "react-icons/io";
 import { motion, AnimatePresence } from "framer-motion";
@@ -88,7 +88,6 @@ const Dashboard = () => {
     if (!window.confirm(`Are you sure you want to delete ${carTitle}?`)) return;
 
     try {
-      // Delete images from Appwrite storage first
       if (imageFileIds && imageFileIds.length > 0) {
         for (const imageFileId of imageFileIds) {
           await storage.deleteFile(
@@ -98,14 +97,12 @@ const Dashboard = () => {
         }
       }
 
-      // Now delete the car document from the database
       await databases.deleteDocument(
         process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID,
         process.env.NEXT_PUBLIC_APPWRITE_COLLECTION_ID,
         carId
       );
 
-      // Update the local state to reflect the deletion
       setCars((prevCars) => prevCars.filter((car) => car.$id !== carId));
       toast.success("Car deleted successfully!");
     } catch (error) {
@@ -121,17 +118,12 @@ const Dashboard = () => {
   }, [fetchCars, isAuthenticated]);
 
   useEffect(() => {
-    if (isAuthenticated) {
-      document.body.classList.add("overflow-hidden");
-    } else {
-      document.body.classList.remove("overflow-hidden");
-    }
+    document.body.classList.toggle("overflow-hidden", isAuthenticated);
     return () => document.body.classList.remove("overflow-hidden");
   }, [isAuthenticated]);
 
   return (
     <div className="h-screen flex items-center justify-center p-6">
-      <ToastContainer />
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}

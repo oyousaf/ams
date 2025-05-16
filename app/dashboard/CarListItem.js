@@ -4,7 +4,7 @@ import { IoTrash } from "react-icons/io5";
 const fallbackImage =
   "https://cdn.elferspot.com/wp-content/uploads/2021/12/269712451_4431790080281806_5749846471891286432_n-Kopie.jpeg";
 
-const CarImage = ({ imageUrl, title = "Car image", setImageError }) => (
+const CarImage = ({ imageUrl, title = "Car image", onError }) => (
   <figure className="w-full sm:w-1/3 mr-4 mb-4 sm:mb-0">
     <img
       src={imageUrl}
@@ -12,18 +12,16 @@ const CarImage = ({ imageUrl, title = "Car image", setImageError }) => (
       width={500}
       height={500}
       className="rounded-md object-cover"
-      onError={() => setImageError(true)}
+      onError={onError}
+      loading="lazy"
     />
-    <figcaption className="sr-only">
-      {title ? `Image of ${title}` : "Car image"}
-    </figcaption>
+    <figcaption className="sr-only">{`Image of ${title}`}</figcaption>
   </figure>
 );
 
 const Detail = ({ label, value }) => (
   <p>
-    {label}:{" "}
-    <span className="font-semibold md:text-xl text-rose-300">{value}</span>
+    {label}: <span className="font-semibold md:text-xl text-rose-300">{value}</span>
   </p>
 );
 
@@ -36,10 +34,7 @@ const CarDetails = ({ car }) => (
       <Detail label="Engine Type" value={car.engineType} />
       <Detail label="Engine Size" value={`${car.engineSize}L`} />
       <Detail label="Transmission" value={car.transmission} />
-      <Detail
-        label="Mileage"
-        value={`${car.mileage.toLocaleString("en-GB")} miles`}
-      />
+      <Detail label="Mileage" value={`${car.mileage.toLocaleString("en-GB")} miles`} />
       <Detail label="Year" value={car.year} />
       <Detail label="Type" value={car.carType} />
     </div>
@@ -48,14 +43,13 @@ const CarDetails = ({ car }) => (
 
 const CarListItem = ({ car, onDelete }) => {
   const [imageError, setImageError] = useState(false);
-  const displayImage = imageError ? fallbackImage : car.imageUrl;
 
   return (
     <li className="border border-rose-200 rounded-md p-4 mb-3 flex flex-col sm:flex-row items-start bg-rose-900 text-gray-200">
       <CarImage
-        imageUrl={displayImage}
+        imageUrl={imageError ? fallbackImage : car.imageUrl}
         title={car.title}
-        setImageError={setImageError}
+        onError={() => setImageError(true)}
       />
       <CarDetails car={car} />
       <button

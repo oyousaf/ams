@@ -3,6 +3,9 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 export const metadata = {
   title: "Ace Motor Sales - Certified Used Cars with Nationwide Delivery",
   description:
@@ -101,6 +104,7 @@ export default function RootLayout({ children }) {
           <Navbar />
           <main>{children}</main>
           <SpeedInsights />
+          <ToastContainer position="top-right" autoClose={3000} />
           <Footer />
         </div>
       </body>

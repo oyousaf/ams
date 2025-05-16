@@ -127,6 +127,8 @@ const AddCarForm = ({ setCars, fetchCars, setActiveTab }) => {
         transmission: "Automatic",
         mileage: "",
         images: [],
+        year: "",
+        carType: "Convertible",
       });
       setImagePreviews([]);
     } catch (insertError) {

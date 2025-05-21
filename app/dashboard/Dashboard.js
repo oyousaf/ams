@@ -134,7 +134,15 @@ const Dashboard = () => {
         {isAuthenticated ? (
           <div className="fixed inset-0 p-4 w-full flex flex-col justify-between bg-rose-800 text-gray-200 z-50">
             <div className="flex flex-col items-center">
-              <Image src="/logo.png" alt="Logo" width={150} height={100} className="mb-4"/>
+              <Link href="/" aria-label="Home">
+                <Image
+                  src="/logo.png"
+                  alt="Logo"
+                  width={150}
+                  height={100}
+                  className="mb-4"
+                />
+              </Link>
               <h2 className="text-5xl font-bold text-gray-200 text-center mb-2">
                 Dashboard
               </h2>
@@ -181,7 +189,7 @@ const Dashboard = () => {
               </AnimatePresence>
             </div>
             <div className="flex justify-center mt-4">
-              <Link href="/" aria-label="Go to Home">
+              <Link href="/" aria-label="Home">
                 <motion.div
                   className="text-gray-200 hover:text-white"
                   whileHover={{ scale: 1.1 }}

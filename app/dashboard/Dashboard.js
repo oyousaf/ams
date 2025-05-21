@@ -12,6 +12,7 @@ import CarList from "./CarList";
 import { databases, storage } from "../lib/appwrite";
 
 import LoadingSpinner from "./LoadingSpinner";
+import Image from "next/image";
 
 /* eslint-disable react/display-name */
 const Tabs = React.memo(({ activeTab, setActiveTab }) => {
@@ -133,6 +134,7 @@ const Dashboard = () => {
         {isAuthenticated ? (
           <div className="fixed inset-0 p-4 w-full flex flex-col justify-between bg-rose-800 text-gray-200 z-50">
             <div className="flex flex-col items-center">
+              <Image src="/logo.png" alt="Logo" width={150} height={100} className="mb-4"/>
               <h2 className="text-5xl font-bold text-gray-200 text-center mb-2">
                 Dashboard
               </h2>

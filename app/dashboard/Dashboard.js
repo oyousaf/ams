@@ -22,6 +22,8 @@ const Tabs = React.memo(({ activeTab, setActiveTab }) => {
     []
   );
 
+  Tabs.displayName = "Tabs";
+
   return (
     <div className="flex justify-center mt-6 space-x-4">
       {tabs.map(({ id, label }) => (

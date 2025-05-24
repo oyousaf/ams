@@ -109,7 +109,7 @@ const AddCarForm = ({ setCars, fetchCars, setActiveTab }) => {
 
       if (!validateFields()) {
         const validationError =
-          "Please fill all required fields correctly, including at least one image and a valid year (1900-2099).";
+          "Something's not quite right mg. Please check all relevant fields and try again.";
         setError(validationError);
         toast.error(validationError);
         return;

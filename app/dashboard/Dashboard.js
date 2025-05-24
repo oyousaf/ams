@@ -1,20 +1,18 @@
 "use client";
 
 import React, { useState, useEffect, useCallback, useMemo } from "react";
+import Link from "next/link";
+import Image from "next/image";
 import { toast } from "react-toastify";
 import { GoHomeFill } from "react-icons/go";
 import { IoIosReturnRight } from "react-icons/io";
 import { motion, AnimatePresence } from "framer-motion";
-import Link from "next/link";
 
 import AddCarForm from "./AddCarForm";
 import CarList from "./CarList";
+import LoadingSpinner from "./LoadingSpinner";
 import { databases, storage } from "../lib/appwrite";
 
-import LoadingSpinner from "./LoadingSpinner";
-import Image from "next/image";
-
-/* eslint-disable react/display-name */
 const Tabs = React.memo(({ activeTab, setActiveTab }) => {
   const tabs = useMemo(
     () => [
@@ -23,23 +21,22 @@ const Tabs = React.memo(({ activeTab, setActiveTab }) => {
     ],
     []
   );
-  /* eslint-enable react/display-name */
 
   return (
     <div className="flex justify-center mt-6 space-x-4">
-      {tabs.map((tab) => (
+      {tabs.map(({ id, label }) => (
         <button
-          key={tab.id}
-          onClick={() => setActiveTab(tab.id)}
+          key={id}
+          onClick={() => setActiveTab(id)}
           className={`px-4 py-2 rounded-md transition-colors duration-200 ${
-            activeTab === tab.id
+            activeTab === id
               ? "bg-rose-600 text-white font-semibold shadow-md"
               : "bg-rose-200 text-gray-700 hover:bg-rose-300 hover:text-gray-900"
           }`}
-          aria-pressed={activeTab === tab.id}
-          aria-controls={`panel-${tab.id}`}
+          aria-pressed={activeTab === id}
+          aria-controls={`panel-${id}`}
         >
-          {tab.label}
+          {label}
         </button>
       ))}
     </div>
@@ -52,7 +49,7 @@ const Dashboard = () => {
   const [error, setError] = useState("");
   const [cars, setCars] = useState([]);
   const [activeTab, setActiveTab] = useState("carList");
-  const [loadingCars, setLoadingCars] = useState(true);
+  const [loadingCars, setLoadingCars] = useState(false);
 
   const handlePasskeySubmit = useCallback(
     (e) => {
@@ -75,48 +72,39 @@ const Dashboard = () => {
         process.env.NEXT_PUBLIC_APPWRITE_COLLECTION_ID
       );
       setCars(response.documents);
-    } catch (error) {
-      console.error("Error fetching cars:", error);
-      toast.error(
-        "Could not load cars. Please check your connection and try again."
-      );
+    } catch (err) {
+      console.error("Error fetching cars:", err);
+      toast.error("Could not load cars. Please try again.");
     } finally {
       setLoadingCars(false);
     }
   }, []);
 
   const handleDeleteCar = useCallback(async (carId, carTitle, imageFileIds) => {
-    if (!window.confirm(`Are you sure you want to delete ${carTitle}?`)) return;
-
+    if (!confirm(`Are you sure you want to delete ${carTitle}?`)) return;
     try {
-      if (imageFileIds && imageFileIds.length > 0) {
-        for (const imageFileId of imageFileIds) {
-          await storage.deleteFile(
-            process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID,
-            imageFileId
-          );
-        }
+      for (const fileId of imageFileIds || []) {
+        await storage.deleteFile(
+          process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID,
+          fileId
+        );
       }
-
       await databases.deleteDocument(
         process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID,
         process.env.NEXT_PUBLIC_APPWRITE_COLLECTION_ID,
         carId
       );
-
-      setCars((prevCars) => prevCars.filter((car) => car.$id !== carId));
+      setCars((prev) => prev.filter((car) => car.$id !== carId));
       toast.success("Car deleted successfully!");
-    } catch (error) {
-      console.error("Error deleting car:", error);
+    } catch (err) {
+      console.error("Error deleting car:", err);
       toast.error("Failed to delete car. Please try again.");
     }
   }, []);
 
   useEffect(() => {
-    if (isAuthenticated) {
-      fetchCars();
-    }
-  }, [fetchCars, isAuthenticated]);
+    if (isAuthenticated) fetchCars();
+  }, [isAuthenticated, fetchCars]);
 
   useEffect(() => {
     document.body.classList.toggle("overflow-hidden", isAuthenticated);
@@ -143,14 +131,13 @@ const Dashboard = () => {
                   className="mb-4"
                 />
               </Link>
-              <h2 className="text-5xl font-bold text-gray-200 text-center mb-2">
-                Dashboard
-              </h2>
+              <h2 className="text-5xl font-bold mb-2 text-center">Dashboard</h2>
               <Tabs activeTab={activeTab} setActiveTab={setActiveTab} />
             </div>
+
             <div className="flex-grow mt-6 overflow-auto scrollbar-none">
               <AnimatePresence mode="wait">
-                {activeTab === "carList" && (
+                {activeTab === "carList" ? (
                   <motion.div
                     key="carList"
                     initial={{ opacity: 0, x: -20 }}
@@ -167,8 +154,7 @@ const Dashboard = () => {
                       <CarList cars={cars} onDelete={handleDeleteCar} />
                     )}
                   </motion.div>
-                )}
-                {activeTab === "addCar" && (
+                ) : (
                   <motion.div
                     key="addCar"
                     initial={{ opacity: 0, x: 20 }}
@@ -188,6 +174,7 @@ const Dashboard = () => {
                 )}
               </AnimatePresence>
             </div>
+
             <div className="flex justify-center mt-4">
               <Link href="/" aria-label="Home">
                 <motion.div
@@ -196,7 +183,7 @@ const Dashboard = () => {
                   whileTap={{ scale: 0.9, rotate: -10 }}
                   transition={{ type: "spring", stiffness: 300 }}
                 >
-                  <GoHomeFill className="mr-2" size={40} />
+                  <GoHomeFill size={40} />
                 </motion.div>
               </Link>
             </div>
@@ -205,8 +192,6 @@ const Dashboard = () => {
           <motion.form
             onSubmit={handlePasskeySubmit}
             className="space-y-6 md:w-[50%] w-full flex flex-col items-center"
-            name="passkey-form"
-            id="passkey-form"
             autoComplete="off"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -214,8 +199,6 @@ const Dashboard = () => {
           >
             <motion.input
               type="password"
-              name="passkey"
-              id="passkey"
               value={passkey}
               maxLength={5}
               onChange={(e) => setPasskey(e.target.value)}

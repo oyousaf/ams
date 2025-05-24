@@ -3,8 +3,7 @@
 import React, { useState, memo } from "react";
 import { IoTrash } from "react-icons/io5";
 
-const FALLBACK_IMAGE =
-  "https://cdn.elferspot.com/wp-content/uploads/2021/12/269712451_4431790080281806_5749846471891286432_n-Kopie.jpeg";
+const FALLBACK_IMAGE = "/fallback.webp";
 
 const CarImage = ({ src, title, onError }) => (
   <figure className="w-full sm:w-1/3 mr-4 mb-4 sm:mb-0">

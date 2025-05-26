@@ -1,3 +1,3 @@
 # Ace Motor Sales
 
-Car showcase website developed using Next, LightWidget and Tailwind
+Pre-owned cars website developed using Next.js 14, Appwrite, Tailwind and Framer

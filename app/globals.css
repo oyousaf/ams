@@ -38,16 +38,13 @@ body {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background-color: #be123c; 
+  background-color: #be123c;
 }
 
 ::-webkit-scrollbar-track {
   background-color: #000;
 }
 
-/* React-Slick */
-@import "~slick-carousel/slick/slick.css";
-@import "~slick-carousel/slick/slick-theme.css";
-
-/* React-Toastify */
-@import "~react-toastify/dist/ReactToastify.css";
+@import "slick-carousel/slick/slick.css";
+@import "slick-carousel/slick/slick-theme.css";
+@import "react-toastify/dist/ReactToastify.css";

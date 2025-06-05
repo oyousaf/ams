@@ -51,6 +51,11 @@ export const gallery = [
 
 export const reviews = [
   {
+    name: "Hamzah H",
+    feedback:
+      "Thank you to Ace Motor Sales for providing me with a beautiful motor. I am over the moon! First time I bought a car without physically seeing the car beforehand. However, Fes made it a very swift experience and made me feel very reassured all the way through the process. He did a live video call with me and arranged everything over the phone and got the car delivered to me on the day I requested. Very impressed with the vehicle and the service. I will definitely be back in the future and will be recommending this company to my friends and family 👌",
+  },
+  {
     name: "Samuel R",
     feedback:
       "I went to see a car at AMS and everything was perfect. There wasn't a single problem with the car. The boss gave me a great price too. My family and I were very happy with the car, and the whole process was very simple. I highly recommend AMS because they have a lot of good cars at great prices. This was my first time buying a car in the UK, and I’m a very happy customer. Big shoutout to these guys! 👏🏿",
@@ -88,11 +93,6 @@ export const reviews = [
   {
     name: "Omar 🍉",
     feedback: `It was a pleasure dealing with AMS! They offered excellent service from start to finish, were attentive to all my needs, and provide a fantastic selection of quality vehicles. Fez was professional, friendly, and knowledgeable. Highly recommend!`,
-  },
-  {
-    name: "Ash X",
-    feedback:
-      "Very pleased with the service from this company! I enquired about the car on Monday and by Wednesday my new car was delivered to my doorstep, with a fresh MOT and a complimentary service. The car is exactly as it was described. Great customer service and good prices too. Highly recommend!",
   },
 ];
 

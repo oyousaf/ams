@@ -7,6 +7,7 @@ import { memo } from "react";
 import { socialLinks } from "../constants/index";
 import EnquiryForm from "./EnquiryForm";
 
+// --- Animation Variants ---
 const fadeIn = {
   hidden: { opacity: 0 },
   visible: { opacity: 1, transition: { duration: 0.6 } },
@@ -19,6 +20,7 @@ const bounceRotate = {
   },
 };
 
+// --- Contact Info ---
 const ContactInfo = memo(() => (
   <motion.div
     className="flex flex-col items-center mt-20 text-center space-y-2 md:text-xl text-lg"
@@ -41,7 +43,9 @@ const ContactInfo = memo(() => (
     </motion.div>
   </motion.div>
 ));
+ContactInfo.displayName = "ContactInfo";
 
+// --- Social Icons ---
 const SocialIcons = memo(() => (
   <div className="flex space-x-6 mt-6 justify-center">
     {socialLinks.map(({ id, href, icon }) => (
@@ -59,7 +63,9 @@ const SocialIcons = memo(() => (
     ))}
   </div>
 ));
+SocialIcons.displayName = "SocialIcons";
 
+// --- Lazy-loaded Google Map ---
 const LazyMap = () => {
   const { ref, inView } = useInView({
     triggerOnce: true,
@@ -83,7 +89,9 @@ const LazyMap = () => {
     </div>
   );
 };
+LazyMap.displayName = "LazyMap";
 
+// --- Footer Component ---
 const Footer = () => {
   return (
     <footer className="py-8 bg-black/90 text-white" id="contact">

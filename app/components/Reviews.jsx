@@ -32,7 +32,7 @@ const Reviews = () => {
             whileHover={{ scale: 1.03 }}
           >
             <FaQuoteLeft className="absolute top-4 left-4 text-3xl text-rose-400 opacity-30" />
-            <p className="text-lg md:text-xl italic leading-relaxed text-center text-zinc-100">
+            <p className="text-lg md:text-xl italic leading-relaxed text-center">
               “{feedback}”
             </p>
             <footer className="mt-6 text-center text-2xl font-semibold text-rose-300">

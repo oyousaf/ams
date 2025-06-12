@@ -25,7 +25,7 @@ const ScrollToTop = () => {
         onClick={scrollToTop}
         aria-label="Scroll to top"
         className="fixed z-40 bottom-8 right-8 p-3 text-2xl text-white bg-rose-900 rounded-full shadow-lg 
-        cursor-pointer hover:bg-rose-700 neon-tile"
+        cursor-pointer hover:bg-rose-700 hover:glow-pulse"
       >
         <FaArrowUp />
       </button>

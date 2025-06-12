@@ -11,9 +11,10 @@ module.exports = {
         background: "var(--background)",
         foreground: "var(--foreground)",
       },
+      boxShadow: {
+        rosePulse: "0 0 10px #f43f5e, 0 0 30px #f43f5e66",
+      },
     },
   },
-  plugins: [
-    require("tailwind-scrollbar"),
-  ],
+  plugins: [require("tailwind-scrollbar")],
 };

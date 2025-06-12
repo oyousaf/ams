@@ -16,24 +16,24 @@ const About = () => {
       icon: FaCar,
       title: "Certified Quality",
       description:
-        "Every vehicle is hand-picked, fully inspected, and certified for peace of mind — ensuring long-term reliability with no surprises.",
+        "Our hand-selected vehicles undergo multi-point inspections and come certified for long-term performance and peace of mind.",
     },
     {
       icon: FaHandshake,
       title: "Nationwide Convenience",
       description:
-        "From digital paperwork to door-to-door delivery, we offer a seamless experience built around your schedule and location.",
+        "We deliver nationwide, offer remote signups, and tailor every step — from browsing to delivery — around your schedule.",
     },
     {
       icon: FaHistory,
       title: `Established ${yearsEstablished} Years`,
-      description: `Since ${establishedYear}, we’ve built our reputation on transparency, trust, and exceptional customer support.`,
+      description: `Trusted since ${establishedYear}, we’ve built a legacy on transparency, care, and standout service.`,
     },
     {
       icon: FaShieldAlt,
       title: "Flexible & Fair",
       description:
-        "Secure any car with a £99 deposit, explore our flexible finance options, and trade in or sell your car hassle-free.",
+        "Reserve your next car with £99, explore flexible financing, and trade-in or sell your current vehicle with zero hassle.",
     },
   ];
 
@@ -44,27 +44,37 @@ const About = () => {
       </h2>
 
       {/* Feature Tiles */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto text-center">
+      <motion.div
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto text-center"
+        initial="hidden"
+        animate="visible"
+        variants={{
+          hidden: {},
+          visible: {
+            transition: {
+              staggerChildren: 0.12,
+            },
+          },
+        }}
+      >
         {about.map((tile, index) => (
           <motion.div
             key={index}
             whileHover={{
               scale: 1.05,
-              rotateX: 5,
-              rotateY: -5,
-              boxShadow: "0px 8px 30px rgba(255, 0, 70, 0.4)",
+              rotateZ: 1,
             }}
-            transition={{ type: "spring", stiffness: 500, damping: 20 }}
-            className="flex flex-col items-center bg-gradient-to-br from-rose-800 via-rose-700 to-rose-900 p-6 rounded-2xl shadow-md hover:shadow-rose-500/30 transition-all duration-300 border border-rose-700/30"
+            transition={{ type: "spring", stiffness: 600, damping: 20 }}
+            className="tile-glow flex flex-col items-center bg-gradient-to-br from-rose-800 via-rose-700 to-rose-900 p-6 rounded-2xl shadow-inner border-2 border-transparent hover:border-rose-500/80 duration-200"
           >
             <tile.icon className="text-white text-5xl mb-4 drop-shadow-md" />
             <h3 className="text-2xl font-bold text-white mb-2">{tile.title}</h3>
-            <p className="md:text-lg leading-relaxed">
+            <p className="md:text-lg text-zinc-100 leading-relaxed">
               {tile.description}
             </p>
           </motion.div>
         ))}
-      </div>
+      </motion.div>
 
       {/* Gallery */}
       <div className="mt-20 max-w-7xl mx-auto">

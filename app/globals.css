@@ -7,36 +7,77 @@
   --foreground: #ededed;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
-  color: var(--foreground);
   background: var(--background);
+  color: var(--foreground);
   font-family: "GeistMono", monospace;
 }
 
-/* Text utility */
+/* Utilities */
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
 }
 
+/* Components */
 @layer components {
   .tile-glow:hover {
     box-shadow: 0 10px 30px rgba(244, 63, 94, 0.5);
     transform: scale(1.05) rotateX(5deg) rotateY(-5deg);
-    transition: all 0.3s ease-in-out;
+    transition: all 0.2s ease-out;
+  }
+
+  .neon-tile:hover {
+    box-shadow: 0 0 8px #f43f5e, 0 0 20px #f43f5e80, 0 0 30px #f43f5e60;
+    transition: all 0.2s ease-out;
+  }
+
+  .glow-pulse {
+    animation: glowPulse 2.4s infinite ease-in-out;
+  }
+
+  @keyframes glowPulse {
+    0% {
+      box-shadow: 0 0 5px #f43f5e;
+    }
+    50% {
+      box-shadow: 0 0 20px #f43f5eaa;
+    }
+    100% {
+      box-shadow: 0 0 5px #f43f5e;
+    }
+  }
+
+  .mobile-menu {
+    @apply backdrop-blur-md bg-gradient-to-br from-zinc-900/80 via-zinc-800/80 to-zinc-900/90 border-t border-rose-900/30;
+  }
+
+  .nav-link {
+    @apply text-gray-300 hover:text-rose-500 scale-[1.03] transition duration-300 ease-in-out;
+  }
+
+  .menu-icon-pulse {
+    animation: pulseGlow 1.6s infinite ease-in-out;
+  }
+
+  @keyframes pulseGlow {
+    0% {
+      color: #f43f5e;
+      text-shadow: 0 0 0px #f43f5e;
+    }
+    50% {
+      color: #f43f5e;
+      text-shadow: 0 0 10px #f43f5e;
+    }
+    100% {
+      color: #f43f5e;
+      text-shadow: 0 0 0px #f43f5e;
+    }
   }
 }
 
-
-/* Scrollbar Styling */
+/* Scrollbar */
 ::-webkit-scrollbar {
   width: 12px;
   height: 12px;
@@ -56,32 +97,3 @@ body {
 @import "slick-carousel/slick/slick.css";
 @import "slick-carousel/slick/slick-theme.css";
 @import "react-toastify/dist/ReactToastify.css";
-
-/* Mobile Menu Glass Look */
-.mobile-menu {
-  @apply backdrop-blur-md bg-gradient-to-br from-zinc-900/80 via-zinc-800/80 to-zinc-900/90 border-t border-rose-900/30;
-}
-
-/* Nav Link */
-.nav-link {
-  @apply text-gray-300 hover:text-rose-500 scale-[1.03] transition duration-300 ease-in-out;
-}
-
-/* Mobile Icon Pulse */
-.menu-icon-pulse {
-  animation: pulseGlow 1.6s infinite ease-in-out;
-}
-@keyframes pulseGlow {
-  0% {
-    color: #f43f5e;
-    text-shadow: 0 0 0px #f43f5e;
-  }
-  50% {
-    color: #f43f5e;
-    text-shadow: 0 0 10px #f43f5e;
-  }
-  100% {
-    color: #f43f5e;
-    text-shadow: 0 0 0px #f43f5e;
-  }
-}

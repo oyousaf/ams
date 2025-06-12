@@ -5,6 +5,7 @@ import { FaGasPump, FaRegCalendarAlt, FaCarSide } from "react-icons/fa";
 import { PiEngineFill } from "react-icons/pi";
 import { GiGearStickPattern } from "react-icons/gi";
 import { BiSolidTachometer } from "react-icons/bi";
+import Divider from "./Divider";
 
 const CarCard = React.memo(({ car, logo }) => {
   const fallbackImage =
@@ -36,7 +37,7 @@ const CarCard = React.memo(({ car, logo }) => {
   );
 
   return (
-    <div className="rounded-xl p-4 flex flex-col tile-glow bg-gradient-to-br from-rose-900 via-rose-800 to-rose-950 text-white transition-all duration-300 shadow-md hover:glow-pulse">
+    <div className="rounded-xl p-4 flex flex-col tile-glow bg-gradient-to-br from-rose-900 via-rose-800 to-rose-950 text-white transition-all duration-300 shadow-md">
       <Slider {...settings}>
         {car.imageUrl?.length > 0 ? (
           car.imageUrl.map((url, i) => (
@@ -69,7 +70,11 @@ const CarCard = React.memo(({ car, logo }) => {
         {car.title}
       </h3>
 
+      <Divider />
+
       <p className="text-zinc-100 mb-4 text-center">{car.description}</p>
+
+      <Divider />
 
       <div className="grid grid-cols-2 gap-x-6 gap-y-5 text-center font-semibold text-lg md:text-xl mb-6">
         <div>
@@ -100,6 +105,8 @@ const CarCard = React.memo(({ car, logo }) => {
           <p className="text-white">{formattedMileage} miles</p>
         </div>
       </div>
+
+      <Divider />
 
       <p className="text-center text-3xl font-bold text-white hover:text-rose-300 transition">
         <a href="tel:07809107655">£{formattedPrice}</a>

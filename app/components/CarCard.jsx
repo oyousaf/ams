@@ -36,7 +36,7 @@ const CarCard = React.memo(({ car, logo }) => {
   );
 
   return (
-    <li className="rounded-xl p-4 flex flex-col tile-glow bg-gradient-to-br from-rose-900 via-rose-800 to-rose-950 text-white transition-all duration-300 shadow-md">
+    <div className="rounded-xl p-4 flex flex-col tile-glow bg-gradient-to-br from-rose-900 via-rose-800 to-rose-950 text-white transition-all duration-300 shadow-md hover:glow-pulse">
       <Slider {...settings}>
         {car.imageUrl?.length > 0 ? (
           car.imageUrl.map((url, i) => (
@@ -104,7 +104,7 @@ const CarCard = React.memo(({ car, logo }) => {
       <p className="text-center text-3xl font-bold text-white hover:text-rose-300 transition">
         <a href="tel:07809107655">£{formattedPrice}</a>
       </p>
-    </li>
+    </div>
   );
 });
 

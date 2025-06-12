@@ -49,6 +49,7 @@ const EnquiryForm = () => {
       <input
         {...register("name")}
         placeholder="Name"
+        autoComplete="name"
         className="w-full p-3 rounded-md border border-gray-300 focus:ring-rose-600 focus:border-rose-600 text-black"
       />
       {errors.name && (
@@ -59,6 +60,7 @@ const EnquiryForm = () => {
         {...register("email")}
         type="email"
         placeholder="Email"
+        autoComplete="email"
         className="w-full p-3 rounded-md border border-gray-300 focus:ring-rose-600 focus:border-rose-600 text-black"
       />
       {errors.email && (
@@ -69,6 +71,7 @@ const EnquiryForm = () => {
         {...register("phone")}
         type="tel"
         placeholder="Phone"
+        autoComplete="tel"
         className="w-full p-3 rounded-md border border-gray-300 focus:ring-rose-600 focus:border-rose-600 text-black"
       />
       {errors.phone && (

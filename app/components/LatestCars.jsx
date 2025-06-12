@@ -4,9 +4,19 @@ import React, { useEffect, useState, useMemo } from "react";
 import { databases } from "../lib/appwrite";
 import { carMakes, carLogos } from "../constants";
 import CarCard from "./CarCard";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { FaArrowUp, FaArrowDown } from "react-icons/fa";
 import LoadingSpinner from "../dashboard/LoadingSpinner";
+
+const sortOptions = [
+  { key: "mileage", label: "Mileage" },
+  { key: "newest", label: "Newest" },
+  { key: "oldest", label: "Oldest" },
+  { key: "engineLow", label: "Engine ↑" },
+  { key: "engineHigh", label: "Engine ↓" },
+  { key: "priceLow", label: "Price ↑" },
+  { key: "priceHigh", label: "Price ↓" },
+];
 
 const LatestCars = () => {
   const [cars, setCars] = useState([]);
@@ -35,7 +45,7 @@ const LatestCars = () => {
   }, []);
 
   const sortedCars = useMemo(() => {
-    return [...cars].sort((a, b) => {
+    const sorted = [...cars].sort((a, b) => {
       switch (sortOption) {
         case "priceLow":
           return a.price - b.price;
@@ -53,22 +63,8 @@ const LatestCars = () => {
           return new Date(b.createdAt) - new Date(a.createdAt);
       }
     });
+    return sorted;
   }, [cars, sortOption]);
-
-  const getSortLabel = (key) => {
-    const label = key.replace(/([a-z])([A-Z])/g, "$1 $2");
-    return key.includes("Low") ? (
-      <>
-        {label.replace(" Low", "")} <FaArrowUp className="inline" />
-      </>
-    ) : key.includes("High") ? (
-      <>
-        {label.replace(" High", "")} <FaArrowDown className="inline" />
-      </>
-    ) : (
-      label
-    );
-  };
 
   return (
     <section id="cars" className="py-24 px-6 md:px-12">
@@ -76,34 +72,31 @@ const LatestCars = () => {
         Latest Cars
       </h2>
 
+      {/* Sort Dropdown */}
       <div className="flex justify-center mb-12">
         <div className="relative">
           <button
-            className="w-64 border border-rose-700 bg-rose-800 text-white text-lg font-semibold rounded-lg p-3 shadow-md focus:outline-none focus:ring-2 focus:ring-rose-600"
-            onClick={() => setDropdownOpen(!isDropdownOpen)}
+            className="w-64 bg-gradient-to-br from-rose-900 via-rose-800 to-rose-950 text-white text-lg font-semibold rounded-lg p-3 shadow-md focus:outline-none focus:ring-2 focus:ring-rose-600"
+
+            onClick={() => setDropdownOpen((prev) => !prev)}
           >
-            Sort By: {getSortLabel(sortOption)}
+            Sort By: {sortOptions.find((opt) => opt.key === sortOption)?.label}
           </button>
+
           {isDropdownOpen && (
             <ul className="absolute w-64 mt-2 border border-rose-700 bg-rose-800 rounded-lg shadow-lg z-10">
-              {[
-                "newest",
-                "oldest",
-                "engineLow",
-                "engineHigh",
-                "priceLow",
-                "priceHigh",
-                "mileage",
-              ].map((option) => (
+              {sortOptions.map(({ key, label }) => (
                 <li
-                  key={option}
+                  key={key}
                   onClick={() => {
-                    setSortOption(option);
+                    setSortOption(key);
                     setDropdownOpen(false);
                   }}
-                  className="p-2 cursor-pointer hover:bg-rose-100 hover:text-rose-700 rounded-md text-center"
+                  className={`p-2 cursor-pointer hover:bg-rose-100 hover:text-rose-700 rounded-md text-center ${
+                    sortOption === key ? "font-bold text-white" : ""
+                  }`}
                 >
-                  {getSortLabel(option)}
+                  {label}
                 </li>
               ))}
             </ul>
@@ -111,6 +104,7 @@ const LatestCars = () => {
         </div>
       </div>
 
+      {/* Content */}
       {loading ? (
         <div className="flex justify-center items-center h-48">
           <LoadingSpinner />
@@ -120,27 +114,32 @@ const LatestCars = () => {
       ) : sortedCars.length === 0 ? (
         <p className="text-center text-lg text-zinc-200">No cars available.</p>
       ) : (
-        <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
-          {sortedCars.map((car) => {
-            const make = carMakes.find((m) =>
-              car.title.toLowerCase().includes(m.toLowerCase())
-            );
-            const logo = make ? carLogos[make] : null;
+        <motion.ul
+          layout
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto"
+        >
+          <AnimatePresence mode="popLayout">
+            {sortedCars.map((car) => {
+              const make = carMakes.find((m) =>
+                car.title.toLowerCase().includes(m.toLowerCase())
+              );
+              const logo = make ? carLogos[make] : null;
 
-            return (
-              <motion.div
-                key={car.$id}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                whileHover={{ scale: 1.03 }}
-                transition={{ duration: 0.3 }}
-                viewport={{ once: true }}
-              >
-                <CarCard car={car} logo={logo} />
-              </motion.div>
-            );
-          })}
-        </ul>
+              return (
+                <motion.li
+                  key={car.$id}
+                  layout
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <CarCard car={car} logo={logo} />
+                </motion.li>
+              );
+            })}
+          </AnimatePresence>
+        </motion.ul>
       )}
     </section>
   );

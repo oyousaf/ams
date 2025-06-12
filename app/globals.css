@@ -20,31 +20,61 @@ body {
   font-family: "GeistMono", monospace;
 }
 
+/* Text utility */
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
 }
 
-/* Custom Scrollbar */
+/* Scrollbar Styling */
 ::-webkit-scrollbar {
   width: 12px;
   height: 12px;
 }
-
 ::-webkit-scrollbar-thumb {
   background-color: #9f1239;
   border-radius: 8px;
 }
-
 ::-webkit-scrollbar-thumb:hover {
   background-color: #be123c;
 }
-
 ::-webkit-scrollbar-track {
   background-color: #000;
 }
 
+/* Vendor Imports */
 @import "slick-carousel/slick/slick.css";
 @import "slick-carousel/slick/slick-theme.css";
 @import "react-toastify/dist/ReactToastify.css";
+
+.mobile-menu {
+  @apply backdrop-blur-md bg-gradient-to-br from-zinc-900/80 via-zinc-800/80 to-zinc-900/90 border-t border-rose-900/30;
+}
+
+.nav-link {
+  @apply text-gray-300 hover:text-rose-500 scale-[1.03] transition duration-300 ease-in-out;
+}
+
+.social-glow:hover {
+  text-shadow: 0 0 6px #f43f5e;
+  color: #f43f5e;
+}
+
+.menu-icon-pulse {
+  animation: pulseGlow 1.6s infinite ease-in-out;
+}
+@keyframes pulseGlow {
+  0% {
+    color: #f43f5e;
+    text-shadow: 0 0 0px #f43f5e;
+  }
+  50% {
+    color: #f43f5e;
+    text-shadow: 0 0 10px #f43f5e;
+  }
+  100% {
+    color: #f43f5e;
+    text-shadow: 0 0 0px #f43f5e;
+  }
+}

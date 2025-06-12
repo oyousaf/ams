@@ -3,19 +3,19 @@
 import { useState, useEffect } from "react";
 import { RiMenu3Line, RiCloseLine } from "react-icons/ri";
 import Image from "next/image";
-import { navLinks, socialLinks } from "../constants/index";
-import logo from "@/public/logo.png";
 import { motion } from "framer-motion";
+import logo from "@/public/logo.png";
+import { navLinks, socialLinks } from "../constants/index";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const toggleMenu = () => setMenuOpen((prev) => !prev);
 
-  const handleScroll = (sectionId) => {
-    const section = document.getElementById(sectionId);
-    if (section) {
-      section.scrollIntoView({ behavior: "smooth" });
+  const handleScroll = (id) => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth" });
       setMenuOpen(false);
     }
   };
@@ -27,11 +27,12 @@ const Navbar = () => {
 
   return (
     <nav
-      className="bg-black text-white fixed top-0 left-0 right-0 p-4 z-50 shadow-md"
+      className="fixed top-0 left-0 right-0 z-50 p-4 bg-black text-white shadow-md"
       role="navigation"
       aria-label="Main navigation"
     >
       <div className="container mx-auto flex items-center justify-between">
+        {/* Logo */}
         <motion.div
           initial={{ scale: 1 }}
           whileHover={{ scale: 1.1 }}
@@ -47,6 +48,7 @@ const Navbar = () => {
           />
         </motion.div>
 
+        {/* Desktop Nav */}
         <ul className="hidden md:flex space-x-6 lg:space-x-8">
           {navLinks.map(({ id, href, name }) => (
             <motion.li
@@ -57,7 +59,7 @@ const Navbar = () => {
             >
               <button
                 onClick={() => handleScroll(href)}
-                className="text-xl lg:text-2xl hover:text-rose-600 transition duration-300"
+                className="text-xl lg:text-2xl hover:text-rose-500 transition duration-300"
               >
                 {name}
               </button>
@@ -65,6 +67,7 @@ const Navbar = () => {
           ))}
         </ul>
 
+        {/* Social Icons (Desktop) */}
         <div className="hidden md:flex space-x-4 lg:space-x-6">
           {socialLinks.map(({ id, href, icon }) => (
             <motion.a
@@ -72,15 +75,17 @@ const Navbar = () => {
               href={href}
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-rose-600 transition duration-300"
-              whileHover={{ scale: 1.2 }}
-              transition={{ type: "spring", stiffness: 300 }}
+              whileHover={{ scale: 1.25, rotate: [0, -5, 5, -2, 2, 0] }}
+              whileTap={{ scale: 0.9 }}
+              transition={{ type: "spring", stiffness: 700, damping: 12 }}
+              className="text-xl lg:text-2xl xl:text-3xl transition duration-300 transform-gpu social-glow"
             >
               {icon}
             </motion.a>
           ))}
         </div>
 
+        {/* Mobile Menu Button */}
         <button
           onClick={toggleMenu}
           className="text-white md:hidden z-10"
@@ -88,22 +93,22 @@ const Navbar = () => {
           aria-label="Toggle mobile menu"
         >
           {menuOpen ? (
-            <RiCloseLine className="text-5xl" />
+            <RiCloseLine className="text-5xl menu-icon-pulse" />
           ) : (
-            <RiMenu3Line className="text-5xl" />
+            <RiMenu3Line className="text-5xl menu-icon-pulse" />
           )}
         </button>
       </div>
 
       {/* Mobile Full-Screen Menu */}
       <motion.div
-        className="fixed inset-0 bg-black flex flex-col md:hidden"
+        className="fixed inset-0 flex flex-col md:hidden mobile-menu"
         initial={{ x: "100%" }}
         animate={{ x: menuOpen ? 0 : "100%" }}
         transition={{ type: "spring", stiffness: 200, damping: 30 }}
       >
         <div className="flex flex-col items-center justify-center flex-grow">
-          <ul className="space-y-8 text-center flex flex-col items-center">
+          <ul className="space-y-8 text-center">
             {navLinks.map(({ id, href, name }) => (
               <motion.li
                 key={id}
@@ -113,7 +118,7 @@ const Navbar = () => {
               >
                 <button
                   onClick={() => handleScroll(href)}
-                  className="text-4xl font-bold hover:text-rose-600 transition duration-300 uppercase"
+                  className="text-4xl font-bold uppercase cursor-pointer nav-link"
                 >
                   {name}
                 </button>
@@ -122,6 +127,7 @@ const Navbar = () => {
           </ul>
         </div>
 
+        {/* Social Icons (Mobile) */}
         <div className="flex space-x-6 mb-20 justify-center">
           {socialLinks.map(({ id, href, icon }) => (
             <motion.a
@@ -129,9 +135,10 @@ const Navbar = () => {
               href={href}
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-rose-600 transition duration-300"
-              whileHover={{ scale: 1.2 }}
-              transition={{ type: "spring", stiffness: 200 }}
+              whileHover={{ scale: 1.25 }}
+              whileTap={{ scale: 0.9 }}
+              transition={{ type: "spring", stiffness: 600, damping: 14 }}
+              className="text-3xl sm:text-4xl transition duration-300 transform-gpu social-glow"
             >
               {icon}
             </motion.a>

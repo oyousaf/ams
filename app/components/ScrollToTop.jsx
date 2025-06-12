@@ -8,11 +8,7 @@ const ScrollToTop = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 800) {
-        setShowButton(true);
-      } else {
-        setShowButton(false);
-      }
+      setShowButton(window.scrollY > 800);
     };
 
     window.addEventListener("scroll", handleScroll);
@@ -27,7 +23,10 @@ const ScrollToTop = () => {
     showButton && (
       <button
         onClick={scrollToTop}
-        className="fixed z-40 text-3xl md:text-xl bottom-8 right-8 bg-rose-900 text-white hover:bg-rose-700 transition duration-200 cursor-pointer p-3 rounded-full shadow-lg"
+        aria-label="Scroll to top"
+        className={`fixed z-40 bottom-8 right-8 p-3 text-2xl text-white bg-rose-900 rounded-full shadow-lg 
+        cursor-pointer hover:bg-rose-700 
+        neon-tile`}
       >
         <FaArrowUp />
       </button>

@@ -25,11 +25,9 @@ const CarCard = React.memo(({ car, logo }) => {
   );
 
   const formattedMileage = useMemo(() => {
-    if (car.mileage >= 1000) {
-      return `${(car.mileage / 1000).toFixed(0)}k`;
-    } else {
-      return car.mileage.toLocaleString("en-GB");
-    }
+    return car.mileage >= 1000
+      ? `${(car.mileage / 1000).toFixed(0)}k`
+      : car.mileage.toLocaleString("en-GB");
   }, [car.mileage]);
 
   const formattedPrice = useMemo(
@@ -38,97 +36,77 @@ const CarCard = React.memo(({ car, logo }) => {
   );
 
   return (
-    <li className="rounded-md p-4 flex flex-col items-start bg-rose-800 text-gray-200">
-      <div className="w-full mb-4 text-center">
-        <Slider {...settings}>
-          {car.imageUrl?.length > 0 ? (
-            car.imageUrl.map((url, index) => (
-              <div key={url}>
-                <Image
-                  src={url}
-                  alt={`${car.title} ${index + 1}`}
-                  width={500}
-                  height={192}
-                  className="rounded-md object-cover"
-                  priority={index === 0}
-                />
-              </div>
-            ))
-          ) : (
-            <Image
-              src={fallbackImage}
-              alt={car.title}
-              width={500}
-              height={192}
-              className="rounded-md object-cover"
-              priority
-            />
-          )}
-        </Slider>
-
-        <div className="w-full mb-4 mt-4 flex justify-center">{logo}</div>
-        <h3 className="font-bold text-white text-3xl mb-2">{car.title}</h3>
-        <p className="text-gray-300 mb-4 md:text-xl">{car.description}</p>
-        <div className="grid grid-cols-1 gap-y-1 text-white md:text-lg mt-8">
-          <div className="grid grid-cols-2 gap-4 mb-4">
-            {/* Engine Type */}
-            <div className="flex flex-col items-center justify-center">
-              <PiEngineFill size={40} className="mb-2" />
-              <span className="font-bold text-xl text-rose-200">
-                {car.engineType}
-              </span>
+    <li className="rounded-xl p-4 flex flex-col bg-rose-800 text-white neon-tile hover:glow-pulse transition-all duration-300">
+      <Slider {...settings}>
+        {car.imageUrl?.length > 0 ? (
+          car.imageUrl.map((url, i) => (
+            <div key={url}>
+              <Image
+                src={url}
+                alt={`${car.title} ${i + 1}`}
+                width={500}
+                height={192}
+                className="rounded-md object-cover"
+                priority={i === 0}
+              />
             </div>
+          ))
+        ) : (
+          <Image
+            src={fallbackImage}
+            alt={car.title}
+            width={500}
+            height={192}
+            className="rounded-md object-cover"
+            priority
+          />
+        )}
+      </Slider>
 
-            {/* Engine Size */}
-            <div className="flex flex-col items-center justify-center">
-              <FaGasPump size={40} className="mb-2" />
-              <span className="font-bold text-xl text-rose-200">
-                {car.engineSize}L
-              </span>
-            </div>
+      {logo && <div className="w-full my-4 flex justify-center">{logo}</div>}
 
-            {/* Transmission */}
-            <div className="flex flex-col items-center justify-center">
-              <GiGearStickPattern size={40} className="mb-2" />
-              <span className="font-bold text-xl text-rose-200">
-                {car.transmission}
-              </span>
-            </div>
+      <h3 className="font-bold text-white text-2xl md:text-3xl mb-2 text-center">
+        {car.title}
+      </h3>
 
-            {/* Car Type */}
-            <div className="flex flex-col items-center justify-center">
-              <FaCarSide size={40} className="mb-2" />
-              <span className="font-bold text-xl text-rose-200">
-                {car.carType}
-              </span>
-            </div>
+      <p className="text-zinc-100 mb-4 text-center">{car.description}</p>
 
-            {/* Year */}
-            <div className="flex flex-col items-center justify-center">
-              <FaRegCalendarAlt size={40} className="mb-2" />
-              <span className="font-bold text-xl text-rose-200">
-                {car.year}
-              </span>
-            </div>
-            
-            {/* Mileage */}
-            <div className="flex flex-col items-center justify-center">
-              <BiSolidTachometer size={40} className="mb-2" />
-              <span className="font-bold text-xl text-rose-200">
-                {formattedMileage} Miles
-              </span>
-            </div>
-          </div>
-
-          <p className="font-bold text-3xl text-gray-300 hover:text-white text-center pt-2">
-            <a href="tel:07809107655">£{formattedPrice}</a>
-          </p>
+      <div className="grid grid-cols-2 gap-x-6 gap-y-5 text-center font-semibold text-lg md:text-xl mb-6">
+        <div>
+          <PiEngineFill size={28} className="mx-auto mb-1 text-rose-200" />
+          <p className="text-white">{car.engineType}</p>
+        </div>
+        <div>
+          <FaGasPump size={28} className="mx-auto mb-1 text-rose-200" />
+          <p className="text-white">{car.engineSize}L</p>
+        </div>
+        <div>
+          <GiGearStickPattern
+            size={28}
+            className="mx-auto mb-1 text-rose-200"
+          />
+          <p className="text-white">{car.transmission}</p>
+        </div>
+        <div>
+          <FaCarSide size={28} className="mx-auto mb-1 text-rose-200" />
+          <p className="text-white">{car.carType}</p>
+        </div>
+        <div>
+          <FaRegCalendarAlt size={28} className="mx-auto mb-1 text-rose-200" />
+          <p className="text-white">{car.year}</p>
+        </div>
+        <div>
+          <BiSolidTachometer size={28} className="mx-auto mb-1 text-rose-200" />
+          <p className="text-white">{formattedMileage} miles</p>
         </div>
       </div>
+
+      <p className="text-center text-3xl font-bold text-white hover:text-rose-300 transition">
+        <a href="tel:07809107655">£{formattedPrice}</a>
+      </p>
     </li>
   );
 });
 
 CarCard.displayName = "CarCard";
-
 export default CarCard;

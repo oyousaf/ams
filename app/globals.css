@@ -48,19 +48,17 @@ body {
 @import "slick-carousel/slick/slick-theme.css";
 @import "react-toastify/dist/ReactToastify.css";
 
+/* Mobile Menu Glass Look */
 .mobile-menu {
   @apply backdrop-blur-md bg-gradient-to-br from-zinc-900/80 via-zinc-800/80 to-zinc-900/90 border-t border-rose-900/30;
 }
 
+/* Nav Link */
 .nav-link {
   @apply text-gray-300 hover:text-rose-500 scale-[1.03] transition duration-300 ease-in-out;
 }
 
-.social-glow:hover {
-  text-shadow: 0 0 6px #f43f5e;
-  color: #f43f5e;
-}
-
+/* Mobile Icon Pulse */
 .menu-icon-pulse {
   animation: pulseGlow 1.6s infinite ease-in-out;
 }

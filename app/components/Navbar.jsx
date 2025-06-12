@@ -123,7 +123,7 @@ const Navbar = () => {
               >
                 <button
                   onClick={() => handleScroll(href)}
-                  className="text-4xl font-bold hover:text-rose-600 transition-colors duration-300 ease-in-out uppercase cursor-pointer"
+                  className="text-5xl font-bold hover:text-rose-600 transition-colors duration-300 ease-in-out uppercase cursor-pointer"
                 >
                   {name}
                 </button>

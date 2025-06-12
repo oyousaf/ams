@@ -75,9 +75,9 @@ const Navbar = () => {
               href={href}
               target="_blank"
               rel="noopener noreferrer"
-              whileHover={{ scale: 1.25, rotate: [0, -5, 5, -2, 2, 0] }}
-              whileTap={{ scale: 0.9 }}
-              transition={{ type: "spring", stiffness: 700, damping: 12 }}
+              whileHover={{ scale: 1.25 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ type: "spring", stiffness: 600, damping: 14 }}
               className="text-xl lg:text-2xl xl:text-3xl transition duration-300 transform-gpu social-glow"
             >
               {icon}
@@ -136,7 +136,7 @@ const Navbar = () => {
               target="_blank"
               rel="noopener noreferrer"
               whileHover={{ scale: 1.25 }}
-              whileTap={{ scale: 0.9 }}
+              whileTap={{ scale: 0.95 }}
               transition={{ type: "spring", stiffness: 600, damping: 14 }}
               className="text-3xl sm:text-4xl transition duration-300 transform-gpu social-glow"
             >

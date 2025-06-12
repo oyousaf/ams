@@ -14,11 +14,11 @@ const Reviews = () => {
         Reviews
       </h2>
 
-      <div className="space-y-12 max-w-5xl mx-auto">
+      <div className="space-y-12 max-w-5xl mx-auto ">
         {reviews.map(({ name, feedback }, index) => (
           <motion.blockquote
             key={index}
-            className="relative p-8 sm:p-10 rounded-2xl bg-gradient-to-br from-rose-900 via-rose-800 to-rose-950 text-white neon-tile shadow-md"
+            className="relative p-8 sm:p-10 rounded-2xl tile-glow bg-gradient-to-br from-rose-900 via-rose-800 to-rose-950 text-white shadow-md"
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}

@@ -36,7 +36,7 @@ const CarCard = React.memo(({ car, logo }) => {
   );
 
   return (
-    <li className="rounded-xl p-4 flex flex-col bg-gradient-to-br from-rose-900 via-rose-800 to-rose-950 text-white transition-all duration-300 shadow-md hover:tile-glow">
+    <li className="rounded-xl p-4 flex flex-col tile-glow bg-gradient-to-br from-rose-900 via-rose-800 to-rose-950 text-white transition-all duration-300 shadow-md">
       <Slider {...settings}>
         {car.imageUrl?.length > 0 ? (
           car.imageUrl.map((url, i) => (

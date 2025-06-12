@@ -21,20 +21,17 @@ const Navbar = () => {
   };
 
   useEffect(() => {
-    const body = document.body;
-    menuOpen
-      ? body.classList.add("overflow-hidden")
-      : body.classList.remove("overflow-hidden");
-
-    return () => {
-      body.classList.remove("overflow-hidden");
-    };
+    document.body.classList.toggle("overflow-hidden", menuOpen);
+    return () => document.body.classList.remove("overflow-hidden");
   }, [menuOpen]);
 
   return (
-    <nav className="bg-black text-white fixed top-0 left-0 right-0 p-4 z-50 shadow-md">
+    <nav
+      className="bg-black text-white fixed top-0 left-0 right-0 p-4 z-50 shadow-md"
+      role="navigation"
+      aria-label="Main navigation"
+    >
       <div className="container mx-auto flex items-center justify-between">
-        {/* Logo */}
         <motion.div
           initial={{ scale: 1 }}
           whileHover={{ scale: 1.1 }}
@@ -44,13 +41,12 @@ const Navbar = () => {
         >
           <Image
             src={logo}
-            alt="logo"
-            priority={true}
+            alt="Ace Motor Sales logo"
+            priority
             className="w-[120px] sm:w-[150px] md:w-[200px]"
           />
         </motion.div>
 
-        {/* Desktop & Tablet Menu */}
         <ul className="hidden md:flex space-x-6 lg:space-x-8">
           {navLinks.map(({ id, href, name }) => (
             <motion.li
@@ -61,7 +57,7 @@ const Navbar = () => {
             >
               <button
                 onClick={() => handleScroll(href)}
-                className="text-xl lg:text-2xl hover:text-rose-600 transition-colors duration-300 ease-in-out cursor-pointer"
+                className="text-xl lg:text-2xl hover:text-rose-600 transition duration-300"
               >
                 {name}
               </button>
@@ -69,7 +65,6 @@ const Navbar = () => {
           ))}
         </ul>
 
-        {/* Social Media Icons (Desktop & Tablet) */}
         <div className="hidden md:flex space-x-4 lg:space-x-6">
           {socialLinks.map(({ id, href, icon }) => (
             <motion.a
@@ -77,7 +72,7 @@ const Navbar = () => {
               href={href}
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-rose-600 transition-colors duration-300 ease-in-out"
+              className="hover:text-rose-600 transition duration-300"
               whileHover={{ scale: 1.2 }}
               transition={{ type: "spring", stiffness: 300 }}
             >
@@ -86,12 +81,11 @@ const Navbar = () => {
           ))}
         </div>
 
-        {/* Mobile Menu Button */}
         <button
           onClick={toggleMenu}
-          className="text-white md:hidden z-10 focus:outline-none"
+          className="text-white md:hidden z-10"
           aria-expanded={menuOpen}
-          aria-label="Toggle navigation menu"
+          aria-label="Toggle mobile menu"
         >
           {menuOpen ? (
             <RiCloseLine className="text-5xl" />
@@ -106,11 +100,7 @@ const Navbar = () => {
         className="fixed inset-0 bg-black flex flex-col md:hidden"
         initial={{ x: "100%" }}
         animate={{ x: menuOpen ? 0 : "100%" }}
-        transition={{
-          type: "spring",
-          stiffness: 200,
-          damping: 30,
-        }}
+        transition={{ type: "spring", stiffness: 200, damping: 30 }}
       >
         <div className="flex flex-col items-center justify-center flex-grow">
           <ul className="space-y-8 text-center flex flex-col items-center">
@@ -123,7 +113,7 @@ const Navbar = () => {
               >
                 <button
                   onClick={() => handleScroll(href)}
-                  className="text-4xl font-bold hover:text-rose-600 transition-colors duration-300 ease-in-out uppercase cursor-pointer"
+                  className="text-4xl font-bold hover:text-rose-600 transition duration-300 uppercase"
                 >
                   {name}
                 </button>
@@ -132,7 +122,6 @@ const Navbar = () => {
           </ul>
         </div>
 
-        {/* Social Media Icons (Mobile) */}
         <div className="flex space-x-6 mb-20 justify-center">
           {socialLinks.map(({ id, href, icon }) => (
             <motion.a
@@ -140,7 +129,7 @@ const Navbar = () => {
               href={href}
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-rose-600 transition-colors duration-300 ease-in-out"
+              className="hover:text-rose-600 transition duration-300"
               whileHover={{ scale: 1.2 }}
               transition={{ type: "spring", stiffness: 200 }}
             >

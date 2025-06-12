@@ -54,12 +54,12 @@ const About = () => {
               rotateY: -5,
               boxShadow: "0px 8px 30px rgba(255, 0, 70, 0.4)",
             }}
-            transition={{ type: "spring", stiffness: 250, damping: 20 }}
+            transition={{ type: "spring", stiffness: 500, damping: 20 }}
             className="flex flex-col items-center bg-gradient-to-br from-rose-800 via-rose-700 to-rose-900 p-6 rounded-2xl shadow-md hover:shadow-rose-500/30 transition-all duration-300 border border-rose-700/30"
           >
             <tile.icon className="text-white text-5xl mb-4 drop-shadow-md" />
             <h3 className="text-2xl font-bold text-white mb-2">{tile.title}</h3>
-            <p className="md:text-lg text-zinc-100 leading-relaxed">
+            <p className="md:text-lg leading-relaxed">
               {tile.description}
             </p>
           </motion.div>

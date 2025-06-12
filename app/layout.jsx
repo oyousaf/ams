@@ -99,7 +99,7 @@ export default function RootLayout({ children }) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
         />
       </head>
-      <body className="min-h-screen bg-black/90 text-white">
+      <body className="min-h-screen text-zinc-100">
         <div role="main" className="max-w-7xl mx-auto relative">
           <Navbar />
           <main>{children}</main>

@@ -3,8 +3,8 @@
 @tailwind utilities;
 
 :root {
-  --background: #000;
-  --foreground: #fff;
+  --background: #0a0a0a;
+  --foreground: #ededed;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -26,6 +26,15 @@ body {
     text-wrap: balance;
   }
 }
+
+@layer components {
+  .tile-glow:hover {
+    box-shadow: 0 10px 30px rgba(244, 63, 94, 0.5);
+    transform: scale(1.05) rotateX(5deg) rotateY(-5deg);
+    transition: all 0.3s ease-in-out;
+  }
+}
+
 
 /* Scrollbar Styling */
 ::-webkit-scrollbar {

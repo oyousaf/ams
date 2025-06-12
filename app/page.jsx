@@ -2,7 +2,7 @@
 
 import HeroSection from "./components/HeroSection";
 import About from "./components/About";
-//import LatestCars from "./components/LatestCars";
+import LatestCars from "./components/LatestCars";
 import Reviews from "./components/Reviews";
 import ScrollToTop from "./components/ScrollToTop";
 import Snow from "./components/Snow";
@@ -12,6 +12,7 @@ const Home = () => {
     <div>
       <HeroSection />
       <About />
+      <LatestCars />
       <Reviews />
       <ScrollToTop />
       <Snow />

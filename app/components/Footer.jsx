@@ -62,7 +62,7 @@ const Footer = () => {
             href={href}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-2xl hover:text-rose-500 "
+            className="text-2xl hover:text-rose-500"
             whileHover={{ scale: 1.2 }}
             transition={{ type: "spring", stiffness: 300 }}
           >

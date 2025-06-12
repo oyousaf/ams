@@ -28,9 +28,12 @@ body {
     transition: all 0.2s ease-out;
   }
 
-  .neon-tile:hover {
+  .neon-tile {
+    transition: box-shadow 0.2s ease-out;
+  }
+
+  .neon-tile:focus-within {
     box-shadow: 0 0 8px #f43f5e, 0 0 20px #f43f5e80, 0 0 30px #f43f5e60;
-    transition: all 0.2s ease-out;
   }
 
   .glow-pulse {
@@ -73,6 +76,23 @@ body {
     100% {
       color: #f43f5e;
       text-shadow: 0 0 0px #f43f5e;
+    }
+  }
+
+  .ringing-phone {
+    animation: pulseRing 1.8s infinite ease-in-out;
+    text-shadow: 0 0 6px #f43f5e, 0 0 12px #f43f5e40;
+  }
+
+  @keyframes pulseRing {
+    0%,
+    100% {
+      transform: scale(1);
+      text-shadow: 0 0 6px #f43f5e, 0 0 12px #f43f5e40;
+    }
+    50% {
+      transform: scale(1.05);
+      text-shadow: 0 0 10px #f43f5e, 0 0 20px #f43f5e80;
     }
   }
 }

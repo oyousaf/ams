@@ -43,81 +43,55 @@ const EnquiryForm = () => {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="flex flex-col w-full h-full max-w-md space-y-4 bg-rose-800 p-6 rounded-lg shadow-md"
-      name="enquiry-form"
-      id="enquiry-form"
+      className="w-full max-w-md p-6 space-y-4 rounded-xl neon-tile bg-gradient-to-br from-rose-900 via-rose-800 to-rose-950 shadow-lg"
       autoComplete="off"
     >
-      <label htmlFor="name" className="sr-only">
-        Name
-      </label>
       <input
         {...register("name")}
-        id="name"
-        name="name"
         placeholder="Name"
-        className="w-full mt-1 p-3 text-black border border-gray-300 rounded-md focus:ring-rose-600 focus:border-rose-600"
-        autoComplete="name"
+        className="w-full p-3 rounded-md border border-gray-300 focus:ring-rose-600 focus:border-rose-600 text-black"
       />
       {errors.name && (
-        <p className="text-red-200 text-sm mt-1">{errors.name.message}</p>
+        <p className="text-red-200 text-sm">{errors.name.message}</p>
       )}
 
-      <label htmlFor="email" className="sr-only">
-        Email
-      </label>
       <input
         {...register("email")}
-        id="email"
-        name="email"
         type="email"
         placeholder="Email"
-        className="w-full mt-1 p-3 text-black border border-gray-300 rounded-md focus:ring-rose-600 focus:border-rose-600"
-        autoComplete="email"
+        className="w-full p-3 rounded-md border border-gray-300 focus:ring-rose-600 focus:border-rose-600 text-black"
       />
       {errors.email && (
-        <p className="text-red-200 text-sm mt-1">{errors.email.message}</p>
+        <p className="text-red-200 text-sm">{errors.email.message}</p>
       )}
 
-      <label htmlFor="phone" className="sr-only">
-        Contact number
-      </label>
       <input
         {...register("phone")}
-        id="phone"
-        name="phone"
         type="tel"
-        placeholder="Contact number"
-        className="w-full mt-1 p-3 text-black border border-gray-300 rounded-md focus:ring-rose-600 focus:border-rose-600"
-        autoComplete="tel"
+        placeholder="Phone"
+        className="w-full p-3 rounded-md border border-gray-300 focus:ring-rose-600 focus:border-rose-600 text-black"
       />
       {errors.phone && (
-        <p className="text-red-200 text-sm mt-1">{errors.phone.message}</p>
+        <p className="text-red-200 text-sm">{errors.phone.message}</p>
       )}
 
-      <label htmlFor="message" className="sr-only">
-        Message
-      </label>
       <textarea
         {...register("message")}
-        id="message"
-        name="message"
         placeholder="Message..."
-        className="w-full h-32 mt-1 p-3 text-black border border-gray-300 rounded-md focus:ring-rose-600 focus:border-rose-600"
-        autoComplete="off"
+        className="w-full h-32 p-3 rounded-md border border-gray-300 focus:ring-rose-600 focus:border-rose-600 text-black"
       />
       {errors.message && (
-        <p className="text-red-200 text-sm mt-1">{errors.message.message}</p>
+        <p className="text-red-200 text-sm">{errors.message.message}</p>
       )}
 
       {status && <p className="text-green-200 text-sm">{status}</p>}
 
       <button
         type="submit"
-        className={`w-full py-3 mt-4 bg-rose-600 text-white rounded-md font-semibold hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-rose-600 focus:ring-opacity-50 ${
+        disabled={isSubmitting}
+        className={`w-full py-3 bg-rose-600 text-white rounded-md font-semibold hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-rose-600 ${
           isSubmitting && "opacity-70 cursor-not-allowed"
         }`}
-        disabled={isSubmitting}
       >
         {isSubmitting ? "Sending..." : "Submit Enquiry"}
       </button>

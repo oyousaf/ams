@@ -14,28 +14,28 @@ export const socialLinks = [
     id: 1,
     href: "https://www.facebook.com/acemotorsales1",
     icon: (
-      <FaFacebook className="text-3xl hover:text-rose-600 transition-all ease-in-out duration-300" />
+      <FaFacebook className="text-4xl md:text-3xl hover:text-rose-600 transition-all ease-in-out duration-300" />
     ),
   },
   {
     id: 2,
     href: "https://www.instagram.com/acemotorsltd",
     icon: (
-      <FaInstagram className="text-3xl hover:text-rose-600 transition-all ease-in-out duration-300" />
+      <FaInstagram className="text-4xl md:text-3xl hover:text-rose-600 transition-all ease-in-out duration-300" />
     ),
   },
   {
     id: 3,
     href: "mailto:acemotorslimited@hotmail.com",
     icon: (
-      <IoMail className="text-3xl hover:text-rose-600 transition-all ease-in-out duration-300" />
+      <IoMail className="text-4xl md:text-3xl hover:text-rose-600 transition-all ease-in-out duration-300" />
     ),
   },
   {
     id: 4,
     href: "tel:07809107655",
     icon: (
-      <FaPhone className="text-3xl hover:text-rose-600 transition-all ease-in-out duration-300" />
+      <FaPhone className="text-4xl md:text-3xl hover:text-rose-600 transition-all ease-in-out duration-300" />
     ),
   },
 ];

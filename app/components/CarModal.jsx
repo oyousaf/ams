@@ -22,17 +22,20 @@ const CarModal = ({ car, logo, onClose }) => {
   const [isLoaded, setIsLoaded] = useState(false);
 
   const handleKeyDown = useCallback(
-    (e) => {
-      if (e.key === "Escape") onClose();
-    },
+    (e) => e.key === "Escape" && onClose(),
     [onClose]
   );
 
   useEffect(() => {
+    const scrollBarWidth =
+      window.innerWidth - document.documentElement.clientWidth;
     document.body.style.overflow = "hidden";
+    document.body.style.paddingRight = `${scrollBarWidth}px`;
+
     window.addEventListener("keydown", handleKeyDown);
     return () => {
       document.body.style.overflow = "auto";
+      document.body.style.paddingRight = "0px";
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [handleKeyDown]);
@@ -95,7 +98,7 @@ const CarModal = ({ car, logo, onClose }) => {
             className="rounded-md overflow-hidden mb-6"
           >
             {!isLoaded && (
-              <div className="flex items-center justify-center h-[300px] md:h-[400px] bg-zinc-800">
+              <div className="flex justify-center items-center h-[300px] md:h-[400px] bg-black bg-opacity-20">
                 <LoadingSpinner />
               </div>
             )}
@@ -108,11 +111,13 @@ const CarModal = ({ car, logo, onClose }) => {
                       alt={`${car.title} ${i + 1}`}
                       width={800}
                       height={400}
-                      className="object-cover w-full h-[300px] md:h-[400px] rounded-md"
+                      className={`object-cover w-full h-[300px] md:h-[400px] rounded-md transition-opacity duration-300 ${
+                        isLoaded ? "opacity-100" : "opacity-0"
+                      }`}
                       style={{ width: "auto", height: "auto" }}
                       loading={i === 0 ? "eager" : "lazy"}
-                      onLoad={() => setIsLoaded(true)}
                       placeholder="empty"
+                      onLoad={() => setIsLoaded(true)}
                     />
                   </div>
                 )
@@ -120,7 +125,7 @@ const CarModal = ({ car, logo, onClose }) => {
             </Slider>
           </div>
 
-          {/* Badges */}
+          {/* Badges & CTA */}
           <div className="flex flex-wrap gap-3 mb-6 justify-center items-center">
             {car.isFeatured && (
               <span className="bg-yellow-400 text-black text-sm px-4 py-1 rounded-full font-semibold uppercase shadow">
@@ -132,17 +137,14 @@ const CarModal = ({ car, logo, onClose }) => {
                 Sold
               </span>
             )}
-            {/* Price */}
-            <div className="flex flex-col items-center gap-3">
-              <a href="tel:07809107655">
-                <span className="inline-block bg-rose-500 hover:bg-rose-600 text-white px-6 py-2 rounded-full font-semibold text-base md:text-lg shadow">
-                  £{formattedPrice}
-                </span>
-              </a>
-            </div>
+            <a
+              href="tel:07809107655"
+              className="bg-rose-500 text-2xl glow-pulse px-4 py-1 rounded-full font-semibold shadow hover:bg-rose-600 transition inline-block"
+            >
+              £{formattedPrice}
+            </a>
           </div>
 
-          {/* Logo */}
           {logo && <div className="flex justify-center mb-4">{logo}</div>}
 
           {/* Title */}
@@ -158,8 +160,8 @@ const CarModal = ({ car, logo, onClose }) => {
 
           <Divider />
 
-          {/* Specs Grid */}
-          <div className="grid grid-cols-2 md:flex md:flex-wrap md:justify-center gap-x-6 gap-y-5 md:gap-8 text-center font-semibold text-lg md:text-xl mb-6">
+          {/* Specs */}
+          <div className="grid grid-cols-2 md:flex md:flex-wrap md:justify-center gap-6 text-center font-semibold text-lg md:text-xl mb-6">
             <div>
               <PiEngineFill size={28} className="mx-auto mb-1 text-rose-200" />
               <p>{car.engineType}</p>

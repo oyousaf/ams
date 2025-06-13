@@ -4,8 +4,8 @@ import React, { useEffect, useState, useMemo } from "react";
 import { databases } from "../lib/appwrite";
 import { carMakes, carLogos } from "../constants";
 import CarCard from "./CarCard";
+import CarModal from "./CarModal";
 import { motion, AnimatePresence } from "framer-motion";
-import { FaArrowUp, FaArrowDown } from "react-icons/fa";
 import LoadingSpinner from "../dashboard/LoadingSpinner";
 
 const sortOptions = [
@@ -24,6 +24,7 @@ const LatestCars = () => {
   const [error, setError] = useState(null);
   const [sortOption, setSortOption] = useState("newest");
   const [isDropdownOpen, setDropdownOpen] = useState(false);
+  const [selectedCar, setSelectedCar] = useState(null);
 
   useEffect(() => {
     const fetchCars = async () => {
@@ -45,7 +46,7 @@ const LatestCars = () => {
   }, []);
 
   const sortedCars = useMemo(() => {
-    const sorted = [...cars].sort((a, b) => {
+    return [...cars].sort((a, b) => {
       switch (sortOption) {
         case "priceLow":
           return a.price - b.price;
@@ -63,7 +64,6 @@ const LatestCars = () => {
           return new Date(b.createdAt) - new Date(a.createdAt);
       }
     });
-    return sorted;
   }, [cars, sortOption]);
 
   return (
@@ -72,12 +72,10 @@ const LatestCars = () => {
         Latest Cars
       </h2>
 
-      {/* Sort Dropdown */}
       <div className="flex justify-center mb-12">
         <div className="relative">
           <button
-            className="w-64 bg-gradient-to-br from-rose-900 via-rose-800 to-rose-950 text-white text-lg font-semibold rounded-lg p-3 shadow-md focus:outline-none focus:ring-2 focus:ring-rose-600"
-
+            className="w-64 bg-gradient-to-br from-rose-900 via-rose-800 to-rose-950 text-white text-lg font-semibold rounded-lg p-3 shadow-md"
             onClick={() => setDropdownOpen((prev) => !prev)}
           >
             Sort By: {sortOptions.find((opt) => opt.key === sortOption)?.label}
@@ -104,7 +102,6 @@ const LatestCars = () => {
         </div>
       </div>
 
-      {/* Content */}
       {loading ? (
         <div className="flex justify-center items-center h-48">
           <LoadingSpinner />
@@ -134,12 +131,24 @@ const LatestCars = () => {
                   exit={{ opacity: 0, scale: 0.95 }}
                   transition={{ duration: 0.3 }}
                 >
-                  <CarCard car={car} logo={logo} />
+                  <CarCard
+                    car={car}
+                    logo={logo}
+                    onOpen={() => setSelectedCar({ ...car, logo })}
+                  />
                 </motion.li>
               );
             })}
           </AnimatePresence>
         </motion.ul>
+      )}
+
+      {selectedCar && (
+        <CarModal
+          car={selectedCar}
+          logo={selectedCar.logo}
+          onClose={() => setSelectedCar(null)}
+        />
       )}
     </section>
   );

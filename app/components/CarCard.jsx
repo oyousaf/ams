@@ -1,35 +1,14 @@
+"use client";
+
 import React, { useMemo } from "react";
-import Slider from "react-slick";
 import Image from "next/image";
-import { FaGasPump, FaRegCalendarAlt, FaCarSide } from "react-icons/fa";
-import { PiEngineFill } from "react-icons/pi";
-import { GiGearStickPattern } from "react-icons/gi";
-import { BiSolidTachometer } from "react-icons/bi";
+import { FaSearch } from "react-icons/fa";
 import Divider from "./Divider";
+import { motion } from "framer-motion";
 
-const CarCard = React.memo(({ car, logo }) => {
-  const fallbackImage =
-    "https://cdn.elferspot.com/wp-content/uploads/2021/12/269712451_4431790080281806_5749846471891286432_n-Kopie.jpeg";
-
-  const settings = useMemo(
-    () => ({
-      dots: false,
-      arrows: false,
-      infinite: car.imageUrl?.length > 1,
-      speed: 500,
-      slidesToShow: 1,
-      slidesToScroll: 1,
-      autoplay: true,
-      autoplaySpeed: 5000,
-    }),
-    [car.imageUrl]
-  );
-
-  const formattedMileage = useMemo(() => {
-    return car.mileage >= 1000
-      ? `${(car.mileage / 1000).toFixed(0)}k`
-      : car.mileage.toLocaleString("en-GB");
-  }, [car.mileage]);
+const CarCard = React.memo(({ car, logo, onOpen }) => {
+  const fallbackImage = "/fallback.webp";
+  const firstImage = car.imageUrl?.[0] || fallbackImage;
 
   const formattedPrice = useMemo(
     () => car.price.toLocaleString("en-GB"),
@@ -37,32 +16,29 @@ const CarCard = React.memo(({ car, logo }) => {
   );
 
   return (
-    <div className="rounded-xl p-4 flex flex-col tile-glow bg-gradient-to-br from-rose-900 via-rose-800 to-rose-950 text-white transition-all duration-300 shadow-md">
-      <Slider {...settings}>
-        {car.imageUrl?.length > 0 ? (
-          car.imageUrl.map((url, i) => (
-            <div key={url}>
-              <Image
-                src={url}
-                alt={`${car.title} ${i + 1}`}
-                width={500}
-                height={192}
-                className="rounded-md object-cover"
-                priority={i === 0}
-              />
-            </div>
-          ))
-        ) : (
-          <Image
-            src={fallbackImage}
-            alt={car.title}
-            width={500}
-            height={192}
-            className="rounded-md object-cover"
-            priority
-          />
-        )}
-      </Slider>
+    <motion.div
+      onClick={onOpen}
+      onKeyDown={(e) => e.key === "Enter" && onOpen()}
+      tabIndex={0}
+      role="button"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      whileHover={{
+        scale: 1.02,
+        boxShadow: "0 0 20px rgba(244, 63, 94, 0.4)",
+      }}
+      transition={{ duration: 0.3 }}
+      className="cursor-pointer rounded-xl p-4 flex flex-col tile-glow bg-gradient-to-br from-rose-900 via-rose-800 to-rose-950 text-white shadow-md focus:outline-none focus:ring-2 focus:ring-rose-400"
+    >
+      <Image
+        src={firstImage}
+        alt={car.title}
+        width={500}
+        height={192}
+        style={{ height: "auto", width: "100%" }}
+        className="w-full object-cover rounded-md"
+        priority
+      />
 
       {logo && <div className="w-full my-4 flex justify-center">{logo}</div>}
 
@@ -72,46 +48,22 @@ const CarCard = React.memo(({ car, logo }) => {
 
       <Divider />
 
-      <p className="text-zinc-100 mb-4 text-center">{car.description}</p>
-
-      <Divider />
-
-      <div className="grid grid-cols-2 gap-x-6 gap-y-5 text-center font-semibold text-lg md:text-xl mb-6">
-        <div>
-          <PiEngineFill size={28} className="mx-auto mb-1 text-rose-200" />
-          <p className="text-white">{car.engineType}</p>
-        </div>
-        <div>
-          <FaGasPump size={28} className="mx-auto mb-1 text-rose-200" />
-          <p className="text-white">{car.engineSize}L</p>
-        </div>
-        <div>
-          <GiGearStickPattern
-            size={28}
-            className="mx-auto mb-1 text-rose-200"
-          />
-          <p className="text-white">{car.transmission}</p>
-        </div>
-        <div>
-          <FaCarSide size={28} className="mx-auto mb-1 text-rose-200" />
-          <p className="text-white">{car.carType}</p>
-        </div>
-        <div>
-          <FaRegCalendarAlt size={28} className="mx-auto mb-1 text-rose-200" />
-          <p className="text-white">{car.year}</p>
-        </div>
-        <div>
-          <BiSolidTachometer size={28} className="mx-auto mb-1 text-rose-200" />
-          <p className="text-white">{formattedMileage} miles</p>
-        </div>
-      </div>
-
-      <Divider />
-
-      <p className="text-center text-3xl font-bold text-white hover:text-rose-300 transition">
-        <a href="tel:07809107655">£{formattedPrice}</a>
+      <p className="text-zinc-100 mb-6 text-center text-base md:text-lg line-clamp-3">
+        {car.description}
       </p>
-    </div>
+
+      <Divider />
+
+      <div className="text-center mt-auto">
+        <p className="md:text-3xl text-2xl font-bold text-white hover:text-rose-300 mb-4">
+          £{formattedPrice}
+        </p>
+        <FaSearch
+          size={24}
+          className="mx-auto text-white hover:text-rose-300 transition"
+        />
+      </div>
+    </motion.div>
   );
 });
 

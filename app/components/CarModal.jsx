@@ -19,35 +19,9 @@ import LoadingSpinner from "../dashboard/LoadingSpinner";
 const CarModal = ({ car, logo, onClose }) => {
   const fallbackImage = "/fallback.webp";
   const sliderRef = useRef(null);
+  const modalRef = useRef(null);
   const [isLoaded, setIsLoaded] = useState(false);
-
-  const handleKeyDown = useCallback(
-    (e) => e.key === "Escape" && onClose(),
-    [onClose]
-  );
-
-  useEffect(() => {
-    const scrollBarWidth =
-      window.innerWidth - document.documentElement.clientWidth;
-    document.body.style.overflow = "hidden";
-    document.body.style.paddingRight = `${scrollBarWidth}px`;
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.body.style.overflow = "auto";
-      document.body.style.paddingRight = "0px";
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [handleKeyDown]);
-
-  const handleWheel = (e) => {
-    if (!sliderRef.current) return;
-    if (e.deltaY > 0 || e.deltaX > 0) {
-      sliderRef.current.slickNext();
-    } else if (e.deltaY < 0 || e.deltaX < 0) {
-      sliderRef.current.slickPrev();
-    }
-  };
+  const touchStartY = useRef(null);
 
   const formattedMileage =
     car.mileage >= 1000
@@ -68,6 +42,49 @@ const CarModal = ({ car, logo, onClose }) => {
     swipe: true,
   };
 
+  const handleKeyDown = useCallback(
+    (e) => {
+      if (e.key === "Escape") onClose();
+      if (e.key === "ArrowRight") sliderRef.current?.slickNext();
+      if (e.key === "ArrowLeft") sliderRef.current?.slickPrev();
+    },
+    [onClose]
+  );
+
+  const handleTouchStart = (e) => {
+    touchStartY.current = e.touches[0].clientY;
+  };
+
+  const handleTouchEnd = (e) => {
+    const touchEndY = e.changedTouches[0].clientY;
+    if (touchStartY.current !== null && touchEndY - touchStartY.current > 100) {
+      onClose();
+    }
+  };
+
+  const handleOutsideClick = (e) => {
+    if (modalRef.current && !modalRef.current.contains(e.target)) {
+      onClose();
+    }
+  };
+
+  useEffect(() => {
+    const scrollBarWidth =
+      window.innerWidth - document.documentElement.clientWidth;
+    document.body.style.overflow = "hidden";
+    document.body.style.paddingRight = `${scrollBarWidth}px`;
+
+    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("mousedown", handleOutsideClick);
+
+    return () => {
+      document.body.style.overflow = "auto";
+      document.body.style.paddingRight = "0px";
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, [handleKeyDown]);
+
   return (
     <AnimatePresence>
       <motion.div
@@ -75,13 +92,19 @@ const CarModal = ({ car, logo, onClose }) => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
       >
         <motion.div
+          ref={modalRef}
           className="relative bg-gradient-to-br from-rose-900 via-rose-800 to-rose-950 text-white w-full max-w-screen-md md:max-h-[95vh] rounded-xl tile-glow p-6 shadow-xl overflow-hidden"
           initial={{ scale: 0.95 }}
           animate={{ scale: 1 }}
           exit={{ scale: 0.95 }}
           transition={{ duration: 0.3 }}
+          role="dialog"
+          aria-modal="true"
+          aria-label={`${car.title} details`}
         >
           {/* Close Button */}
           <button
@@ -94,7 +117,14 @@ const CarModal = ({ car, logo, onClose }) => {
 
           {/* Image Slider */}
           <div
-            onWheel={handleWheel}
+            onWheel={(e) => {
+              if (!sliderRef.current) return;
+              if (e.deltaY > 0 || e.deltaX > 0) {
+                sliderRef.current.slickNext();
+              } else if (e.deltaY < 0 || e.deltaX < 0) {
+                sliderRef.current.slickPrev();
+              }
+            }}
             className="rounded-md overflow-hidden mb-6"
           >
             {!isLoaded && (

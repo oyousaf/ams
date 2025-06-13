@@ -1,42 +1,10 @@
 "use client";
 
-import { useState } from "react";
-import { FaHandshake, FaCar, FaHistory, FaShieldAlt } from "react-icons/fa";
-import { gallery } from "../constants";
+import { aboutTiles, gallery } from "../constants";
 import ImageTile from "./ImageTile";
 import { motion } from "framer-motion";
 
 const About = () => {
-  const [currentYear] = useState(new Date().getFullYear());
-  const establishedYear = 2022;
-  const yearsEstablished = currentYear - establishedYear;
-
-  const about = [
-    {
-      icon: FaCar,
-      title: "Certified Quality",
-      description:
-        "Our vehicles undergo multi-point inspections and come certified for long-term performance and peace of mind.",
-    },
-    {
-      icon: FaHandshake,
-      title: "Nationwide Convenience",
-      description:
-        "We deliver nationwide and tailor every step — from browsing to delivery — around your schedule.",
-    },
-    {
-      icon: FaHistory,
-      title: `Established ${yearsEstablished} Years`,
-      description: `Trusted since ${establishedYear}, we’ve built a legacy on transparency, care, and standout service.`,
-    },
-    {
-      icon: FaShieldAlt,
-      title: "Flexible & Fair",
-      description:
-        "Reserve your next car with £99, explore flexible financing, and trade-in or sell your current vehicle with zero hassle.",
-    },
-  ];
-
   return (
     <section className="py-16 px-4 lg:px-8" id="about">
       <h2 className="text-4xl md:text-5xl font-bold text-center mb-12 text-white">
@@ -51,19 +19,14 @@ const About = () => {
         variants={{
           hidden: {},
           visible: {
-            transition: {
-              staggerChildren: 0.12,
-            },
+            transition: { staggerChildren: 0.12 },
           },
         }}
       >
-        {about.map((tile, index) => (
+        {aboutTiles.map((tile, index) => (
           <motion.div
             key={index}
-            whileHover={{
-              scale: 1.05,
-              rotateZ: 1,
-            }}
+            whileHover={{ scale: 1.05, rotateZ: 1 }}
             transition={{ type: "spring", stiffness: 600, damping: 20 }}
             className="tile-glow flex flex-col items-center bg-gradient-to-br from-rose-800 via-rose-700 to-rose-900 p-6 rounded-2xl shadow-inner border-2 border-transparent hover:border-rose-500/80 duration-200"
           >
@@ -102,7 +65,11 @@ const About = () => {
               }}
               transition={{ type: "spring", stiffness: 180, damping: 18 }}
             >
-              <ImageTile src={src} alt={`Image ${index + 1}`} />
+              <ImageTile
+                src={src}
+                alt={`Gallery image ${index + 1}`}
+                priority={index === 0}
+              />
             </motion.div>
           ))}
         </motion.div>

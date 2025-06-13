@@ -6,6 +6,38 @@ export const navLinks = [
   { id: 5, href: "contact", name: "Contact" },
 ];
 
+import { FaCar, FaHandshake, FaHistory, FaShieldAlt } from "react-icons/fa";
+
+const currentYear = new Date().getFullYear();
+const establishedYear = 2022;
+const yearsEstablished = currentYear - establishedYear;
+
+export const aboutTiles = [
+  {
+    icon: FaCar,
+    title: "Certified Quality",
+    description:
+      "Each car is thoroughly inspected and certified to ensure lasting performance and total peace of mind.",
+  },
+  {
+    icon: FaHandshake,
+    title: "Trusted Nationwide",
+    description:
+      "From first call to final delivery, we provide reliable UK-wide service with honesty, care, and convenience.",
+  },
+    {
+    icon: FaShieldAlt,
+    title: "Flexibility",
+    description:
+      "Reserve your next car for £99, explore flexible financing or sell your current vehicle with zero hassle.",
+  },
+  {
+    icon: FaHistory,
+    title: `Established ${yearsEstablished} Years`,
+    description: `Trusted since ${establishedYear}, we’ve built a legacy on transparency, care, and standout service.`,
+  },
+];
+
 import { FaInstagram, FaFacebook, FaPhone } from "react-icons/fa";
 import { IoMail } from "react-icons/io5";
 

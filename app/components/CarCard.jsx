@@ -37,7 +37,8 @@ const CarCard = React.memo(({ car, logo, onOpen }) => {
         height={192}
         style={{ height: "auto", width: "100%" }}
         className="w-full object-cover rounded-md"
-        priority
+        blurDataURL="/fallback.webp"
+        placeholder="blur"
       />
 
       {logo && <div className="w-full my-4 flex justify-center">{logo}</div>}

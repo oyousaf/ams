@@ -16,13 +16,13 @@ const About = () => {
       icon: FaCar,
       title: "Certified Quality",
       description:
-        "Our hand-selected vehicles undergo multi-point inspections and come certified for long-term performance and peace of mind.",
+        "Our vehicles undergo multi-point inspections and come certified for long-term performance and peace of mind.",
     },
     {
       icon: FaHandshake,
       title: "Nationwide Convenience",
       description:
-        "We deliver nationwide, offer remote signups, and tailor every step — from browsing to delivery — around your schedule.",
+        "We deliver nationwide and tailor every step — from browsing to delivery — around your schedule.",
     },
     {
       icon: FaHistory,

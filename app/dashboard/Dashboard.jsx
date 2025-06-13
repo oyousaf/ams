@@ -126,7 +126,7 @@ const Dashboard = () => {
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
         className="w-full max-w-md px-4 py-2 rounded-xl border border-rose-300 bg-rose-900 placeholder:text-rose-400 shadow-md"
-        placeholder="Search cars..."
+        placeholder="Search..."
       />
       <div className="relative w-64">
         <button

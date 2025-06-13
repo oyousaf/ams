@@ -2,43 +2,31 @@
 
 import React, { useState, memo } from "react";
 import { IoTrash } from "react-icons/io5";
+import { FaEdit, FaSave, FaTimes } from "react-icons/fa";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 import { databases } from "../lib/appwrite";
+import ConfirmModal from "./ConfirmModal";
 
 const FALLBACK_IMAGE = "/fallback.webp";
 
-const CarListItem = ({ car, setCars }) => {
+const CarListItem = ({ car, setCars, fetchCars }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedCar, setEditedCar] = useState({ ...car });
   const [saving, setSaving] = useState(false);
   const [hasError, setHasError] = useState(false);
-
-  const carTypes = [
-    "Convertible",
-    "Coupe",
-    "Crossover",
-    "Estate",
-    "Hatchback",
-    "Minivan",
-    "Pickup",
-    "Saloon",
-    "Sports",
-    "SUV",
-    "Truck",
-    "Van",
-  ];
+  const [confirmOpen, setConfirmOpen] = useState(false);
 
   const imageUrl = hasError ? FALLBACK_IMAGE : car.imageUrl;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    const parsedValue = ["price", "mileage", "engineSize", "year"].includes(
-      name
-    )
-      ? Number(value)
-      : value;
-    setEditedCar((prev) => ({ ...prev, [name]: parsedValue }));
+    setEditedCar((prev) => ({
+      ...prev,
+      [name]: ["price", "mileage", "engineSize", "year"].includes(name)
+        ? Number(value)
+        : value,
+    }));
   };
 
   const handleSave = async () => {
@@ -52,13 +40,12 @@ const CarListItem = ({ car, setCars }) => {
         car.$id,
         {
           title: editedCar.title,
-          description: editedCar.description,
           price: editedCar.price,
-          engineType: editedCar.engineType,
-          engineSize: editedCar.engineSize,
-          transmission: editedCar.transmission,
           mileage: editedCar.mileage,
+          engineSize: editedCar.engineSize,
           year: editedCar.year,
+          transmission: editedCar.transmission,
+          engineType: editedCar.engineType,
           carType: editedCar.carType,
         }
       );
@@ -81,7 +68,6 @@ const CarListItem = ({ car, setCars }) => {
   };
 
   const handleDelete = async () => {
-    if (!confirm(`Delete ${car.title}?`)) return;
     try {
       const { storage } = await import("../lib/appwrite");
       for (const fileId of car.imageFileIds || []) {
@@ -99,6 +85,7 @@ const CarListItem = ({ car, setCars }) => {
 
       setCars((prev) => prev.filter((c) => c.$id !== car.$id));
       toast.success("Car deleted!", { id: `toast-delete-${car.$id}` });
+      setConfirmOpen(false);
     } catch (err) {
       console.error(err);
       toast.error("Failed to delete car.", { id: `toast-delete-${car.$id}` });
@@ -134,73 +121,80 @@ const CarListItem = ({ car, setCars }) => {
             type="text"
             value={editedCar.title}
             onChange={handleChange}
-            className="w-full px-2 py-1 bg-white text-rose-900 rounded font-semibold text-lg  glow-pulse"
+            className="w-full px-2 py-1 bg-rose-200 text-rose-900 rounded font-semibold text-lg glow-pulse"
           />
         ) : (
           <h3 className="font-bold text-white text-2xl ">{car.title}</h3>
         )}
-        <p className="text-gray-300 mb-2">
-          {isEditing ? (
-            <textarea
-              name="description"
-              value={editedCar.description}
-              onChange={handleChange}
-              className="w-full px-2 py-1 rounded bg-rose-100 text-rose-900"
-            />
-          ) : (
-            car.description
-          )}
-        </p>
+        <p className="text-gray-300 mb-2">{car.description}</p>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-white">
-          {["price", "mileage", "engineSize", "year"].map((key) => (
+          {[
+            ["Price", "price", "£"],
+            ["Mileage", "mileage", ""],
+            ["Engine Type", "engineType"],
+            ["Engine Size", "engineSize", "L"],
+            ["Transmission", "transmission"],
+            ["Year", "year"],
+            ["Type", "carType"],
+          ].map(([label, key, unit = ""]) => (
             <p key={key}>
-              {key.charAt(0).toUpperCase() + key.slice(1)}:{" "}
-              {isEditing ? (
+              {label}:{" "}
+              {isEditing &&
+              ["price", "mileage", "engineSize", "year"].includes(key) ? (
                 <input
                   name={key}
+                  value={editedCar[key]}
                   type="number"
                   step={key === "engineSize" ? "0.1" : "1"}
-                  value={editedCar[key]}
                   onChange={handleChange}
-                  className="px-2 py-1 rounded bg-rose-100 text-rose-900"
+                  className="px-2 py-1 rounded bg-rose-200 text-rose-900"
                 />
-              ) : (
-                <span className="font-semibold text-rose-300">
-                  {key === "price"
-                    ? `£${editedCar[key].toLocaleString()}`
-                    : key === "engineSize"
-                    ? `${editedCar[key]}L`
-                    : editedCar[key]}
-                </span>
-              )}
-            </p>
-          ))}
-
-          {["engineType", "transmission", "carType"].map((key) => (
-            <p key={key}>
-              {key.charAt(0).toUpperCase() + key.slice(1)}:{" "}
-              {isEditing ? (
+              ) : isEditing &&
+                ["engineType", "transmission", "carType"].includes(key) ? (
                 <select
                   name={key}
                   value={editedCar[key]}
                   onChange={handleChange}
-                  className="px-2 py-1 rounded bg-rose-100 text-rose-900"
+                  className="px-2 py-1 rounded bg-rose-200 text-rose-900"
                 >
-                  {(key === "engineType"
-                    ? ["Electric", "Diesel", "Hybrid", "Petrol"]
-                    : key === "transmission"
-                    ? ["Automatic", "Manual"]
-                    : carTypes
-                  ).map((option) => (
-                    <option key={option} value={option}>
-                      {option}
-                    </option>
-                  ))}
+                  {key === "engineType" &&
+                    ["Electric", "Diesel", "Hybrid", "Petrol"].map((option) => (
+                      <option key={option} value={option}>
+                        {option}
+                      </option>
+                    ))}
+                  {key === "transmission" &&
+                    ["Automatic", "Manual"].map((option) => (
+                      <option key={option} value={option}>
+                        {option}
+                      </option>
+                    ))}
+                  {key === "carType" &&
+                    [
+                      "Convertible",
+                      "Coupe",
+                      "Crossover",
+                      "Estate",
+                      "Hatchback",
+                      "Minivan",
+                      "Pickup",
+                      "Saloon",
+                      "Sports",
+                      "SUV",
+                      "Truck",
+                      "Van",
+                    ].map((option) => (
+                      <option key={option} value={option}>
+                        {option}
+                      </option>
+                    ))}
                 </select>
               ) : (
                 <span className="font-semibold text-rose-300">
-                  {editedCar[key]}
+                  {unit}
+                  {car[key]}
+                  {unit === "L" ? "L" : ""}
                 </span>
               )}
             </p>
@@ -233,20 +227,29 @@ const CarListItem = ({ car, setCars }) => {
         ) : (
           <button
             onClick={() => setIsEditing(true)}
-            className="hover:text-blue-500"
+            className="text-blue-400 hover:text-blue-600"
             title="Edit"
           >
             ✏️
           </button>
         )}
         <button
-          onClick={handleDelete}
+          onClick={() => setConfirmOpen(true)}
           className="text-rose-400 hover:text-rose-600"
           title="Delete"
         >
-          <IoTrash size={22} />
+          🗑️
         </button>
       </div>
+
+      {/* 🔒 Inline Modal Only for This Car */}
+      <ConfirmModal
+        isOpen={confirmOpen}
+        onClose={() => setConfirmOpen(false)}
+        onConfirm={handleDelete}
+        title={`Delete ${car.title}?`}
+        message="This will permanently remove the car from your listings."
+      />
     </motion.li>
   );
 };

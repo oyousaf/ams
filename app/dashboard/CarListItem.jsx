@@ -1,8 +1,6 @@
 "use client";
 
 import React, { useState, memo } from "react";
-import { IoTrash } from "react-icons/io5";
-import { FaEdit, FaSave, FaTimes } from "react-icons/fa";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 import { databases } from "../lib/appwrite";

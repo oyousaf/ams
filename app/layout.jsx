@@ -2,8 +2,7 @@ import "./globals.css";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-
-import { toast, Toaster } from "sonner";
+import { Toaster } from "sonner";
 
 export const metadata = {
   title: "Ace Motor Sales - Certified Used Cars with Nationwide Delivery",
@@ -66,8 +65,7 @@ const structuredData = {
   url: metadata.canonicalUrl,
   logo: "/apple-touch-icon.png",
   image: "/hero.jpg",
-  description:
-    "Explore certified, pre-owned vehicles with top quality, reliability, and performance.",
+  description: metadata.description,
   address: {
     "@type": "PostalAddress",
     streetAddress: "4 Westgate",
@@ -91,7 +89,10 @@ const structuredData = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en-gb" className="min-h-full antialiased">
+    <html
+      lang="en-gb"
+      className="min-h-full scroll-smooth antialiased bg-black"
+    >
       <head>
         <script
           type="application/ld+json"
@@ -99,20 +100,19 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body className="min-h-screen text-zinc-100">
-        <div role="main" className="max-w-7xl mx-auto relative">
-          <Navbar />
-          <main>{children}</main>
-          <SpeedInsights />
-          <Toaster
-            position="top-right"
-            duration={3000}
-            richColors
-            closeButton
-            visibleToasts={5}
-          />
-
-          <Footer />
-        </div>
+        <Navbar />
+        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {children}
+        </main>
+        <Footer />
+        <Toaster
+          position="top-right"
+          duration={3000}
+          richColors
+          closeButton
+          visibleToasts={5}
+        />
+        <SpeedInsights />
       </body>
     </html>
   );

@@ -8,7 +8,7 @@ import { databases } from "../lib/appwrite";
 
 const FALLBACK_IMAGE = "/fallback.webp";
 
-const CarListItem = ({ car, setCars, fetchCars }) => {
+const CarListItem = ({ car, setCars }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedCar, setEditedCar] = useState({ ...car });
   const [saving, setSaving] = useState(false);

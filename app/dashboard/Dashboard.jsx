@@ -50,7 +50,8 @@ const Dashboard = () => {
     const isValid =
       savedPasskey === process.env.NEXT_PUBLIC_DASHBOARD_PASSKEY &&
       savedTimestamp &&
-      Date.now() - parseInt(savedTimestamp, 10) <= SESSION_EXPIRY_DAYS * 86400000;
+      Date.now() - parseInt(savedTimestamp, 10) <=
+        SESSION_EXPIRY_DAYS * 86400000;
     if (isValid) {
       setIsAuthenticated(true);
       document.documentElement.style.overflow = "hidden";
@@ -58,19 +59,22 @@ const Dashboard = () => {
     }
   }, []);
 
-  const handlePasskeySubmit = useCallback((e) => {
-    e.preventDefault();
-    if (passkey === process.env.NEXT_PUBLIC_DASHBOARD_PASSKEY) {
-      sessionStorage.setItem(SESSION_KEY, passkey);
-      sessionStorage.setItem(SESSION_TIMESTAMP_KEY, Date.now().toString());
-      setIsAuthenticated(true);
-      setError("");
-      document.documentElement.style.overflow = "hidden";
-      document.body.style.overflow = "hidden";
-    } else {
-      setError("Incorrect passkey. Please try again.");
-    }
-  }, [passkey]);
+  const handlePasskeySubmit = useCallback(
+    (e) => {
+      e.preventDefault();
+      if (passkey === process.env.NEXT_PUBLIC_DASHBOARD_PASSKEY) {
+        sessionStorage.setItem(SESSION_KEY, passkey);
+        sessionStorage.setItem(SESSION_TIMESTAMP_KEY, Date.now().toString());
+        setIsAuthenticated(true);
+        setError("");
+        document.documentElement.style.overflow = "hidden";
+        document.body.style.overflow = "hidden";
+      } else {
+        setError("Incorrect passkey. Please try again.");
+      }
+    },
+    [passkey]
+  );
 
   const fetchCars = useCallback(async () => {
     setLoading(true);
@@ -93,7 +97,10 @@ const Dashboard = () => {
   }, [isAuthenticated, fetchCars]);
 
   useEffect(() => {
-    const timeout = setTimeout(() => setDebouncedQuery(searchQuery), DEBOUNCE_DELAY);
+    const timeout = setTimeout(
+      () => setDebouncedQuery(searchQuery),
+      DEBOUNCE_DELAY
+    );
     return () => clearTimeout(timeout);
   }, [searchQuery]);
 
@@ -102,18 +109,34 @@ const Dashboard = () => {
     if (debouncedQuery.trim()) {
       const q = debouncedQuery.toLowerCase();
       filtered = filtered.filter((car) =>
-        [car.make, car.model, car.title, car.year].join(" ").toLowerCase().includes(q)
+        [car.make, car.model, car.title, car.year]
+          .join(" ")
+          .toLowerCase()
+          .includes(q)
       );
     }
 
     switch (sortOption) {
-      case "priceLow": filtered.sort((a, b) => a.price - b.price); break;
-      case "priceHigh": filtered.sort((a, b) => b.price - a.price); break;
-      case "mileage": filtered.sort((a, b) => a.mileage - b.mileage); break;
-      case "engineLow": filtered.sort((a, b) => a.engineSize - b.engineSize); break;
-      case "engineHigh": filtered.sort((a, b) => b.engineSize - a.engineSize); break;
-      case "oldest": filtered.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt)); break;
-      default: filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      case "priceLow":
+        filtered.sort((a, b) => a.price - b.price);
+        break;
+      case "priceHigh":
+        filtered.sort((a, b) => b.price - a.price);
+        break;
+      case "mileage":
+        filtered.sort((a, b) => a.mileage - b.mileage);
+        break;
+      case "engineLow":
+        filtered.sort((a, b) => a.engineSize - b.engineSize);
+        break;
+      case "engineHigh":
+        filtered.sort((a, b) => b.engineSize - a.engineSize);
+        break;
+      case "oldest":
+        filtered.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+        break;
+      default:
+        filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     }
 
     setFilteredCars(filtered);
@@ -179,7 +202,10 @@ const Dashboard = () => {
         <div className="max-w-7xl mx-auto">
           <header className="relative flex justify-center items-center h-[80px] mb-6">
             <Link href="/" className="absolute right-0 top-1">
-              <GoHomeFill size={36} className="hover:text-rose-300 transition" />
+              <GoHomeFill
+                size={36}
+                className="hover:text-rose-300 transition"
+              />
             </Link>
             <Image src="/logo.png" alt="Logo" width={120} height={80} />
           </header>
@@ -216,7 +242,11 @@ const Dashboard = () => {
               {loading ? (
                 <LoadingSpinner />
               ) : (
-                <CarList cars={filteredCars} setCars={setCars} fetchCars={fetchCars} />
+                <CarList
+                  cars={filteredCars}
+                  setCars={setCars}
+                  fetchCars={fetchCars}
+                />
               )}
             </motion.div>
           )}
@@ -229,7 +259,11 @@ const Dashboard = () => {
               exit={{ opacity: 0, x: -50 }}
               transition={{ duration: 0.3 }}
             >
-              <AddCarForm setCars={setCars} fetchCars={fetchCars} />
+              <AddCarForm
+                setCars={setCars}
+                fetchCars={fetchCars}
+                setActiveTab={setActiveTab}
+              />
             </motion.div>
           )}
         </div>

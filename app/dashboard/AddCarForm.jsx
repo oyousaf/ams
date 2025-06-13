@@ -109,7 +109,7 @@ const AddCarForm = ({ setCars, fetchCars, setActiveTab }) => {
         const validationError =
           "Something's not quite right. Please check all relevant fields and try again.";
         setError(validationError);
-        toast.error(validationError);
+        toast.error(validationError, { id: "add-car-toast" });
         return;
       }
 
@@ -119,16 +119,22 @@ const AddCarForm = ({ setCars, fetchCars, setActiveTab }) => {
         const imageUrls = [];
 
         for (const image of newCar.images) {
-          const file = await storage.createFile(
-            process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID,
-            ID.unique(),
-            image
-          );
-
-          imageFileIds.push(file.$id);
-          imageUrls.push(
-            `${process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT}/storage/buckets/${process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID}/files/${file.$id}/view?project=${process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID}&mode=admin`
-          );
+          try {
+            const file = await storage.createFile(
+              process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID,
+              ID.unique(),
+              image
+            );
+            imageFileIds.push(file.$id);
+            imageUrls.push(
+              `${process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT}/storage/buckets/${process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID}/files/${file.$id}/view?project=${process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID}&mode=admin`
+            );
+          } catch (uploadErr) {
+            console.error("Image upload failed:", uploadErr);
+            toast.error("Failed to upload image(s).", { id: "add-car-toast" });
+            setLoading(false);
+            return;
+          }
         }
 
         const carData = await databases.createDocument(
@@ -151,14 +157,20 @@ const AddCarForm = ({ setCars, fetchCars, setActiveTab }) => {
           }
         );
 
-        toast.success("Car added successfully!");
+        if (!carData || !carData.$id) {
+          throw new Error("Invalid car data response.");
+        }
+
+        toast.success("Car added successfully!", { id: "add-car-toast" });
         setCars((prev) => [...prev, carData]);
         fetchCars();
         setActiveTab("carList");
         resetForm();
-      } catch (error) {
-        console.error("Error adding car:", error);
-        toast.error("Failed to add car. Please try again.");
+      } catch (err) {
+        console.error("Error during car add flow:", err);
+        toast.error("Failed to add car. Please try again.", {
+          id: "add-car-toast",
+        });
       } finally {
         setLoading(false);
       }

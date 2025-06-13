@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { FaArrowDown } from "react-icons/fa";
 
@@ -14,19 +15,29 @@ const HeroSection = () => {
   return (
     <section
       id="hero"
-      className="relative flex flex-col justify-center items-center h-screen px-6 py-12 text-center bg-cover bg-center overflow-hidden"
-      style={{ backgroundImage: "url('/hero.jpg')" }}
+      className="relative flex flex-col justify-center items-center h-screen px-6 py-12 text-center overflow-hidden"
       aria-label="Hero banner for Ace Motor Sales"
     >
+      {/* Background image */}
+      <Image
+        src="/hero.jpg"
+        alt="Hero background"
+        fill
+        priority
+        placeholder="blur"
+        blurDataURL="/fallback.webp"
+        className="object-cover z-0"
+      />
+
       {/* Gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-black/80 via-zinc-900/70 to-black/80 backdrop-blur-sm" />
+      <div className="absolute inset-0 bg-gradient-to-br from-black/80 via-zinc-900/70 to-black/80 backdrop-blur-sm z-10" />
 
       {/* Content */}
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
-        className="relative z-10 text-white max-w-4xl mx-auto"
+        className="relative z-20 text-white max-w-4xl mx-auto"
       >
         <h1 className="text-2xl md:text-4xl font-bold mb-6 leading-relaxed tracking-tight">
           Explore our selection of certified, pre-owned vehicles — thoroughly

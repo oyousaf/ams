@@ -123,7 +123,7 @@ const CarModal = ({ car, logo, onClose }) => {
                 Sold
               </span>
             )}
-            <span className="bg-white text-black text-sm px-4 py-1 rounded-full font-semibold shadow">
+            <span className="bg-rose-500 text-2xl px-4 py-1 rounded-full font-semibold shadow">
               £{formattedPrice}
             </span>
           </div>

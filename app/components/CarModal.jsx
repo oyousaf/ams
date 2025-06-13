@@ -14,6 +14,7 @@ import { PiEngineFill } from "react-icons/pi";
 import { GiGearStickPattern } from "react-icons/gi";
 import { BiSolidTachometer } from "react-icons/bi";
 import Divider from "./Divider";
+import LoadingSpinner from "../dashboard/LoadingSpinner";
 
 const CarModal = ({ car, logo, onClose }) => {
   const fallbackImage = "/fallback.webp";
@@ -79,6 +80,7 @@ const CarModal = ({ car, logo, onClose }) => {
           exit={{ scale: 0.95 }}
           transition={{ duration: 0.3 }}
         >
+          {/* Close Button */}
           <button
             className="absolute top-4 right-4 text-white text-2xl hover:text-rose-400 transition z-50"
             onClick={onClose}
@@ -87,10 +89,16 @@ const CarModal = ({ car, logo, onClose }) => {
             <FaTimes />
           </button>
 
+          {/* Image Slider */}
           <div
             onWheel={handleWheel}
             className="rounded-md overflow-hidden mb-6"
           >
+            {!isLoaded && (
+              <div className="flex items-center justify-center h-[300px] md:h-[400px] bg-zinc-800">
+                <LoadingSpinner />
+              </div>
+            )}
             <Slider {...sliderSettings} ref={sliderRef}>
               {(car.imageUrl?.length ? car.imageUrl : [fallbackImage]).map(
                 (url, i) => (
@@ -103,8 +111,8 @@ const CarModal = ({ car, logo, onClose }) => {
                       className="object-cover w-full h-[300px] md:h-[400px] rounded-md"
                       style={{ width: "auto", height: "auto" }}
                       loading={i === 0 ? "eager" : "lazy"}
-                      placeholder="empty"
                       onLoad={() => setIsLoaded(true)}
+                      placeholder="empty"
                     />
                   </div>
                 )
@@ -112,7 +120,8 @@ const CarModal = ({ car, logo, onClose }) => {
             </Slider>
           </div>
 
-          <div className="flex flex-wrap gap-3 mb-6 justify-center">
+          {/* Badges */}
+          <div className="flex flex-wrap gap-3 mb-6 justify-center items-center">
             {car.isFeatured && (
               <span className="bg-yellow-400 text-black text-sm px-4 py-1 rounded-full font-semibold uppercase shadow">
                 Featured
@@ -123,13 +132,20 @@ const CarModal = ({ car, logo, onClose }) => {
                 Sold
               </span>
             )}
-            <span className="bg-rose-500 text-2xl px-4 py-1 rounded-full font-semibold shadow">
-              £{formattedPrice}
-            </span>
+            {/* Price */}
+            <div className="flex flex-col items-center gap-3">
+              <a href="tel:07809107655">
+                <span className="inline-block bg-rose-500 hover:bg-rose-600 text-white px-6 py-2 rounded-full font-semibold text-base md:text-lg shadow">
+                  £{formattedPrice}
+                </span>
+              </a>
+            </div>
           </div>
 
+          {/* Logo */}
           {logo && <div className="flex justify-center mb-4">{logo}</div>}
 
+          {/* Title */}
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-2">
             {car.title}
           </h2>
@@ -142,52 +158,41 @@ const CarModal = ({ car, logo, onClose }) => {
 
           <Divider />
 
-          {/* Flex layout on desktop */}
+          {/* Specs Grid */}
           <div className="grid grid-cols-2 md:flex md:flex-wrap md:justify-center gap-x-6 gap-y-5 md:gap-8 text-center font-semibold text-lg md:text-xl mb-6">
             <div>
               <PiEngineFill size={28} className="mx-auto mb-1 text-rose-200" />
-              <p className="text-white">{car.engineType}</p>
+              <p>{car.engineType}</p>
             </div>
             <div>
               <FaGasPump size={28} className="mx-auto mb-1 text-rose-200" />
-              <p className="text-white">{car.engineSize}L</p>
+              <p>{car.engineSize}L</p>
             </div>
             <div>
               <GiGearStickPattern
                 size={28}
                 className="mx-auto mb-1 text-rose-200"
               />
-              <p className="text-white">{car.transmission}</p>
+              <p>{car.transmission}</p>
             </div>
             <div>
               <FaCarSide size={28} className="mx-auto mb-1 text-rose-200" />
-              <p className="text-white">{car.carType}</p>
+              <p>{car.carType}</p>
             </div>
             <div>
               <FaRegCalendarAlt
                 size={28}
                 className="mx-auto mb-1 text-rose-200"
               />
-              <p className="text-white">{car.year}</p>
+              <p>{car.year}</p>
             </div>
             <div>
               <BiSolidTachometer
                 size={28}
                 className="mx-auto mb-1 text-rose-200"
               />
-              <p className="text-white">{formattedMileage} miles</p>
+              <p>{formattedMileage} miles</p>
             </div>
-          </div>
-
-          <Divider />
-
-          <div className="text-center text-2xl font-bold mt-6">
-            <a
-              href="tel:07809107655"
-              className="inline-block bg-rose-600 hover:bg-rose-700 transition text-white px-6 py-3 rounded-full shadow-lg"
-            >
-              Call to Enquire
-            </a>
           </div>
         </motion.div>
       </motion.div>

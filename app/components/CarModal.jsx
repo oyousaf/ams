@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useCallback, useRef } from "react";
+import React, { useEffect, useCallback, useRef, useState } from "react";
 import Image from "next/image";
 import Slider from "react-slick";
 import { motion, AnimatePresence } from "framer-motion";
@@ -18,8 +18,8 @@ import Divider from "./Divider";
 const CarModal = ({ car, logo, onClose }) => {
   const fallbackImage = "/fallback.webp";
   const sliderRef = useRef(null);
+  const [isLoaded, setIsLoaded] = useState(false);
 
-  // Handle ESC to close
   const handleKeyDown = useCallback(
     (e) => {
       if (e.key === "Escape") onClose();
@@ -36,10 +36,8 @@ const CarModal = ({ car, logo, onClose }) => {
     };
   }, [handleKeyDown]);
 
-  // Mouse wheel horizontal scroll
   const handleWheel = (e) => {
     if (!sliderRef.current) return;
-
     if (e.deltaY > 0 || e.deltaX > 0) {
       sliderRef.current.slickNext();
     } else if (e.deltaY < 0 || e.deltaX < 0) {
@@ -81,7 +79,6 @@ const CarModal = ({ car, logo, onClose }) => {
           exit={{ scale: 0.95 }}
           transition={{ duration: 0.3 }}
         >
-          {/* Close Button */}
           <button
             className="absolute top-4 right-4 text-white text-2xl hover:text-rose-400 transition z-50"
             onClick={onClose}
@@ -90,7 +87,6 @@ const CarModal = ({ car, logo, onClose }) => {
             <FaTimes />
           </button>
 
-          {/* Image Slider */}
           <div
             onWheel={handleWheel}
             className="rounded-md overflow-hidden mb-6"
@@ -106,6 +102,9 @@ const CarModal = ({ car, logo, onClose }) => {
                       height={400}
                       className="object-cover w-full h-[300px] md:h-[400px] rounded-md"
                       style={{ width: "auto", height: "auto" }}
+                      loading={i === 0 ? "eager" : "lazy"}
+                      placeholder="empty"
+                      onLoad={() => setIsLoaded(true)}
                     />
                   </div>
                 )
@@ -113,7 +112,6 @@ const CarModal = ({ car, logo, onClose }) => {
             </Slider>
           </div>
 
-          {/* Badges */}
           <div className="flex flex-wrap gap-3 mb-6 justify-center">
             {car.isFeatured && (
               <span className="bg-yellow-400 text-black text-sm px-4 py-1 rounded-full font-semibold uppercase shadow">
@@ -130,10 +128,8 @@ const CarModal = ({ car, logo, onClose }) => {
             </span>
           </div>
 
-          {/* Logo */}
           {logo && <div className="flex justify-center mb-4">{logo}</div>}
 
-          {/* Title */}
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-2">
             {car.title}
           </h2>
@@ -146,8 +142,8 @@ const CarModal = ({ car, logo, onClose }) => {
 
           <Divider />
 
-          {/* Specs Grid */}
-          <div className="grid grid-cols-2 gap-x-6 gap-y-5 text-center font-semibold text-lg md:text-xl mb-6">
+          {/* Flex layout on desktop */}
+          <div className="grid grid-cols-2 md:flex md:flex-wrap md:justify-center gap-x-6 gap-y-5 md:gap-8 text-center font-semibold text-lg md:text-xl mb-6">
             <div>
               <PiEngineFill size={28} className="mx-auto mb-1 text-rose-200" />
               <p className="text-white">{car.engineType}</p>
@@ -185,7 +181,6 @@ const CarModal = ({ car, logo, onClose }) => {
 
           <Divider />
 
-          {/* CTA */}
           <div className="text-center text-2xl font-bold mt-6">
             <a
               href="tel:07809107655"

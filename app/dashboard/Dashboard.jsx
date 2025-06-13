@@ -1,11 +1,10 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Toaster, toast } from "sonner";
 import { GoHomeFill } from "react-icons/go";
 import { IoIosReturnRight } from "react-icons/io";
-import { FiChevronDown } from "react-icons/fi";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -21,9 +20,12 @@ const DEBOUNCE_DELAY = 300;
 
 const sortOptions = [
   { key: "newest", label: "Newest" },
-  { key: "priceLow", label: "Price: Low to High" },
-  { key: "priceHigh", label: "Price: High to Low" },
+  { key: "oldest", label: "Oldest" },
+  { key: "priceLow", label: "Price ↑" },
+  { key: "priceHigh", label: "Price ↓" },
   { key: "mileage", label: "Mileage" },
+  { key: "engineLow", label: "Engine ↑" },
+  { key: "engineHigh", label: "Engine ↓" },
 ];
 
 const Dashboard = () => {
@@ -48,25 +50,27 @@ const Dashboard = () => {
     const isValid =
       savedPasskey === process.env.NEXT_PUBLIC_DASHBOARD_PASSKEY &&
       savedTimestamp &&
-      Date.now() - parseInt(savedTimestamp, 10) <=
-        SESSION_EXPIRY_DAYS * 86400000;
-    if (isValid) setIsAuthenticated(true);
+      Date.now() - parseInt(savedTimestamp, 10) <= SESSION_EXPIRY_DAYS * 86400000;
+    if (isValid) {
+      setIsAuthenticated(true);
+      document.documentElement.style.overflow = "hidden";
+      document.body.style.overflow = "hidden";
+    }
   }, []);
 
-  const handlePasskeySubmit = useCallback(
-    (e) => {
-      e.preventDefault();
-      if (passkey === process.env.NEXT_PUBLIC_DASHBOARD_PASSKEY) {
-        sessionStorage.setItem(SESSION_KEY, passkey);
-        sessionStorage.setItem(SESSION_TIMESTAMP_KEY, Date.now().toString());
-        setIsAuthenticated(true);
-        setError("");
-      } else {
-        setError("Incorrect passkey. Please try again.");
-      }
-    },
-    [passkey]
-  );
+  const handlePasskeySubmit = useCallback((e) => {
+    e.preventDefault();
+    if (passkey === process.env.NEXT_PUBLIC_DASHBOARD_PASSKEY) {
+      sessionStorage.setItem(SESSION_KEY, passkey);
+      sessionStorage.setItem(SESSION_TIMESTAMP_KEY, Date.now().toString());
+      setIsAuthenticated(true);
+      setError("");
+      document.documentElement.style.overflow = "hidden";
+      document.body.style.overflow = "hidden";
+    } else {
+      setError("Incorrect passkey. Please try again.");
+    }
+  }, [passkey]);
 
   const fetchCars = useCallback(async () => {
     setLoading(true);
@@ -89,10 +93,7 @@ const Dashboard = () => {
   }, [isAuthenticated, fetchCars]);
 
   useEffect(() => {
-    const timeout = setTimeout(
-      () => setDebouncedQuery(searchQuery),
-      DEBOUNCE_DELAY
-    );
+    const timeout = setTimeout(() => setDebouncedQuery(searchQuery), DEBOUNCE_DELAY);
     return () => clearTimeout(timeout);
   }, [searchQuery]);
 
@@ -101,25 +102,20 @@ const Dashboard = () => {
     if (debouncedQuery.trim()) {
       const q = debouncedQuery.toLowerCase();
       filtered = filtered.filter((car) =>
-        [car.make, car.model, car.title, car.year]
-          .join(" ")
-          .toLowerCase()
-          .includes(q)
+        [car.make, car.model, car.title, car.year].join(" ").toLowerCase().includes(q)
       );
     }
+
     switch (sortOption) {
-      case "priceLow":
-        filtered.sort((a, b) => a.price - b.price);
-        break;
-      case "priceHigh":
-        filtered.sort((a, b) => b.price - a.price);
-        break;
-      case "mileage":
-        filtered.sort((a, b) => a.mileage - b.mileage);
-        break;
-      default:
-        filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      case "priceLow": filtered.sort((a, b) => a.price - b.price); break;
+      case "priceHigh": filtered.sort((a, b) => b.price - a.price); break;
+      case "mileage": filtered.sort((a, b) => a.mileage - b.mileage); break;
+      case "engineLow": filtered.sort((a, b) => a.engineSize - b.engineSize); break;
+      case "engineHigh": filtered.sort((a, b) => b.engineSize - a.engineSize); break;
+      case "oldest": filtered.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt)); break;
+      default: filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     }
+
     setFilteredCars(filtered);
   }, [cars, debouncedQuery, sortOption]);
 
@@ -135,35 +131,47 @@ const Dashboard = () => {
       <div className="relative w-64">
         <button
           onClick={() => setDropdownOpen(!isDropdownOpen)}
-          className="w-full px-4 py-2 rounded-xl border border-rose-300 bg-rose-900 shadow-md flex justify-between items-center"
+          className="w-full px-4 py-2 rounded-lg text-white bg-gradient-to-br from-rose-900 via-rose-800 to-rose-950 shadow font-semibold"
         >
-          {sortOptions.find((opt) => opt.key === sortOption)?.label}
-          <FiChevronDown className="ml-2" />
+          Sort By: {sortOptions.find((opt) => opt.key === sortOption)?.label}
         </button>
-        {isDropdownOpen && (
-          <ul className="absolute w-full mt-2 border border-rose-700 bg-rose-800 rounded-lg shadow-lg z-10">
-            {sortOptions.map(({ key, label }) => (
-              <li
-                key={key}
-                onClick={() => {
-                  setSortOption(key);
-                  setDropdownOpen(false);
-                }}
-                className={`p-2 cursor-pointer hover:bg-rose-100 hover:text-rose-700 rounded-md text-center ${
-                  sortOption === key ? "font-bold text-white" : ""
-                }`}
-              >
-                {label}
-              </li>
-            ))}
-          </ul>
-        )}
+
+        <AnimatePresence>
+          {isDropdownOpen && (
+            <motion.ul
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2 }}
+              className="absolute w-full mt-2 border border-rose-700 bg-rose-800 rounded-lg shadow-lg z-10"
+            >
+              {sortOptions.map(({ key, label }) => (
+                <li
+                  key={key}
+                  onClick={() => {
+                    setSortOption(key);
+                    setDropdownOpen(false);
+                  }}
+                  className={`p-2 cursor-pointer text-center rounded-md transition 
+                    hover:bg-rose-100 hover:text-rose-700
+                    ${
+                      sortOption === key
+                        ? "bg-rose-700 text-white font-bold"
+                        : "text-white"
+                    }`}
+                >
+                  {label}
+                </li>
+              ))}
+            </motion.ul>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );
 
   return (
-    <div className="fixed inset-0 h-screen w-screen bg-rose-950 text-white p-4 z-[9999] overflow-auto">
+    <div className="fixed inset-0 h-screen w-screen bg-rose-950 text-white p-4 z-[9999] overflow-hidden">
       <Toaster richColors position="top-right" />
       {!hydrated ? (
         <LoadingSpinner />
@@ -171,17 +179,13 @@ const Dashboard = () => {
         <div className="max-w-7xl mx-auto">
           <header className="relative flex justify-center items-center h-[80px] mb-6">
             <Link href="/" className="absolute right-0 top-1">
-              <GoHomeFill
-                size={36}
-                className="hover:text-rose-300 transition"
-              />
+              <GoHomeFill size={36} className="hover:text-rose-300 transition" />
             </Link>
             <Image src="/logo.png" alt="Logo" width={120} height={80} />
           </header>
 
           <div className="flex flex-col items-center gap-4 mb-8">
             <h1 className="text-4xl font-bold tracking-wide">Dashboard</h1>
-
             <div className="flex justify-center gap-4">
               {["carList", "addCar"].map((tab, idx) => (
                 <button
@@ -197,7 +201,6 @@ const Dashboard = () => {
                 </button>
               ))}
             </div>
-
             {activeTab === "carList" && renderSearchAndSort()}
           </div>
 
@@ -213,11 +216,7 @@ const Dashboard = () => {
               {loading ? (
                 <LoadingSpinner />
               ) : (
-                <CarList
-                  cars={filteredCars}
-                  setCars={setCars}
-                  fetchCars={fetchCars}
-                />
+                <CarList cars={filteredCars} setCars={setCars} fetchCars={fetchCars} />
               )}
             </motion.div>
           )}

@@ -18,6 +18,12 @@ const sortOptions = [
   { key: "priceHigh", label: "Price ↓" },
 ];
 
+const dropdownVariants = {
+  hidden: { opacity: 0, y: -10, scale: 0.95 },
+  visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.2 } },
+  exit: { opacity: 0, y: -10, scale: 0.95, transition: { duration: 0.15 } },
+};
+
 const LatestCars = () => {
   const [cars, setCars] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -75,30 +81,40 @@ const LatestCars = () => {
       <div className="flex justify-center mb-12">
         <div className="relative">
           <button
-            className="w-64 bg-gradient-to-br from-rose-900 via-rose-800 to-rose-950 text-white text-lg font-semibold rounded-lg p-3 shadow-md"
+            className="w-64 bg-gradient-to-br from-rose-900 via-rose-800 to-rose-950 text-white text-lg font-semibold rounded-lg p-3 shadow-md text-center"
             onClick={() => setDropdownOpen((prev) => !prev)}
           >
             Sort By: {sortOptions.find((opt) => opt.key === sortOption)?.label}
           </button>
 
-          {isDropdownOpen && (
-            <ul className="absolute w-64 mt-2 border border-rose-700 bg-rose-800 rounded-lg shadow-lg z-10">
-              {sortOptions.map(({ key, label }) => (
-                <li
-                  key={key}
-                  onClick={() => {
-                    setSortOption(key);
-                    setDropdownOpen(false);
-                  }}
-                  className={`p-2 cursor-pointer hover:bg-rose-100 hover:text-rose-700 rounded-md text-center ${
-                    sortOption === key ? "font-bold text-white" : ""
-                  }`}
-                >
-                  {label}
-                </li>
-              ))}
-            </ul>
-          )}
+          <AnimatePresence>
+            {isDropdownOpen && (
+              <motion.ul
+                className="absolute w-64 mt-2 border border-rose-700 bg-rose-800 rounded-lg shadow-lg z-10"
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                variants={dropdownVariants}
+              >
+                {sortOptions.map(({ key, label }) => (
+                  <li
+                    key={key}
+                    onClick={() => {
+                      setSortOption(key);
+                      setDropdownOpen(false);
+                    }}
+                    className={`p-2 cursor-pointer hover:bg-rose-100 hover:text-rose-700 rounded-md text-center ${
+                      sortOption === key
+                        ? "font-bold text-white bg-rose-700 bg-opacity-50 glow-pulse"
+                        : ""
+                    }`}
+                  >
+                    {label}
+                  </li>
+                ))}
+              </motion.ul>
+            )}
+          </AnimatePresence>
         </div>
       </div>
 

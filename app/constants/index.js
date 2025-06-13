@@ -21,11 +21,11 @@ export const aboutTiles = [
   },
   {
     icon: FaHandshake,
-    title: "Trusted Nationwide",
+    title: "Superb Service",
     description:
       "From first call to final delivery, we provide reliable UK-wide service with honesty, care, and convenience.",
   },
-    {
+  {
     icon: FaShieldAlt,
     title: "Flexibility",
     description:

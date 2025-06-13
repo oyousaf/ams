@@ -15,7 +15,8 @@ const About = () => {
       <motion.div
         className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto text-center"
         initial="hidden"
-        animate="visible"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.2 }}
         variants={{
           hidden: {},
           visible: {
@@ -26,8 +27,10 @@ const About = () => {
         {aboutTiles.map((tile, index) => (
           <motion.div
             key={index}
-            whileHover={{ scale: 1.05, rotateZ: 1 }}
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ type: "spring", stiffness: 600, damping: 20 }}
+            whileHover={{ scale: 1.05, rotateZ: 1 }}
             className="tile-glow flex flex-col items-center bg-gradient-to-br from-rose-800 via-rose-700 to-rose-900 p-6 rounded-2xl shadow-inner border-2 border-transparent hover:border-rose-500/80 duration-200"
           >
             <tile.icon className="text-white text-5xl mb-4 drop-shadow-md" />
@@ -44,7 +47,8 @@ const About = () => {
         <motion.div
           className="grid grid-cols-1 md:grid-cols-4 gap-4"
           initial="hidden"
-          animate="visible"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
           variants={{
             hidden: { opacity: 0 },
             visible: {

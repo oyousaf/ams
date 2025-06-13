@@ -1,79 +1,56 @@
 "use client";
 
-import React, { useState, useEffect, useCallback, useMemo } from "react";
-import Link from "next/link";
-import Image from "next/image";
-import { toast, Toaster } from "sonner";
+import React, { useState, useEffect, useCallback } from "react";
+import { motion } from "framer-motion";
+import { Toaster, toast } from "sonner";
 import { GoHomeFill } from "react-icons/go";
 import { IoIosReturnRight } from "react-icons/io";
-import { motion, AnimatePresence } from "framer-motion";
+import { FiChevronDown } from "react-icons/fi";
+import Link from "next/link";
+import Image from "next/image";
 
 import AddCarForm from "./AddCarForm";
 import CarList from "./CarList";
 import LoadingSpinner from "./LoadingSpinner";
-import { databases, storage } from "../lib/appwrite";
+import { databases } from "../lib/appwrite";
 
 const SESSION_KEY = "dashboard_session";
 const SESSION_TIMESTAMP_KEY = "dashboard_session_timestamp";
 const SESSION_EXPIRY_DAYS = 7;
+const DEBOUNCE_DELAY = 300;
 
-const Tabs = React.memo(({ activeTab, setActiveTab }) => {
-  const tabs = useMemo(
-    () => [
-      { id: "carList", label: "Current Cars" },
-      { id: "addCar", label: "Add Car" },
-    ],
-    []
-  );
-
-  Tabs.displayName = "Tabs";
-
-  return (
-    <div className="flex justify-center mt-6 space-x-4">
-      {tabs.map(({ id, label }) => (
-        <button
-          key={id}
-          onClick={() => setActiveTab(id)}
-          className={`px-4 py-2 rounded-md transition-colors duration-200 ${
-            activeTab === id
-              ? "bg-rose-600 text-white font-semibold shadow-md"
-              : "bg-rose-200 text-gray-700 hover:bg-rose-300 hover:text-gray-900"
-          }`}
-          aria-pressed={activeTab === id}
-          aria-controls={`panel-${id}`}
-        >
-          {label}
-        </button>
-      ))}
-    </div>
-  );
-});
+const sortOptions = [
+  { key: "newest", label: "Newest" },
+  { key: "priceLow", label: "Price: Low to High" },
+  { key: "priceHigh", label: "Price: High to Low" },
+  { key: "mileage", label: "Mileage" },
+];
 
 const Dashboard = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [passkey, setPasskey] = useState("");
   const [error, setError] = useState("");
   const [cars, setCars] = useState([]);
+  const [filteredCars, setFilteredCars] = useState([]);
   const [activeTab, setActiveTab] = useState("carList");
-  const [loadingCars, setLoadingCars] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [hydrated, setHydrated] = useState(false);
+
+  const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedQuery, setDebouncedQuery] = useState("");
+  const [sortOption, setSortOption] = useState("newest");
+  const [isDropdownOpen, setDropdownOpen] = useState(false);
 
   useEffect(() => {
     setHydrated(true);
     const savedPasskey = sessionStorage.getItem(SESSION_KEY);
     const savedTimestamp = sessionStorage.getItem(SESSION_TIMESTAMP_KEY);
-
-    if (
+    const isValid =
       savedPasskey === process.env.NEXT_PUBLIC_DASHBOARD_PASSKEY &&
       savedTimestamp &&
       Date.now() - parseInt(savedTimestamp, 10) <=
-        SESSION_EXPIRY_DAYS * 24 * 60 * 60 * 1000
-    ) {
-      setIsAuthenticated(true);
-    } else {
-      sessionStorage.removeItem(SESSION_KEY);
-      sessionStorage.removeItem(SESSION_TIMESTAMP_KEY);
-    }
+        SESSION_EXPIRY_DAYS * 86400000;
+    if (isValid) setIsAuthenticated(true);
   }, []);
 
   const handlePasskeySubmit = useCallback(
@@ -92,40 +69,18 @@ const Dashboard = () => {
   );
 
   const fetchCars = useCallback(async () => {
-    setLoadingCars(true);
+    setLoading(true);
     try {
-      const response = await databases.listDocuments(
+      const res = await databases.listDocuments(
         process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID,
         process.env.NEXT_PUBLIC_APPWRITE_COLLECTION_ID
       );
-      setCars(response.documents);
-    } catch (err) {
-      console.error("Error fetching cars:", err);
-      toast.error("Could not load cars. Please try again.");
+      setCars(res.documents);
+      setFilteredCars(res.documents);
+    } catch {
+      toast.error("Failed to load cars.");
     } finally {
-      setLoadingCars(false);
-    }
-  }, []);
-
-  const handleDeleteCar = useCallback(async (carId, carTitle, imageFileIds) => {
-    if (!confirm(`Are you sure you want to delete ${carTitle}?`)) return;
-    try {
-      for (const fileId of imageFileIds || []) {
-        await storage.deleteFile(
-          process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID,
-          fileId
-        );
-      }
-      await databases.deleteDocument(
-        process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID,
-        process.env.NEXT_PUBLIC_APPWRITE_COLLECTION_ID,
-        carId
-      );
-      setCars((prev) => prev.filter((car) => car.$id !== carId));
-      toast.success("Car deleted successfully!");
-    } catch (err) {
-      console.error("Error deleting car:", err);
-      toast.error("Failed to delete car. Please try again.");
+      setLoading(false);
     }
   }, []);
 
@@ -134,143 +89,174 @@ const Dashboard = () => {
   }, [isAuthenticated, fetchCars]);
 
   useEffect(() => {
-    document.body.classList.toggle("overflow-hidden", isAuthenticated);
-    return () => {
-      document.body.classList.remove("overflow-hidden");
-    };
-  }, [isAuthenticated]);
+    const timeout = setTimeout(
+      () => setDebouncedQuery(searchQuery),
+      DEBOUNCE_DELAY
+    );
+    return () => clearTimeout(timeout);
+  }, [searchQuery]);
+
+  useEffect(() => {
+    let filtered = [...cars];
+    if (debouncedQuery.trim()) {
+      const q = debouncedQuery.toLowerCase();
+      filtered = filtered.filter((car) =>
+        [car.make, car.model, car.title, car.year]
+          .join(" ")
+          .toLowerCase()
+          .includes(q)
+      );
+    }
+    switch (sortOption) {
+      case "priceLow":
+        filtered.sort((a, b) => a.price - b.price);
+        break;
+      case "priceHigh":
+        filtered.sort((a, b) => b.price - a.price);
+        break;
+      case "mileage":
+        filtered.sort((a, b) => a.mileage - b.mileage);
+        break;
+      default:
+        filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    }
+    setFilteredCars(filtered);
+  }, [cars, debouncedQuery, sortOption]);
+
+  const renderSearchAndSort = () => (
+    <div className="flex flex-col items-center gap-4 mt-6">
+      <input
+        type="text"
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+        className="w-full max-w-md px-4 py-2 rounded-xl border border-rose-300 bg-rose-900 placeholder:text-rose-400 shadow-md"
+        placeholder="Search cars..."
+      />
+      <div className="relative w-64">
+        <button
+          onClick={() => setDropdownOpen(!isDropdownOpen)}
+          className="w-full px-4 py-2 rounded-xl border border-rose-300 bg-rose-900 shadow-md flex justify-between items-center"
+        >
+          {sortOptions.find((opt) => opt.key === sortOption)?.label}
+          <FiChevronDown className="ml-2" />
+        </button>
+        {isDropdownOpen && (
+          <ul className="absolute w-full mt-2 border border-rose-700 bg-rose-800 rounded-lg shadow-lg z-10">
+            {sortOptions.map(({ key, label }) => (
+              <li
+                key={key}
+                onClick={() => {
+                  setSortOption(key);
+                  setDropdownOpen(false);
+                }}
+                className={`p-2 cursor-pointer hover:bg-rose-100 hover:text-rose-700 rounded-md text-center ${
+                  sortOption === key ? "font-bold text-white" : ""
+                }`}
+              >
+                {label}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </div>
+  );
 
   return (
-    <>
-      <Toaster
-        position="top-right"
-        duration={3000}
-        richColors
-        closeButton
-        visibleToasts={5}
-      />
-
+    <div className="fixed inset-0 h-screen w-screen bg-rose-950 text-white p-4 z-[9999] overflow-auto">
+      <Toaster richColors position="top-right" />
       {!hydrated ? (
-        <div className="h-screen flex items-center justify-center bg-rose-950">
-          <LoadingSpinner />
+        <LoadingSpinner />
+      ) : isAuthenticated ? (
+        <div className="max-w-7xl mx-auto">
+          <header className="relative flex justify-center items-center h-[80px] mb-6">
+            <Link href="/" className="absolute right-0 top-1">
+              <GoHomeFill
+                size={36}
+                className="hover:text-rose-300 transition"
+              />
+            </Link>
+            <Image src="/logo.png" alt="Logo" width={120} height={80} />
+          </header>
+
+          <div className="flex flex-col items-center gap-4 mb-8">
+            <h1 className="text-4xl font-bold tracking-wide">Dashboard</h1>
+
+            <div className="flex justify-center gap-4">
+              {["carList", "addCar"].map((tab, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => setActiveTab(tab)}
+                  className={`px-4 py-2 rounded-full shadow transition text-sm md:text-base relative ${
+                    activeTab === tab
+                      ? "bg-rose-700 text-white glow-pulse"
+                      : "bg-rose-300 text-rose-900 hover:bg-rose-400"
+                  }`}
+                >
+                  {tab === "carList" ? "Current Cars" : "Add Car"}
+                </button>
+              ))}
+            </div>
+
+            {activeTab === "carList" && renderSearchAndSort()}
+          </div>
+
+          {activeTab === "carList" && (
+            <motion.div
+              key={debouncedQuery + sortOption}
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -30 }}
+              transition={{ duration: 0.4 }}
+              className="mt-4"
+            >
+              {loading ? (
+                <LoadingSpinner />
+              ) : (
+                <CarList
+                  cars={filteredCars}
+                  setCars={setCars}
+                  fetchCars={fetchCars}
+                />
+              )}
+            </motion.div>
+          )}
+
+          {activeTab === "addCar" && (
+            <motion.div
+              key="addCar"
+              initial={{ opacity: 0, x: 50 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -50 }}
+              transition={{ duration: 0.3 }}
+            >
+              <AddCarForm setCars={setCars} fetchCars={fetchCars} />
+            </motion.div>
+          )}
         </div>
       ) : (
-        <div className="h-screen flex items-center justify-center p-6 bg-rose-950">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: "easeOut" }}
-            className="bg-rose-900 rounded-lg shadow-lg w-auto max-w-7xl p-8 flex flex-col items-center"
+        <form
+          onSubmit={handlePasskeySubmit}
+          className="flex flex-col items-center justify-center min-h-screen gap-4"
+        >
+          <input
+            type="password"
+            value={passkey}
+            maxLength={5}
+            onChange={(e) => setPasskey(e.target.value)}
+            className="px-4 py-2 rounded bg-white text-rose-800"
+            placeholder="Enter Passkey"
+          />
+          {error && <p className="text-rose-300">{error}</p>}
+          <button
+            type="submit"
+            className="px-6 py-2 bg-rose-700 rounded text-white hover:bg-rose-800 transition"
           >
-            {isAuthenticated ? (
-              <div className="fixed inset-0 p-4 w-full flex flex-col justify-between bg-rose-800 text-gray-200 z-50">
-                <div className="flex flex-col items-center">
-                  <Link href="/" aria-label="Home">
-                    <Image
-                      src="/logo.png"
-                      alt="Logo"
-                      width={150}
-                      height={100}
-                      className="mb-4"
-                    />
-                  </Link>
-                  <h2 className="text-5xl font-bold mb-2 text-center">
-                    Dashboard
-                  </h2>
-                  <Tabs activeTab={activeTab} setActiveTab={setActiveTab} />
-                </div>
-
-                <div className="flex-grow mt-6 overflow-auto scrollbar-none">
-                  <AnimatePresence mode="wait">
-                    {activeTab === "carList" ? (
-                      <motion.div
-                        key="carList"
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: 20 }}
-                        transition={{ duration: 0.3 }}
-                        className="h-full"
-                        role="tabpanel"
-                        id="panel-carList"
-                      >
-                        {loadingCars ? (
-                          <LoadingSpinner />
-                        ) : (
-                          <CarList cars={cars} onDelete={handleDeleteCar} />
-                        )}
-                      </motion.div>
-                    ) : (
-                      <motion.div
-                        key="addCar"
-                        initial={{ opacity: 0, x: 20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: -20 }}
-                        transition={{ duration: 0.3 }}
-                        className="h-full"
-                        role="tabpanel"
-                        id="panel-addCar"
-                      >
-                        <AddCarForm
-                          setCars={setCars}
-                          fetchCars={fetchCars}
-                          setActiveTab={setActiveTab}
-                        />
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-
-                <div className="flex justify-center mt-4">
-                  <Link href="/" aria-label="Home">
-                    <motion.div
-                      className="text-gray-200 hover:text-white"
-                      whileHover={{ scale: 1.1 }}
-                      whileTap={{ scale: 0.9, rotate: -10 }}
-                      transition={{ type: "spring", stiffness: 300 }}
-                    >
-                      <GoHomeFill size={40} />
-                    </motion.div>
-                  </Link>
-                </div>
-              </div>
-            ) : (
-              <motion.form
-                onSubmit={handlePasskeySubmit}
-                className="space-y-6 md:w-[50%] w-full flex flex-col items-center"
-                autoComplete="off"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5 }}
-              >
-                <motion.input
-                  name="password"
-                  type="password"
-                  value={passkey}
-                  maxLength={5}
-                  onChange={(e) => setPasskey(e.target.value)}
-                  placeholder="Enter Passkey"
-                  className="w-auto px-4 py-2 border text-rose-800 border-gray-300 rounded-md text-center focus:outline-none focus:ring-2 focus:ring-rose-600"
-                  autoComplete="current-password"
-                  animate={{ x: error ? [-10, 10, -10, 10, 0] : 0 }}
-                  transition={{ duration: 0.3 }}
-                />
-                {error && (
-                  <p className="text-white text-sm text-center">{error}</p>
-                )}
-                <motion.button
-                  type="submit"
-                  className="w-auto bg-rose-600 text-white px-4 py-2 rounded-lg hover:bg-rose-700 transition"
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <IoIosReturnRight size={30} />
-                </motion.button>
-              </motion.form>
-            )}
-          </motion.div>
-        </div>
+            <IoIosReturnRight size={28} />
+          </button>
+        </form>
       )}
-    </>
+    </div>
   );
 };
 

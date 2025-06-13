@@ -1,5 +1,3 @@
-// app/dashboard/CarList.jsx
-
 "use client";
 
 import React, { memo } from "react";

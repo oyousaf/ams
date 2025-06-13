@@ -192,9 +192,9 @@ const CarListItem = ({ car, setCars, fetchCars }) => {
                 </select>
               ) : (
                 <span className="font-semibold text-rose-300">
-                  {unit}
-                  {car[key]}
-                  {unit === "L" ? "L" : ""}
+                  {key === "engineSize"
+                    ? `${car[key]}L`
+                    : `${unit || ""}${car[key]}`}
                 </span>
               )}
             </p>

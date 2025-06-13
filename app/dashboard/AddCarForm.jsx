@@ -7,7 +7,7 @@ import { AiOutlineLoading } from "react-icons/ai";
 import Image from "next/image";
 
 const AddCarForm = ({ setCars, fetchCars, setActiveTab }) => {
-  const [newCar, setNewCar] = useState({
+  const initialState = {
     title: "",
     description: "",
     price: "",
@@ -18,7 +18,12 @@ const AddCarForm = ({ setCars, fetchCars, setActiveTab }) => {
     images: [],
     year: "",
     carType: "Convertible",
-  });
+  };
+
+  const [newCar, setNewCar] = useState(initialState);
+  const [imagePreviews, setImagePreviews] = useState([]);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const carTypes = useMemo(
     () =>
@@ -38,10 +43,6 @@ const AddCarForm = ({ setCars, fetchCars, setActiveTab }) => {
       ].sort(),
     []
   );
-
-  const [imagePreviews, setImagePreviews] = useState([]);
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     return () => {
@@ -65,37 +66,20 @@ const AddCarForm = ({ setCars, fetchCars, setActiveTab }) => {
   );
 
   const validateFields = useCallback(() => {
-    if (
-      !newCar.title.trim() ||
-      !newCar.price ||
-      isNaN(newCar.price) ||
-      !newCar.engineSize ||
-      isNaN(newCar.engineSize) ||
-      !newCar.mileage ||
-      isNaN(newCar.mileage) ||
-      !newCar.year ||
-      !/^(19|20)\d{2}$/.test(newCar.year) ||
-      newCar.images.length === 0
-    ) {
-      return false;
-    }
-    return true;
+    const { title, price, engineSize, mileage, year, images } = newCar;
+    return (
+      title.trim() &&
+      !isNaN(price) &&
+      !isNaN(engineSize) &&
+      !isNaN(mileage) &&
+      /^(19|20)\d{2}$/.test(year) &&
+      images.length > 0
+    );
   }, [newCar]);
 
   const resetForm = useCallback(() => {
     imagePreviews.forEach((url) => URL.revokeObjectURL(url));
-    setNewCar({
-      title: "",
-      description: "",
-      price: "",
-      engineType: "Electric",
-      engineSize: "",
-      transmission: "Automatic",
-      mileage: "",
-      images: [],
-      year: "",
-      carType: "Convertible",
-    });
+    setNewCar(initialState);
     setImagePreviews([]);
     setError("");
   }, [imagePreviews]);
@@ -104,12 +88,12 @@ const AddCarForm = ({ setCars, fetchCars, setActiveTab }) => {
     async (e) => {
       e.preventDefault();
       setError("");
+      toast.dismiss("add-car-toast");
 
       if (!validateFields()) {
-        const validationError =
-          "Something's not quite right. Please check all relevant fields and try again.";
-        setError(validationError);
-        toast.error(validationError, { id: "add-car-toast" });
+        const msg = "Please check all required fields.";
+        setError(msg);
+        toast.error(msg, { id: "add-car-toast" });
         return;
       }
 
@@ -119,47 +103,34 @@ const AddCarForm = ({ setCars, fetchCars, setActiveTab }) => {
         const imageUrls = [];
 
         for (const image of newCar.images) {
-          try {
-            const file = await storage.createFile(
-              process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID,
-              ID.unique(),
-              image
-            );
-            imageFileIds.push(file.$id);
-            imageUrls.push(
-              `${process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT}/storage/buckets/${process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID}/files/${file.$id}/view?project=${process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID}&mode=admin`
-            );
-          } catch (uploadErr) {
-            console.error("Image upload failed:", uploadErr);
-            toast.error("Failed to upload image(s).", { id: "add-car-toast" });
-            setLoading(false);
-            return;
-          }
+          const file = await storage.createFile(
+            process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID,
+            ID.unique(),
+            image
+          );
+          imageFileIds.push(file.$id);
+          imageUrls.push(
+            `${process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT}/storage/buckets/${process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID}/files/${file.$id}/view?project=${process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID}&mode=admin`
+          );
         }
+
+        const { images, ...carPayload } = newCar;
 
         const carData = await databases.createDocument(
           process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID,
           process.env.NEXT_PUBLIC_APPWRITE_COLLECTION_ID,
           ID.unique(),
           {
-            title: newCar.title.trim(),
-            description: newCar.description.trim(),
+            ...carPayload,
             price: parseFloat(newCar.price),
-            engineType: newCar.engineType,
             engineSize: parseFloat(newCar.engineSize),
-            transmission: newCar.transmission,
             mileage: parseFloat(newCar.mileage),
-            imageUrl: imageUrls,
-            imageFileIds: imageFileIds,
-            createdAt: new Date().toISOString(),
             year: parseInt(newCar.year, 10),
-            carType: newCar.carType,
+            imageUrl: imageUrls,
+            imageFileIds,
+            createdAt: new Date().toISOString(),
           }
         );
-
-        if (!carData || !carData.$id) {
-          throw new Error("Invalid car data response.");
-        }
 
         toast.success("Car added successfully!", { id: "add-car-toast" });
         setCars((prev) => [...prev, carData]);
@@ -167,7 +138,7 @@ const AddCarForm = ({ setCars, fetchCars, setActiveTab }) => {
         setActiveTab("carList");
         resetForm();
       } catch (err) {
-        console.error("Error during car add flow:", err);
+        console.error("Error adding car:", err);
         toast.error("Failed to add car. Please try again.", {
           id: "add-car-toast",
         });
@@ -182,115 +153,91 @@ const AddCarForm = ({ setCars, fetchCars, setActiveTab }) => {
     <div className="w-full flex flex-col items-center py-8">
       <div className="w-full max-w-xl p-6 bg-rose-900 shadow-lg rounded-lg border border-rose-200">
         <form
-          id="addCar"
-          name="addCar"
           onSubmit={handleAddCar}
           className="space-y-4 flex flex-col items-center"
         >
           <input
-            id="title"
             name="title"
-            type="text"
             value={newCar.title}
             onChange={handleInputChange}
             placeholder="Title"
             required
             className="w-full border border-rose-300 text-rose-800 rounded-md px-3 py-2"
-            autoComplete="on"
-            aria-label="Car title"
           />
           <textarea
-            id="description"
             name="description"
             value={newCar.description}
             onChange={handleInputChange}
             placeholder="Description"
             required
             className="w-full border border-rose-300 text-rose-800 rounded-md px-3 py-2"
-            autoComplete="on"
-            aria-label="Car description"
           />
           <input
-            id="price"
             name="price"
-            type="text"
             value={newCar.price}
             onChange={handleInputChange}
             placeholder="Price"
             required
             className="w-full border border-rose-300 text-rose-800 rounded-md px-3 py-2"
-            autoComplete="on"
-            aria-label="Price"
           />
           <div className="flex space-x-4 w-full">
             <select
-              id="engineType"
               name="engineType"
               value={newCar.engineType}
               onChange={handleInputChange}
               className="w-full border border-rose-300 text-rose-800 rounded-md px-3 py-2"
-              aria-label="Engine type"
             >
-              <option value="Electric">Electric</option>
-              <option value="Diesel">Diesel</option>
-              <option value="Hybrid">Hybrid</option>
-              <option value="Petrol">Petrol</option>
+              {["Electric", "Diesel", "Hybrid", "Petrol"].map((type) => (
+                <option key={type} value={type}>
+                  {type}
+                </option>
+              ))}
             </select>
             <select
-              id="transmission"
               name="transmission"
               value={newCar.transmission}
               onChange={handleInputChange}
               className="w-full border border-rose-300 text-rose-800 rounded-md px-3 py-2"
-              aria-label="Transmission type"
             >
-              <option value="Automatic">Automatic</option>
-              <option value="Manual">Manual</option>
+              {["Automatic", "Manual"].map((trans) => (
+                <option key={trans} value={trans}>
+                  {trans}
+                </option>
+              ))}
             </select>
           </div>
           <div className="flex space-x-4 w-full">
             <input
-              id="engineSize"
               name="engineSize"
-              type="text"
               value={newCar.engineSize}
               onChange={handleInputChange}
               placeholder="Engine Size"
               required
               className="w-full border border-rose-300 text-rose-800 rounded-md px-3 py-2"
-              aria-label="Engine size"
             />
             <input
-              id="mileage"
               name="mileage"
-              type="text"
               value={newCar.mileage}
               onChange={handleInputChange}
               placeholder="Mileage"
               required
               className="w-full border border-rose-300 text-rose-800 rounded-md px-3 py-2"
-              aria-label="Mileage"
             />
           </div>
           <div className="flex space-x-4 w-full">
             <input
-              id="year"
               name="year"
-              type="text"
               value={newCar.year}
               onChange={handleInputChange}
               placeholder="Year"
               required
               className="w-full border border-rose-300 text-rose-800 rounded-md px-3 py-2"
-              aria-label="Year"
             />
             <select
-              id="carType"
               name="carType"
               value={newCar.carType}
               onChange={handleInputChange}
               className="w-full border border-rose-300 text-rose-800 rounded-md px-3 py-2"
-              aria-label="Car type"
             >
               {carTypes.map((type) => (
                 <option key={type} value={type}>
@@ -300,15 +247,12 @@ const AddCarForm = ({ setCars, fetchCars, setActiveTab }) => {
             </select>
           </div>
           <input
-            id="images"
-            name="images"
             type="file"
             accept="image/*"
             onChange={handleImageChange}
+            multiple
             required
             className="w-full border border-rose-300 text-rose-200 rounded-md px-3 py-2"
-            multiple
-            aria-label="Upload car images"
           />
           {imagePreviews.length > 0 && (
             <div className="flex space-x-4 mt-4">
@@ -330,7 +274,6 @@ const AddCarForm = ({ setCars, fetchCars, setActiveTab }) => {
             type="submit"
             disabled={loading}
             className="w-full bg-rose-800 hover:bg-rose-700 text-white rounded-md py-2 mt-4 flex justify-center items-center"
-            aria-busy={loading}
           >
             {loading ? (
               <AiOutlineLoading className="animate-spin" size={22} />

@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Toaster, toast } from "sonner";
 import { GoHomeFill } from "react-icons/go";
 import { IoIosReturnRight } from "react-icons/io";
 import Link from "next/link";
@@ -195,7 +194,6 @@ const Dashboard = () => {
 
   return (
     <div className="fixed inset-0 h-screen w-screen bg-rose-950 text-white p-4 z-[9999] overflow-hidden">
-      <Toaster richColors position="top-right" />
       {!hydrated ? (
         <LoadingSpinner />
       ) : isAuthenticated ? (

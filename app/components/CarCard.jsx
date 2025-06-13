@@ -48,7 +48,7 @@ const CarCard = React.memo(({ car, logo, onOpen }) => {
 
       <Divider />
 
-      <p className="text-zinc-100 mb-6 text-center text-base md:text-lg line-clamp-3">
+      <p className="text-zinc-100 mb-4 text-center text-base md:text-lg line-clamp-3">
         {car.description}
       </p>
 

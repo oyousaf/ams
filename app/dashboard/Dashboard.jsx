@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { toast } from "react-toastify";
+import { toast, Toaster } from "sonner";
 import { GoHomeFill } from "react-icons/go";
 import { IoIosReturnRight } from "react-icons/io";
 import { motion, AnimatePresence } from "framer-motion";
@@ -110,119 +110,136 @@ const Dashboard = () => {
 
   useEffect(() => {
     document.body.classList.toggle("overflow-hidden", isAuthenticated);
-    return () => document.body.classList.remove("overflow-hidden");
+    return () => {
+      document.body.classList.remove("overflow-hidden");
+    };
   }, [isAuthenticated]);
 
   return (
-    <div className="h-screen flex items-center justify-center p-6">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: "easeOut" }}
-        className="bg-rose-900 rounded-lg shadow-lg w-auto max-w-7xl p-8 flex flex-col items-center"
-      >
-        {isAuthenticated ? (
-          <div className="fixed inset-0 p-4 w-full flex flex-col justify-between bg-rose-800 text-gray-200 z-50">
-            <div className="flex flex-col items-center">
-              <Link href="/" aria-label="Home">
-                <Image
-                  src="/logo.png"
-                  alt="Logo"
-                  width={150}
-                  height={100}
-                  className="mb-4"
-                />
-              </Link>
-              <h2 className="text-5xl font-bold mb-2 text-center">Dashboard</h2>
-              <Tabs activeTab={activeTab} setActiveTab={setActiveTab} />
-            </div>
+    <>
+      <Toaster
+        position="top-right"
+        duration={3000}
+        richColors
+        closeButton
+        visibleToasts={5}
+      />
 
-            <div className="flex-grow mt-6 overflow-auto scrollbar-none">
-              <AnimatePresence mode="wait">
-                {activeTab === "carList" ? (
-                  <motion.div
-                    key="carList"
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: 20 }}
-                    transition={{ duration: 0.3 }}
-                    className="h-full"
-                    role="tabpanel"
-                    id="panel-carList"
-                  >
-                    {loadingCars ? (
-                      <LoadingSpinner />
-                    ) : (
-                      <CarList cars={cars} onDelete={handleDeleteCar} />
-                    )}
-                  </motion.div>
-                ) : (
-                  <motion.div
-                    key="addCar"
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -20 }}
-                    transition={{ duration: 0.3 }}
-                    className="h-full"
-                    role="tabpanel"
-                    id="panel-addCar"
-                  >
-                    <AddCarForm
-                      setCars={setCars}
-                      fetchCars={fetchCars}
-                      setActiveTab={setActiveTab}
-                    />
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
+      <div className="h-screen flex items-center justify-center p-6">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
+          className="bg-rose-900 rounded-lg shadow-lg w-auto max-w-7xl p-8 flex flex-col items-center"
+        >
+          {isAuthenticated ? (
+            <div className="fixed inset-0 p-4 w-full flex flex-col justify-between bg-rose-800 text-gray-200 z-50">
+              <div className="flex flex-col items-center">
+                <Link href="/" aria-label="Home">
+                  <Image
+                    src="/logo.png"
+                    alt="Logo"
+                    width={150}
+                    height={100}
+                    className="mb-4"
+                  />
+                </Link>
+                <h2 className="text-5xl font-bold mb-2 text-center">
+                  Dashboard
+                </h2>
+                <Tabs activeTab={activeTab} setActiveTab={setActiveTab} />
+              </div>
 
-            <div className="flex justify-center mt-4">
-              <Link href="/" aria-label="Home">
-                <motion.div
-                  className="text-gray-200 hover:text-white"
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9, rotate: -10 }}
-                  transition={{ type: "spring", stiffness: 300 }}
-                >
-                  <GoHomeFill size={40} />
-                </motion.div>
-              </Link>
+              <div className="flex-grow mt-6 overflow-auto scrollbar-none">
+                <AnimatePresence mode="wait">
+                  {activeTab === "carList" ? (
+                    <motion.div
+                      key="carList"
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: 20 }}
+                      transition={{ duration: 0.3 }}
+                      className="h-full"
+                      role="tabpanel"
+                      id="panel-carList"
+                    >
+                      {loadingCars ? (
+                        <LoadingSpinner />
+                      ) : (
+                        <CarList cars={cars} onDelete={handleDeleteCar} />
+                      )}
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      key="addCar"
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -20 }}
+                      transition={{ duration: 0.3 }}
+                      className="h-full"
+                      role="tabpanel"
+                      id="panel-addCar"
+                    >
+                      <AddCarForm
+                        setCars={setCars}
+                        fetchCars={fetchCars}
+                        setActiveTab={setActiveTab}
+                      />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              <div className="flex justify-center mt-4">
+                <Link href="/" aria-label="Home">
+                  <motion.div
+                    className="text-gray-200 hover:text-white"
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9, rotate: -10 }}
+                    transition={{ type: "spring", stiffness: 300 }}
+                  >
+                    <GoHomeFill size={40} />
+                  </motion.div>
+                </Link>
+              </div>
             </div>
-          </div>
-        ) : (
-          <motion.form
-            onSubmit={handlePasskeySubmit}
-            className="space-y-6 md:w-[50%] w-full flex flex-col items-center"
-            autoComplete="off"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
-          >
-            <motion.input
-              type="password"
-              value={passkey}
-              maxLength={5}
-              onChange={(e) => setPasskey(e.target.value)}
-              placeholder="Enter Passkey"
-              className="w-auto px-4 py-2 border text-rose-800 border-gray-300 rounded-md text-center focus:outline-none focus:ring-2 focus:ring-rose-600"
-              autoComplete="current-password"
-              animate={{ x: error ? [-10, 10, -10, 10, 0] : 0 }}
-              transition={{ duration: 0.3 }}
-            />
-            {error && <p className="text-white text-sm text-center">{error}</p>}
-            <motion.button
-              type="submit"
-              className="w-auto bg-rose-600 text-white px-4 py-2 rounded-lg hover:bg-rose-700 transition"
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
+          ) : (
+            <motion.form
+              onSubmit={handlePasskeySubmit}
+              className="space-y-6 md:w-[50%] w-full flex flex-col items-center"
+              autoComplete="off"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5 }}
             >
-              <IoIosReturnRight size={30} />
-            </motion.button>
-          </motion.form>
-        )}
-      </motion.div>
-    </div>
+              <motion.input
+                name="password"
+                type="password"
+                value={passkey}
+                maxLength={5}
+                onChange={(e) => setPasskey(e.target.value)}
+                placeholder="Enter Passkey"
+                className="w-auto px-4 py-2 border text-rose-800 border-gray-300 rounded-md text-center focus:outline-none focus:ring-2 focus:ring-rose-600"
+                autoComplete="current-password"
+                animate={{ x: error ? [-10, 10, -10, 10, 0] : 0 }}
+                transition={{ duration: 0.3 }}
+              />
+              {error && (
+                <p className="text-white text-sm text-center">{error}</p>
+              )}
+              <motion.button
+                type="submit"
+                className="w-auto bg-rose-600 text-white px-4 py-2 rounded-lg hover:bg-rose-700 transition"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <IoIosReturnRight size={30} />
+              </motion.button>
+            </motion.form>
+          )}
+        </motion.div>
+      </div>
+    </>
   );
 };
 

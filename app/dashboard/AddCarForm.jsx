@@ -3,8 +3,8 @@ import React, { useState, useEffect, useMemo } from "react";
 import { motion } from "framer-motion";
 import { databases, storage, ID } from "../lib/appwrite";
 import { toast } from "sonner";
-import { AiOutlineLoading } from "react-icons/ai";
 import Image from "next/image";
+import LoadingSpinner from "./LoadingSpinner";
 
 const shakeVariant = {
   idle: { x: 0 },
@@ -34,7 +34,7 @@ export default function AddCarForm({ setCars, fetchCars, setActiveTab }) {
   const [car, setCar] = useState(initial);
   const [previews, setPreviews] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [shakeKey, setShakeKey] = useState(0);
+  const [shouldShake, setShouldShake] = useState(false);
 
   const carTypes = useMemo(
     () =>
@@ -95,7 +95,7 @@ export default function AddCarForm({ setCars, fetchCars, setActiveTab }) {
   const onSubmit = async (e) => {
     e.preventDefault();
     if (!valid()) {
-      setShakeKey((k) => k + 1);
+      setShouldShake(true);
       toast.error("Please fill all fields");
       return;
     }
@@ -144,19 +144,18 @@ export default function AddCarForm({ setCars, fetchCars, setActiveTab }) {
   };
 
   return (
-    <motion.div
-      key={shakeKey}
-      variants={shakeVariant}
-      initial="idle"
-      animate="shake"
-      className="h-full flex flex-col p-4 relative"
-    >
+    <div className="h-full flex flex-col p-4 relative">
       <div className="max-w-3xl mx-auto w-full mb-24">
         <form
           onSubmit={onSubmit}
           className="flex-1 flex flex-col overflow-hidden"
         >
-          <div className="space-y-4 overflow-y-auto">
+          <motion.div
+            variants={shakeVariant}
+            animate={shouldShake ? "shake" : "idle"}
+            onAnimationComplete={() => setShouldShake(false)}
+            className="space-y-4 overflow-y-auto"
+          >
             {["title", "description", "price"].map((name) =>
               name === "description" ? (
                 <textarea
@@ -182,7 +181,6 @@ export default function AddCarForm({ setCars, fetchCars, setActiveTab }) {
               )
             )}
 
-            {/* Grid selects and inputs */}
             <div className="grid grid-cols-2 gap-2">
               <select
                 name="engineType"
@@ -270,7 +268,7 @@ export default function AddCarForm({ setCars, fetchCars, setActiveTab }) {
                 ))}
               </div>
             )}
-          </div>
+          </motion.div>
         </form>
       </div>
 
@@ -282,13 +280,13 @@ export default function AddCarForm({ setCars, fetchCars, setActiveTab }) {
             className="w-full py-3 rounded bg-rose-700 text-white flex justify-center"
           >
             {loading ? (
-              <AiOutlineLoading className="animate-spin" />
+              <LoadingSpinner />
             ) : (
               "Add Car"
             )}
           </button>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }

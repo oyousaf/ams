@@ -150,138 +150,145 @@ const AddCarForm = ({ setCars, fetchCars, setActiveTab }) => {
   );
 
   return (
-    <div className="w-full flex flex-col items-center py-8">
-      <div className="w-full max-w-xl p-6 bg-rose-900 shadow-lg rounded-lg border border-rose-200">
-        <form
-          onSubmit={handleAddCar}
-          className="space-y-4 flex flex-col items-center"
-        >
-          <input
-            name="title"
-            value={newCar.title}
-            onChange={handleInputChange}
-            placeholder="Title"
-            required
-            className="w-full border border-rose-300 text-rose-800 rounded-md px-3 py-2"
-          />
-          <textarea
-            name="description"
-            value={newCar.description}
-            onChange={handleInputChange}
-            placeholder="Description"
-            required
-            className="w-full border border-rose-300 text-rose-800 rounded-md px-3 py-2"
-          />
-          <input
-            name="price"
-            value={newCar.price}
-            onChange={handleInputChange}
-            placeholder="Price"
-            required
-            className="w-full border border-rose-300 text-rose-800 rounded-md px-3 py-2"
-          />
-          <div className="flex space-x-4 w-full">
-            <select
-              name="engineType"
-              value={newCar.engineType}
-              onChange={handleInputChange}
-              className="w-full border border-rose-300 text-rose-800 rounded-md px-3 py-2"
-            >
-              {["Electric", "Diesel", "Hybrid", "Petrol"].map((type) => (
-                <option key={type} value={type}>
-                  {type}
-                </option>
-              ))}
-            </select>
-            <select
-              name="transmission"
-              value={newCar.transmission}
-              onChange={handleInputChange}
-              className="w-full border border-rose-300 text-rose-800 rounded-md px-3 py-2"
-            >
-              {["Automatic", "Manual"].map((trans) => (
-                <option key={trans} value={trans}>
-                  {trans}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="flex space-x-4 w-full">
-            <input
-              name="engineSize"
-              value={newCar.engineSize}
-              onChange={handleInputChange}
-              placeholder="Engine Size"
-              required
-              className="w-full border border-rose-300 text-rose-800 rounded-md px-3 py-2"
-            />
-            <input
-              name="mileage"
-              value={newCar.mileage}
-              onChange={handleInputChange}
-              placeholder="Mileage"
-              required
-              className="w-full border border-rose-300 text-rose-800 rounded-md px-3 py-2"
-            />
-          </div>
-          <div className="flex space-x-4 w-full">
-            <input
-              name="year"
-              value={newCar.year}
-              onChange={handleInputChange}
-              placeholder="Year"
-              required
-              className="w-full border border-rose-300 text-rose-800 rounded-md px-3 py-2"
-            />
-            <select
-              name="carType"
-              value={newCar.carType}
-              onChange={handleInputChange}
-              className="w-full border border-rose-300 text-rose-800 rounded-md px-3 py-2"
-            >
-              {carTypes.map((type) => (
-                <option key={type} value={type}>
-                  {type}
-                </option>
-              ))}
-            </select>
-          </div>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleImageChange}
-            multiple
-            required
-            className="w-full border border-rose-300 text-rose-200 rounded-md px-3 py-2"
-          />
-          {imagePreviews.length > 0 && (
-            <div className="flex space-x-4 mt-4">
-              {imagePreviews.map((preview, idx) => (
-                <Image
-                  key={idx}
-                  src={preview}
-                  alt={`Preview ${idx + 1}`}
-                  className="object-cover rounded-md"
-                  width={96}
-                  height={96}
-                  unoptimized
-                />
-              ))}
-            </div>
-          )}
-          {error && <p className="text-red-600 mt-2">{error}</p>}
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-rose-800 hover:bg-rose-700 text-white rounded-md py-2 mt-4 flex justify-center items-center"
+    <div className="w-full flex justify-center items-center">
+      <div className="w-full max-w-xl bg-rose-900 border border-rose-200 shadow-lg rounded-lg overflow-hidden">
+        <div className="max-h-[80vh] overflow-y-auto p-6">
+          <form
+            onSubmit={handleAddCar}
+            className="space-y-4 flex flex-col items-center"
           >
-            {loading ? (
-              <AiOutlineLoading className="animate-spin" size={22} />
-            ) : (
-              "Add Car"
+            <input
+              name="title"
+              value={newCar.title}
+              onChange={handleInputChange}
+              placeholder="Title"
+              required
+              className="w-full border border-rose-300 text-rose-800 rounded-md px-3 py-2"
+            />
+            <textarea
+              name="description"
+              value={newCar.description}
+              onChange={handleInputChange}
+              placeholder="Description"
+              required
+              className="w-full border border-rose-300 text-rose-800 rounded-md px-3 py-2"
+            />
+            <input
+              name="price"
+              value={newCar.price}
+              onChange={handleInputChange}
+              placeholder="Price"
+              required
+              className="w-full border border-rose-300 text-rose-800 rounded-md px-3 py-2"
+            />
+            <div className="flex space-x-4 w-full">
+              <select
+                name="engineType"
+                value={newCar.engineType}
+                onChange={handleInputChange}
+                className="w-full border border-rose-300 text-rose-800 rounded-md px-3 py-2"
+              >
+                {["Electric", "Diesel", "Hybrid", "Petrol"].map((type) => (
+                  <option key={type} value={type}>
+                    {type}
+                  </option>
+                ))}
+              </select>
+              <select
+                name="transmission"
+                value={newCar.transmission}
+                onChange={handleInputChange}
+                className="w-full border border-rose-300 text-rose-800 rounded-md px-3 py-2"
+              >
+                {["Automatic", "Manual"].map((trans) => (
+                  <option key={trans} value={trans}>
+                    {trans}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="flex space-x-4 w-full">
+              <input
+                name="engineSize"
+                value={newCar.engineSize}
+                onChange={handleInputChange}
+                placeholder="Engine Size"
+                required
+                className="w-full border border-rose-300 text-rose-800 rounded-md px-3 py-2"
+              />
+              <input
+                name="mileage"
+                value={newCar.mileage}
+                onChange={handleInputChange}
+                placeholder="Mileage"
+                required
+                className="w-full border border-rose-300 text-rose-800 rounded-md px-3 py-2"
+              />
+            </div>
+            <div className="flex space-x-4 w-full">
+              <input
+                name="year"
+                value={newCar.year}
+                onChange={handleInputChange}
+                placeholder="Year"
+                required
+                className="w-full border border-rose-300 text-rose-800 rounded-md px-3 py-2"
+              />
+              <select
+                name="carType"
+                value={newCar.carType}
+                onChange={handleInputChange}
+                className="w-full border border-rose-300 text-rose-800 rounded-md px-3 py-2"
+              >
+                {carTypes.map((type) => (
+                  <option key={type} value={type}>
+                    {type}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+              multiple
+              required
+              className="w-full border border-rose-300 text-rose-200 rounded-md px-3 py-2"
+            />
+            {imagePreviews.length > 0 && (
+              <div className="flex overflow-x-auto space-x-4 mt-4 w-full pb-2">
+                {imagePreviews.map((preview, idx) => (
+                  <Image
+                    key={idx}
+                    src={preview}
+                    alt={`Preview ${idx + 1}`}
+                    className="object-cover rounded-md flex-shrink-0"
+                    width={96}
+                    height={96}
+                    unoptimized
+                  />
+                ))}
+              </div>
             )}
-          </button>
-        </form>
+            {error && <p className="text-red-600 mt-2">{error}</p>}
+          </form>
+
+          {/* Sticky button below form */}
+          <div className="sticky bottom-0 pt-4 bg-rose-900">
+            <button
+              type="submit"
+              onClick={handleAddCar}
+              disabled={loading}
+              className="w-full bg-rose-800 hover:bg-rose-700 text-white rounded-md py-2 flex justify-center items-center"
+            >
+              {loading ? (
+                <AiOutlineLoading className="animate-spin" size={22} />
+              ) : (
+                "Add Car"
+              )}
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -140,7 +140,7 @@ export default function AddCarForm({ setCars, fetchCars, setActiveTab }) {
         ID.unique(),
         payload
       );
-      toast.success("Car added!");
+      toast.success("Car added successfully!");
       setCars((p) => [...p, doc]);
       fetchCars();
       setActiveTab("carList");

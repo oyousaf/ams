@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { GoHomeFill } from "react-icons/go";
 import { IoIosReturnRight } from "react-icons/io";
 import Link from "next/link";
+import Image from "next/image";
 import AddCarForm from "./AddCarForm";
 import CarList from "./CarList";
 import LoadingSpinner from "./LoadingSpinner";
@@ -120,6 +121,13 @@ const Dashboard = () => {
           onSubmit={handlePass}
           className="flex flex-col gap-4 items-center text-white w-full max-w-sm"
         >
+          <Image
+            src="/logo.png"
+            alt="Logo"
+            width={200}
+            height={100}
+            className="mb-2"
+          />
           <input
             type="password"
             value={passkey}

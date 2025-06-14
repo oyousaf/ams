@@ -124,8 +124,8 @@ const CarListItem = ({ car, setCars }, ref) => {
         <figcaption className="sr-only">Image of {car.title}</figcaption>
       </figure>
 
-      <div className="w-full sm:w-2/3 space-y-2 relative">
-        <div className="flex justify-end gap-3 sm:absolute sm:top-0 sm:right-0 z-10 mb-2 sm:mb-0">
+      <div className="w-full sm:w-2/3 space-y-2 relative ">
+        <div className="flex justify-end gap-3 sm:absolute sm:top-0 sm:right-0 z-10 mb-2 sm:mb-0 text-xl">
           {isEditing ? (
             <>
               <button onClick={handleSave} disabled={saving} title="Save">

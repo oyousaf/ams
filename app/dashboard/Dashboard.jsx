@@ -117,18 +117,21 @@ const Dashboard = () => {
   if (!isAuthenticated) {
     return (
       <div className="fixed inset-0 bg-rose-950 z-[100] flex items-center justify-center px-4">
-        <form
+        <motion.form
           onSubmit={handlePass}
           className="flex flex-col gap-4 items-center text-white w-full max-w-sm"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
         >
           <Image
             src="/logo.png"
-            alt="Logo"
+            alt="logo"
             width={200}
             height={100}
-            priority
             className="mb-2"
             style={{ width: "auto", height: "auto" }}
+            priority
           />
           <input
             type="password"
@@ -136,15 +139,19 @@ const Dashboard = () => {
             onChange={(e) => setPasskey(e.target.value)}
             placeholder="Passkey..."
             maxLength={5}
-            className={`px-4 py-2 rounded text-rose-700 items-center text-center focus:glow-pulse ${
+            className={`px-4 py-2 rounded text-rose-700 text-center focus:glow-pulse ${
               error ? "shake border border-red-500" : ""
             }`}
           />
           {error && <span className="text-red-500">{error}</span>}
-          <button type="submit" className="bg-rose-700 p-2 rounded">
+          <button
+            type="submit"
+            className="bg-rose-700 p-2 rounded"
+            aria-label="Submit passkey"
+          >
             <IoIosReturnRight size={24} />
           </button>
-        </form>
+        </motion.form>
       </div>
     );
   }
@@ -169,7 +176,11 @@ const Dashboard = () => {
       <header className="h-[80px] flex-shrink-0 px-4 shadow-md">
         <div className="max-w-7xl mx-auto w-full flex justify-between items-center h-full">
           <h1 className="text-2xl font-bold">Dashboard</h1>
-          <Link href="/" className="text-white hover:text-rose-400">
+          <Link
+            href="/"
+            className="text-white hover:text-rose-400"
+            aria-label="Go to homepage"
+          >
             <GoHomeFill size={28} />
           </Link>
         </div>
@@ -185,6 +196,7 @@ const Dashboard = () => {
                 ? "bg-rose-700 text-white glow-pulse"
                 : "bg-rose-300 text-rose-900"
             }`}
+            aria-label={`Switch to ${label} tab`}
           >
             {label}
           </button>
@@ -206,6 +218,7 @@ const Dashboard = () => {
                 <button
                   onClick={() => setDropdown(!dropdown)}
                   className="w-full px-4 py-2 rounded-lg text-white bg-gradient-to-br from-rose-900 via-rose-800 to-rose-950 shadow font-semibold"
+                  aria-label="Toggle sort options"
                 >
                   Sort By:{" "}
                   {sortOptions.find(([key]) => key === sortOption)?.[1]}
@@ -232,6 +245,7 @@ const Dashboard = () => {
                               ? "bg-rose-700 text-white font-bold"
                               : "text-white"
                           }`}
+                          aria-label={`Sort by ${label}`}
                         >
                           {label}
                         </li>

@@ -50,7 +50,7 @@ const EnquiryForm = () => {
         {...register("name")}
         placeholder="Name"
         autoComplete="name"
-        className="w-full p-3 rounded-md border border-gray-300 focus:ring-rose-600 focus:border-rose-600 text-black"
+        className="w-full p-3 rounded-md border border-gray-300 focus:glow-pulse focus:ring-rose-600 focus:border-rose-600 text-black"
       />
       {errors.name && (
         <p className="text-red-200 text-sm">{errors.name.message}</p>
@@ -61,7 +61,7 @@ const EnquiryForm = () => {
         type="email"
         placeholder="Email"
         autoComplete="email"
-        className="w-full p-3 rounded-md border border-gray-300 focus:ring-rose-600 focus:border-rose-600 text-black"
+        className="w-full p-3 rounded-md border border-gray-300 focus:glow-pulse focus:ring-rose-600 focus:border-rose-600 text-black"
       />
       {errors.email && (
         <p className="text-red-200 text-sm">{errors.email.message}</p>
@@ -72,7 +72,7 @@ const EnquiryForm = () => {
         type="tel"
         placeholder="Phone"
         autoComplete="tel"
-        className="w-full p-3 rounded-md border border-gray-300 focus:ring-rose-600 focus:border-rose-600 text-black"
+        className="w-full p-3 rounded-md border border-gray-300 focus:glow-pulse focus:ring-rose-600 focus:border-rose-600 text-black"
       />
       {errors.phone && (
         <p className="text-red-200 text-sm">{errors.phone.message}</p>
@@ -81,7 +81,7 @@ const EnquiryForm = () => {
       <textarea
         {...register("message")}
         placeholder="Message..."
-        className="w-full h-32 p-3 rounded-md border border-gray-300 focus:ring-rose-600 focus:border-rose-600 text-black"
+        className="w-full h-32 p-3 rounded-md border border-gray-300 focus:glow-pulse focus:ring-rose-600 focus:border-rose-600 text-black"
       />
       {errors.message && (
         <p className="text-red-200 text-sm">{errors.message.message}</p>
@@ -92,7 +92,7 @@ const EnquiryForm = () => {
       <button
         type="submit"
         disabled={isSubmitting}
-        className={`w-full py-3 bg-rose-600 text-white rounded-md font-semibold hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-rose-600 ${
+        className={`w-full py-3 bg-rose-600 text-white rounded-md font-semibold hover:glow-pulse hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-rose-600 ${
           isSubmitting && "opacity-70 cursor-not-allowed"
         }`}
       >

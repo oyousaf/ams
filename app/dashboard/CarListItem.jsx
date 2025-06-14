@@ -125,11 +125,11 @@ const CarListItem = ({ car, setCars }, ref) => {
       </figure>
 
       <div className="w-full sm:w-2/3 space-y-2 relative">
-        <div className="absolute top-0 right-0 z-10 flex justify-end gap-3 mb-2">
+        <div className="flex justify-end gap-3 sm:absolute sm:top-0 sm:right-0 z-10 mb-2 sm:mb-0">
           {isEditing ? (
             <>
               <button onClick={handleSave} disabled={saving} title="Save">
-                📎
+                💾
               </button>
               <button
                 onClick={() => {

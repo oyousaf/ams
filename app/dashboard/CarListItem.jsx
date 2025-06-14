@@ -35,19 +35,32 @@ const CarListItem = ({ car, setCars }) => {
     setSaving(true);
 
     try {
+      const {
+        title,
+        description,
+        price,
+        mileage,
+        engineSize,
+        year,
+        transmission,
+        engineType,
+        carType,
+      } = editedCar;
+
       const result = await databases.updateDocument(
         process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID,
         process.env.NEXT_PUBLIC_APPWRITE_COLLECTION_ID,
         car.$id,
         {
-          title: editedCar.title,
-          price: editedCar.price,
-          mileage: editedCar.mileage,
-          engineSize: editedCar.engineSize,
-          year: editedCar.year,
-          transmission: editedCar.transmission,
-          engineType: editedCar.engineType,
-          carType: editedCar.carType,
+          title,
+          description,
+          price,
+          mileage,
+          engineSize,
+          year,
+          transmission,
+          engineType,
+          carType,
         }
       );
 
@@ -99,9 +112,7 @@ const CarListItem = ({ car, setCars }) => {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.3 }}
-      className={`border border-rose-200 rounded-md p-4 mb-3 flex flex-col sm:flex-row items-start bg-rose-900 text-gray-200 relative ${
-        isEditing ? "animate-glow-pulse" : ""
-      }`}
+      className={`border border-rose-200 rounded-md p-4 mb-3 flex flex-col sm:flex-row items-start bg-rose-900 text-gray-200 relative`}
     >
       {/* IMAGE */}
       <figure className="w-full sm:w-1/3 mr-0 sm:mr-4 mb-4 sm:mb-0">
@@ -166,13 +177,25 @@ const CarListItem = ({ car, setCars }) => {
             type="text"
             value={editedCar.title}
             onChange={handleChange}
-            className="w-full px-2 py-1 bg-rose-200 text-rose-900 rounded font-semibold text-lg glow-pulse"
+            className="w-full px-2 py-1 mt-10 sm:mt-12 bg-rose-200 text-rose-900 rounded font-semibold text-lg focus:glow-pulse"
           />
         ) : (
           <h3 className="font-bold text-white text-2xl">{car.title}</h3>
         )}
 
-        <p className="text-gray-300 mb-2">{car.description}</p>
+        {/* DESCRIPTION */}
+        {isEditing ? (
+          <textarea
+            name="description"
+            value={editedCar.description}
+            onChange={handleChange}
+            rows={3}
+            className="w-full px-2 py-1 bg-rose-200 text-rose-900 rounded focus:glow-pulse"
+            placeholder="Car description..."
+          />
+        ) : (
+          <p className="text-gray-300 mb-2">{car.description}</p>
+        )}
 
         {/* STATS */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-white">
@@ -195,7 +218,7 @@ const CarListItem = ({ car, setCars }) => {
                   type="number"
                   step={key === "engineSize" ? "0.1" : "1"}
                   onChange={handleChange}
-                  className="px-2 py-1 rounded bg-rose-200 text-rose-900"
+                  className="px-2 py-1 rounded bg-rose-200 text-rose-900 focus:glow-pulse"
                 />
               ) : isEditing &&
                 ["engineType", "transmission", "carType"].includes(key) ? (
@@ -203,18 +226,18 @@ const CarListItem = ({ car, setCars }) => {
                   name={key}
                   value={editedCar[key]}
                   onChange={handleChange}
-                  className="px-2 py-1 rounded bg-rose-200 text-rose-900"
+                  className="px-2 py-1 rounded bg-rose-200 text-rose-900 focus:glow-pulse"
                 >
                   {key === "engineType" &&
-                    ["Electric", "Diesel", "Hybrid", "Petrol"].map((option) => (
-                      <option key={option} value={option}>
-                        {option}
+                    ["Electric", "Diesel", "Hybrid", "Petrol"].map((opt) => (
+                      <option key={opt} value={opt}>
+                        {opt}
                       </option>
                     ))}
                   {key === "transmission" &&
-                    ["Automatic", "Manual"].map((option) => (
-                      <option key={option} value={option}>
-                        {option}
+                    ["Automatic", "Manual"].map((opt) => (
+                      <option key={opt} value={opt}>
+                        {opt}
                       </option>
                     ))}
                   {key === "carType" &&
@@ -231,9 +254,9 @@ const CarListItem = ({ car, setCars }) => {
                       "SUV",
                       "Truck",
                       "Van",
-                    ].map((option) => (
-                      <option key={option} value={option}>
-                        {option}
+                    ].map((opt) => (
+                      <option key={opt} value={opt}>
+                        {opt}
                       </option>
                     ))}
                 </select>
@@ -251,7 +274,7 @@ const CarListItem = ({ car, setCars }) => {
         </div>
       </div>
 
-      {/* DELETE CONFIRM */}
+      {/* CONFIRM DELETE */}
       <ConfirmModal
         isOpen={confirmOpen}
         onClose={() => setConfirmOpen(false)}

@@ -5,7 +5,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { GoHomeFill } from "react-icons/go";
 import { IoIosReturnRight } from "react-icons/io";
 import Link from "next/link";
-import Image from "next/image";
 import AddCarForm from "./AddCarForm";
 import CarList from "./CarList";
 import LoadingSpinner from "./LoadingSpinner";
@@ -31,7 +30,6 @@ const Dashboard = () => {
   const EXPIRY = 7 * 86400000;
   const DEBOUNCE = 300;
 
-  // Authentication check
   useEffect(() => {
     setHydrated(true);
     const p = sessionStorage.getItem(SESSION_KEY);
@@ -54,7 +52,7 @@ const Dashboard = () => {
       );
       setCars(res.documents);
       setFilteredCars(res.documents);
-    } catch (e) {
+    } catch {
       toast.error("Failed to load cars");
     } finally {
       setLoading(false);
@@ -75,7 +73,7 @@ const Dashboard = () => {
     if (debounced.trim()) {
       const q = debounced.toLowerCase();
       list = list.filter((c) =>
-        [c.make, c.model, c.title, c.year]?.join(" ").toLowerCase().includes(q)
+        [c.make, c.model, c.title, c.year].join(" ").toLowerCase().includes(q)
       );
     }
     const maps = {
@@ -127,11 +125,13 @@ const Dashboard = () => {
   return (
     <div className="fixed inset-0 h-screen overflow-hidden bg-rose-950 text-white flex flex-col z-[9999]">
       {/* Header */}
-      <header className="h-[80px] flex-shrink-0 flex justify-between items-center px-4 shadow-md">
-        <h1 className="text-2xl font-bold">Dashboard</h1>
-        <Link href="/" className="text-white hover:text-rose-400">
-          <GoHomeFill size={28} />
-        </Link>
+      <header className="h-[80px] flex-shrink-0 px-4 shadow-md">
+        <div className="max-w-7xl mx-auto w-full flex justify-between items-center h-full">
+          <h1 className="text-2xl font-bold">Dashboard</h1>
+          <Link href="/" className="text-white hover:text-rose-400">
+            <GoHomeFill size={28} />
+          </Link>
+        </div>
       </header>
 
       {/* Tabs */}
@@ -142,7 +142,7 @@ const Dashboard = () => {
             onClick={() => setActiveTab(t)}
             className={`px-4 py-2 rounded-full font-medium ${
               activeTab === t
-                ? "bg-rose-700 text-white"
+                ? "bg-rose-700 text-white glow-pulse"
                 : "bg-rose-300 text-rose-900"
             }`}
           >
@@ -154,7 +154,7 @@ const Dashboard = () => {
       {/* Main content */}
       <div className="flex-1 overflow-hidden">
         {activeTab === "carList" && (
-          <div className="h-full flex flex-col overflow-y-auto p-4">
+          <div className="h-full flex flex-col overflow-y-auto p-4 max-w-7xl mx-auto w-full">
             <div className="flex flex-col md:flex-row md:justify-between gap-4 mb-4">
               <input
                 type="text"
@@ -207,12 +207,12 @@ const Dashboard = () => {
                             setDropdown(false);
                           }}
                           className={`p-2 cursor-pointer text-center rounded-md transition 
-              hover:bg-rose-100 hover:text-rose-700
-              ${
-                sortOption === key
-                  ? "bg-rose-700 text-white font-bold"
-                  : "text-white"
-              }`}
+                            hover:bg-rose-100 hover:text-rose-700
+                            ${
+                              sortOption === key
+                                ? "bg-rose-700 text-white font-bold"
+                                : "text-white"
+                            }`}
                         >
                           {label}
                         </li>

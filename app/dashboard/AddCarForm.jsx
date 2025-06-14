@@ -47,7 +47,6 @@ const AddCarForm = ({ setCars, fetchCars, setActiveTab }) => {
     []
   );
 
-  // Clean up previews
   useEffect(
     () => () => previews.forEach((u) => URL.revokeObjectURL(u)),
     [previews]
@@ -88,10 +87,12 @@ const AddCarForm = ({ setCars, fetchCars, setActiveTab }) => {
     e.preventDefault();
     setError("");
     toast.dismiss("add-car");
+
     if (!valid()) {
       setError("Check all fields");
       return;
     }
+
     setLoading(true);
     try {
       const ids = [],
@@ -141,148 +142,157 @@ const AddCarForm = ({ setCars, fetchCars, setActiveTab }) => {
 
   return (
     <div className="h-full overflow-hidden flex flex-col p-4">
-      <form onSubmit={submit} className="flex-1 flex flex-col overflow-hidden">
-        <div className="flex-1 overflow-y-auto space-y-4">
-          {[
-            { name: "title", type: "text", placeholder: "Title" },
-            {
-              name: "description",
-              type: "textarea",
-              placeholder: "Description",
-            },
-            { name: "price", type: "number", placeholder: "Price" },
-          ].map((f) =>
-            f.type === "textarea" ? (
-              <textarea
-                key={f.name}
-                name={f.name}
-                value={car[f.name]}
-                onChange={onChange}
-                placeholder={f.placeholder}
-                className="w-full px-3 py-2 rounded bg-rose-800"
-                required
-              />
-            ) : (
-              <input
-                key={f.name}
-                name={f.name}
-                type={f.type}
-                value={car[f.name]}
-                onChange={onChange}
-                placeholder={f.placeholder}
-                className="w-full px-3 py-2 rounded bg-rose-800"
-                required
-              />
-            )
-          )}
-
-          <div className="grid grid-cols-2 gap-2">
-            <select
-              name="engineType"
-              value={car.engineType}
-              onChange={onChange}
-              className="px-3 py-2 rounded bg-rose-800"
-            >
-              {["Electric", "Diesel", "Hybrid", "Petrol"].map((t) => (
-                <option key={t} value={t}>
-                  {t}
-                </option>
-              ))}
-            </select>
-            <select
-              name="transmission"
-              value={car.transmission}
-              onChange={onChange}
-              className="px-3 py-2 rounded bg-rose-800"
-            >
-              {["Automatic", "Manual"].map((t) => (
-                <option key={t} value={t}>
-                  {t}
-                </option>
-              ))}
-            </select>
-
-            <input
-              name="engineSize"
-              type="number"
-              value={car.engineSize}
-              onChange={onChange}
-              placeholder="Engine size"
-              className="px-3 py-2 rounded bg-rose-800"
-              required
-            />
-            <input
-              name="mileage"
-              type="number"
-              value={car.mileage}
-              onChange={onChange}
-              placeholder="Mileage"
-              className="px-3 py-2 rounded bg-rose-800"
-              required
-            />
-
-            <input
-              name="year"
-              type="number"
-              value={car.year}
-              onChange={onChange}
-              placeholder="Year"
-              className="px-3 py-2 rounded bg-rose-800"
-              required
-            />
-            <select
-              name="carType"
-              value={car.carType}
-              onChange={onChange}
-              className="px-3 py-2 rounded bg-rose-800"
-            >
-              {carTypes.map((t) => (
-                <option key={t} value={t}>
-                  {t}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <input
-            type="file"
-            multiple
-            accept="image/*"
-            onChange={onImages}
-            className="w-full pt-2"
-          />
-
-          {previews.length > 0 && (
-            <div className="flex overflow-x-auto space-x-2 py-2">
-              {previews.map((u, i) => (
-                <Image
-                  key={i}
-                  src={u}
-                  width={80}
-                  height={80}
-                  className="rounded"
-                  alt={`Preview ${i}`}
+      <div className="max-w-7xl mx-auto w-full">
+        <form
+          onSubmit={submit}
+          className="flex-1 flex flex-col overflow-hidden"
+        >
+          <div className="flex-1 overflow-y-auto space-y-4">
+            {[
+              { name: "title", type: "text", placeholder: "Title" },
+              {
+                name: "description",
+                type: "textarea",
+                placeholder: "Description",
+              },
+              { name: "price", type: "number", placeholder: "Price" },
+            ].map((f) =>
+              f.type === "textarea" ? (
+                <textarea
+                  key={f.name}
+                  name={f.name}
+                  value={car[f.name]}
+                  onChange={onChange}
+                  placeholder={f.placeholder}
+                  className="w-full px-3 py-2 rounded bg-rose-800"
+                  required
                 />
-              ))}
-            </div>
-          )}
-
-          {error && <span className="text-red-400">{error}</span>}
-          <div className="p-4">
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full py-3 rounded bg-rose-700 text-white flex justify-center"
-            >
-              {loading ? (
-                <AiOutlineLoading className="animate-spin" />
               ) : (
-                "Add Car"
-              )}
-            </button>
+                <input
+                  key={f.name}
+                  name={f.name}
+                  type={f.type}
+                  value={car[f.name]}
+                  onChange={onChange}
+                  placeholder={f.placeholder}
+                  className="w-full px-3 py-2 rounded bg-rose-800"
+                  required
+                />
+              )
+            )}
+
+            <div className="grid grid-cols-2 gap-2">
+              <select
+                name="engineType"
+                value={car.engineType}
+                onChange={onChange}
+                className="px-3 py-2 rounded bg-rose-800"
+              >
+                {["Electric", "Diesel", "Hybrid", "Petrol"].map((t) => (
+                  <option key={t} value={t}>
+                    {t}
+                  </option>
+                ))}
+              </select>
+
+              <select
+                name="transmission"
+                value={car.transmission}
+                onChange={onChange}
+                className="px-3 py-2 rounded bg-rose-800"
+              >
+                {["Automatic", "Manual"].map((t) => (
+                  <option key={t} value={t}>
+                    {t}
+                  </option>
+                ))}
+              </select>
+
+              <input
+                name="engineSize"
+                type="number"
+                value={car.engineSize}
+                onChange={onChange}
+                placeholder="Engine size"
+                className="px-3 py-2 rounded bg-rose-800"
+                required
+              />
+
+              <input
+                name="mileage"
+                type="number"
+                value={car.mileage}
+                onChange={onChange}
+                placeholder="Mileage"
+                className="px-3 py-2 rounded bg-rose-800"
+                required
+              />
+
+              <input
+                name="year"
+                type="number"
+                value={car.year}
+                onChange={onChange}
+                placeholder="Year"
+                className="px-3 py-2 rounded bg-rose-800"
+                required
+              />
+
+              <select
+                name="carType"
+                value={car.carType}
+                onChange={onChange}
+                className="px-3 py-2 rounded bg-rose-800"
+              >
+                {carTypes.map((t) => (
+                  <option key={t} value={t}>
+                    {t}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <input
+              type="file"
+              multiple
+              accept="image/*"
+              onChange={onImages}
+              className="w-full pt-2"
+            />
+
+            {previews.length > 0 && (
+              <div className="flex overflow-x-auto space-x-2 py-2">
+                {previews.map((u, i) => (
+                  <Image
+                    key={i}
+                    src={u}
+                    width={80}
+                    height={80}
+                    className="rounded"
+                    alt={`Preview ${i}`}
+                  />
+                ))}
+              </div>
+            )}
+
+            {error && <span className="text-red-400">{error}</span>}
+
+            <div className="p-4">
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full py-3 rounded bg-rose-700 text-white flex justify-center"
+              >
+                {loading ? (
+                  <AiOutlineLoading className="animate-spin" />
+                ) : (
+                  "Add Car"
+                )}
+              </button>
+            </div>
           </div>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
   );
 };

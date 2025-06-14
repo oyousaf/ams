@@ -31,6 +31,13 @@ const Dashboard = () => {
   const DEBOUNCE = 300;
 
   useEffect(() => {
+    document.body.classList.add("overflow-hidden");
+    return () => {
+      document.body.classList.remove("overflow-hidden");
+    };
+  }, []);
+
+  useEffect(() => {
     setHydrated(true);
     const p = sessionStorage.getItem(SESSION_KEY);
     const ts = +sessionStorage.getItem(SESSION_TS);
@@ -39,7 +46,6 @@ const Dashboard = () => {
       ts + EXPIRY > Date.now()
     ) {
       setIsAuthenticated(true);
-      document.body.classList.add("overflow-hidden");
     }
   }, []);
 
@@ -94,7 +100,6 @@ const Dashboard = () => {
       sessionStorage.setItem(SESSION_TS, Date.now().toString());
       setIsAuthenticated(true);
       setError("");
-      document.body.classList.add("overflow-hidden");
     } else {
       setError("Incorrect passkey");
     }

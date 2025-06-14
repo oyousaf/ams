@@ -268,8 +268,6 @@ const AddCarForm = ({ setCars, fetchCars, setActiveTab }) => {
           )}
 
           {error && <span className="text-red-400">{error}</span>}
-        </div>
-
         <div className="p-4">
           <button
             type="submit"
@@ -283,6 +281,8 @@ const AddCarForm = ({ setCars, fetchCars, setActiveTab }) => {
             )}
           </button>
         </div>
+        </div>
+
       </form>
     </div>
   );

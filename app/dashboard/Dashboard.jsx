@@ -163,10 +163,10 @@ const Dashboard = () => {
                 placeholder="Search..."
                 className="px-4 py-2 rounded bg-rose-800 w-full md:w-1/2"
               />
-              <div className="relative w-full md:w-1/4">
+              <div className="relative w-64 z-[100]">
                 <button
                   onClick={() => setDropdown(!dropdown)}
-                  className="w-full text-left px-4 py-2 rounded bg-rose-800"
+                  className="w-full text-left px-4 py-2 rounded bg-rose-800 "
                 >
                   Sort: {sortOption}
                 </button>

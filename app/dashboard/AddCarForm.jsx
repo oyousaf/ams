@@ -142,7 +142,7 @@ const AddCarForm = ({ setCars, fetchCars, setActiveTab }) => {
 
   return (
     <div className="h-full overflow-hidden flex flex-col p-4 relative">
-      <div className="max-w-7xl mx-auto w-full pb-24">
+      <div className="max-w-3xl mx-auto w-full pb-24">
         <form
           onSubmit={submit}
           className="flex-1 flex flex-col overflow-hidden"
@@ -278,7 +278,7 @@ const AddCarForm = ({ setCars, fetchCars, setActiveTab }) => {
 
       {/* Fixed Button */}
       <div className="fixed bottom-0 left-0 right-0 bg-rose-950 px-4 py-3 z-50 shadow-inner">
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-3xl mx-auto">
           <button
             type="submit"
             onClick={submit}

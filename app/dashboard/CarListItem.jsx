@@ -95,7 +95,9 @@ const CarListItem = ({ car, setCars }, ref) => {
       );
 
       setCars((prev) => prev.filter((c) => c.$id !== car.$id));
-      toast.success("Car deleted successfully!", { id: `toast-delete-${car.$id}` });
+      toast.success("Car deleted successfully!", {
+        id: `toast-delete-${car.$id}`,
+      });
       setConfirmOpen(false);
     } catch (err) {
       console.error(err);
@@ -124,7 +126,7 @@ const CarListItem = ({ car, setCars }, ref) => {
         <figcaption className="sr-only">Image of {car.title}</figcaption>
       </figure>
 
-      <div className="w-full sm:w-2/3 space-y-2 relative ">
+      <div className="w-full sm:w-2/3 space-y-2 relative">
         <div className="flex justify-end gap-3 sm:absolute sm:top-0 sm:right-0 z-10 mb-2 sm:mb-0 text-xl">
           {isEditing ? (
             <>

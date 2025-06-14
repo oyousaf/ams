@@ -9,7 +9,7 @@ import ConfirmModal from "./ConfirmModal";
 const FALLBACK_IMAGE = "/fallback.webp";
 
 const formatNumber = (num) =>
-  typeof num === "number" ? num.toLocaleString("en-UK") : num;
+  typeof num === "number" ? num.toLocaleString("en-GB") : num;
 
 const CarListItem = ({ car, setCars }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -133,12 +133,7 @@ const CarListItem = ({ car, setCars }) => {
         <div className="flex justify-end gap-3 sm:absolute sm:top-0 sm:right-0 z-10 mb-2 sm:mb-0">
           {isEditing ? (
             <>
-              <button
-                onClick={handleSave}
-                disabled={saving}
-                className="text-green-400 hover:text-green-600"
-                title="Save"
-              >
+              <button onClick={handleSave} disabled={saving} title="Save">
                 💾
               </button>
               <button
@@ -146,26 +141,17 @@ const CarListItem = ({ car, setCars }) => {
                   setIsEditing(false);
                   setEditedCar({ ...car });
                 }}
-                className="text-gray-300 hover:text-white"
                 title="Cancel"
               >
                 ❌
               </button>
             </>
           ) : (
-            <button
-              onClick={() => setIsEditing(true)}
-              className="text-blue-400 hover:text-blue-600"
-              title="Edit"
-            >
+            <button onClick={() => setIsEditing(true)} title="Edit">
               ✏️
             </button>
           )}
-          <button
-            onClick={() => setConfirmOpen(true)}
-            className="text-rose-400 hover:text-rose-600"
-            title="Delete"
-          >
+          <button onClick={() => setConfirmOpen(true)} title="Delete">
             🗑️
           </button>
         </div>

@@ -14,6 +14,15 @@ const shakeVariant = {
   },
 };
 
+const fadeInUp = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.4, ease: "easeOut" },
+  },
+};
+
 export default function AddCarForm({ setCars, fetchCars, setActiveTab }) {
   const initial = useMemo(
     () => ({
@@ -144,7 +153,12 @@ export default function AddCarForm({ setCars, fetchCars, setActiveTab }) {
   };
 
   return (
-    <div className="h-full flex flex-col p-4 relative">
+    <motion.div
+      className="h-full flex flex-col p-4 relative"
+      initial="hidden"
+      animate="visible"
+      variants={fadeInUp}
+    >
       <div className="max-w-3xl mx-auto w-full mb-24">
         <form
           onSubmit={onSubmit}
@@ -155,10 +169,11 @@ export default function AddCarForm({ setCars, fetchCars, setActiveTab }) {
             animate={shouldShake ? "shake" : "idle"}
             onAnimationComplete={() => setShouldShake(false)}
             className="space-y-4 overflow-y-auto"
+            layout
           >
             {["title", "description", "price"].map((name) =>
               name === "description" ? (
-                <textarea
+                <motion.textarea
                   key={name}
                   name={name}
                   value={car[name]}
@@ -166,9 +181,10 @@ export default function AddCarForm({ setCars, fetchCars, setActiveTab }) {
                   placeholder={name.charAt(0).toUpperCase() + name.slice(1)}
                   className="w-full px-3 py-2 rounded bg-rose-800"
                   required
+                  layout
                 />
               ) : (
-                <input
+                <motion.input
                   key={name}
                   name={name}
                   type={name === "price" ? "number" : "text"}
@@ -177,36 +193,39 @@ export default function AddCarForm({ setCars, fetchCars, setActiveTab }) {
                   placeholder={name.charAt(0).toUpperCase() + name.slice(1)}
                   className="w-full px-3 py-2 rounded bg-rose-800"
                   required
+                  layout
                 />
               )
             )}
 
             <div className="grid grid-cols-2 gap-2">
-              <select
+              <motion.select
                 name="engineType"
                 value={car.engineType}
                 onChange={onChange}
                 className="px-3 py-2 rounded bg-rose-800"
+                layout
               >
                 {["Electric", "Diesel", "Hybrid", "Petrol"].map((t) => (
                   <option key={t} value={t}>
                     {t}
                   </option>
                 ))}
-              </select>
-              <select
+              </motion.select>
+              <motion.select
                 name="transmission"
                 value={car.transmission}
                 onChange={onChange}
                 className="px-3 py-2 rounded bg-rose-800"
+                layout
               >
                 {["Automatic", "Manual"].map((t) => (
                   <option key={t} value={t}>
                     {t}
                   </option>
                 ))}
-              </select>
-              <input
+              </motion.select>
+              <motion.input
                 name="engineSize"
                 type="number"
                 placeholder="Engine Size"
@@ -214,8 +233,9 @@ export default function AddCarForm({ setCars, fetchCars, setActiveTab }) {
                 onChange={onChange}
                 className="px-3 py-2 rounded bg-rose-800"
                 required
+                layout
               />
-              <input
+              <motion.input
                 name="mileage"
                 type="number"
                 placeholder="Mileage"
@@ -223,8 +243,9 @@ export default function AddCarForm({ setCars, fetchCars, setActiveTab }) {
                 onChange={onChange}
                 className="px-3 py-2 rounded bg-rose-800"
                 required
+                layout
               />
-              <input
+              <motion.input
                 name="year"
                 type="number"
                 placeholder="Year"
@@ -232,61 +253,78 @@ export default function AddCarForm({ setCars, fetchCars, setActiveTab }) {
                 onChange={onChange}
                 className="px-3 py-2 rounded bg-rose-800"
                 required
+                layout
               />
-              <select
+              <motion.select
                 name="carType"
                 value={car.carType}
                 onChange={onChange}
                 className="px-3 py-2 rounded bg-rose-800"
+                layout
               >
                 {carTypes.map((t) => (
                   <option key={t} value={t}>
                     {t}
                   </option>
                 ))}
-              </select>
+              </motion.select>
             </div>
 
-            <input
+            <motion.input
               type="file"
               multiple
               accept="image/*"
               onChange={onImages}
               className="w-full pt-2"
+              layout
             />
             {previews.length > 0 && (
-              <div className="flex overflow-x-auto space-x-2 py-2">
+              <motion.div
+                className="flex overflow-x-auto space-x-2 py-2"
+                layout
+              >
                 {previews.map((u, i) => (
-                  <Image
-                    key={i}
-                    src={u}
-                    width={80}
-                    height={80}
-                    alt={`Preview ${i}`}
-                    className="rounded"
-                  />
+                  <motion.div key={i} layout>
+                    <Image
+                      src={u}
+                      width={80}
+                      height={80}
+                      alt={`Preview ${i}`}
+                      className="rounded"
+                    />
+                  </motion.div>
                 ))}
-              </div>
+              </motion.div>
             )}
           </motion.div>
         </form>
       </div>
 
-      <div className="fixed bottom-0 left-0 right-0 bg-rose-950 px-4 py-3 z-50 shadow-inner">
+      <motion.div
+        className="fixed bottom-0 left-0 right-0 bg-rose-950 px-4 py-3 z-50 shadow-inner"
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+      >
         <div className="max-w-3xl mx-auto">
-          <button
+          <motion.button
             onClick={onSubmit}
             disabled={loading}
-            className="w-full py-3 rounded bg-rose-700 text-white flex justify-center"
+            whileTap={{ scale: 0.95 }}
+            whileHover={{ scale: 1.02 }}
+            className="w-full py-3 rounded bg-rose-700 text-white flex justify-center items-center gap-2 transition-transform"
           >
             {loading ? (
-              <AiOutlineLoading className="animate-spin text-xl" />
+              <>
+                <AiOutlineLoading className="animate-spin text-xl" />
+                <span>Uploading...</span>
+              </>
             ) : (
               "Add Car"
             )}
-          </button>
+          </motion.button>
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }

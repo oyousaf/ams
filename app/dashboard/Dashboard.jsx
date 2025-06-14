@@ -120,7 +120,7 @@ const Dashboard = () => {
           onChange={(e) => setPasskey(e.target.value)}
           placeholder="Enter Passkey"
           className={`px-4 py-2 rounded text-black ${
-            error ? "animate-shake border border-red-500" : ""
+            error ? "shake border border-red-500" : ""
           }`}
           maxLength={5}
         />

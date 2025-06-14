@@ -1,12 +1,20 @@
 "use client";
-
 import React, { useState, useEffect, useMemo } from "react";
+import { motion } from "framer-motion";
 import { databases, storage, ID } from "../lib/appwrite";
 import { toast } from "sonner";
 import { AiOutlineLoading } from "react-icons/ai";
 import Image from "next/image";
 
-const AddCarForm = ({ setCars, fetchCars, setActiveTab }) => {
+const shakeVariant = {
+  idle: { x: 0 },
+  shake: {
+    x: [-8, 8, -6, 6, 0],
+    transition: { duration: 0.4 },
+  },
+};
+
+export default function AddCarForm({ setCars, fetchCars, setActiveTab }) {
   const initial = useMemo(
     () => ({
       title: "",
@@ -26,7 +34,7 @@ const AddCarForm = ({ setCars, fetchCars, setActiveTab }) => {
   const [car, setCar] = useState(initial);
   const [previews, setPreviews] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [shakeKey, setShakeKey] = useState(0);
 
   const carTypes = useMemo(
     () =>
@@ -58,16 +66,18 @@ const AddCarForm = ({ setCars, fetchCars, setActiveTab }) => {
   };
 
   const onImages = (e) => {
-    const files = [...e.target.files];
+    const files = Array.from(e.target.files);
     previews.forEach((u) => URL.revokeObjectURL(u));
     setCar((p) => ({ ...p, images: files }));
     setPreviews(files.map((f) => URL.createObjectURL(f)));
   };
 
   const valid = () => {
-    const { title, price, engineSize, mileage, year, images } = car;
+    const { title, description, price, engineSize, mileage, year, images } =
+      car;
     return (
       title.trim() &&
+      description.trim() &&
       +price >= 0 &&
       +engineSize >= 0 &&
       +mileage >= 0 &&
@@ -80,23 +90,19 @@ const AddCarForm = ({ setCars, fetchCars, setActiveTab }) => {
     previews.forEach((u) => URL.revokeObjectURL(u));
     setCar(initial);
     setPreviews([]);
-    setError("");
   };
 
-  const submit = async (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
-    setError("");
-    toast.dismiss("add-car");
-
     if (!valid()) {
-      setError("Check all fields");
+      setShakeKey((k) => k + 1);
+      toast.error("Please fill all fields");
       return;
     }
-
     setLoading(true);
     try {
-      const ids = [],
-        urls = [];
+      const ids = [];
+      const urls = [];
       for (const f of car.images) {
         const file = await storage.createFile(
           process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID,
@@ -108,7 +114,6 @@ const AddCarForm = ({ setCars, fetchCars, setActiveTab }) => {
           `${process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT}/storage/buckets/${process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID}/files/${file.$id}/view?project=${process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID}&mode=admin`
         );
       }
-
       const payload = {
         ...car,
         price: +car.price,
@@ -120,46 +125,46 @@ const AddCarForm = ({ setCars, fetchCars, setActiveTab }) => {
         createdAt: new Date().toISOString(),
       };
       delete payload.images;
-
       const doc = await databases.createDocument(
         process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID,
         process.env.NEXT_PUBLIC_APPWRITE_COLLECTION_ID,
         ID.unique(),
         payload
       );
-
-      toast.success("Car added successfully!", { id: "add-car" });
+      toast.success("Car added!");
       setCars((p) => [...p, doc]);
       fetchCars();
       setActiveTab("carList");
       reset();
     } catch {
-      toast.error("Error uploading", { id: "add-car" });
+      toast.error("Error uploading");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="h-full overflow-hidden flex flex-col p-4 relative">
-      <div className="max-w-3xl mx-auto w-full pb-24">
+    <motion.div
+      key={shakeKey}
+      variants={shakeVariant}
+      initial="idle"
+      animate="shake"
+      className="h-full flex flex-col p-4 relative"
+    >
+      <div className="max-w-3xl mx-auto w-full mb-24">
         <form
-          onSubmit={submit}
+          onSubmit={onSubmit}
           className="flex-1 flex flex-col overflow-hidden"
         >
-          <div className="flex-1 overflow-y-auto space-y-4">
-            {[
-              { name: "title" },
-              { name: "description", type: "textarea" },
-              { name: "price" },
-            ].map(({ name, type }) =>
-              type === "textarea" ? (
+          <div className="space-y-4 overflow-y-auto">
+            {["title", "description", "price"].map((name) =>
+              name === "description" ? (
                 <textarea
                   key={name}
                   name={name}
                   value={car[name]}
                   onChange={onChange}
-                  placeholder={name[0].toUpperCase() + name.slice(1)}
+                  placeholder={name.charAt(0).toUpperCase() + name.slice(1)}
                   className="w-full px-3 py-2 rounded bg-rose-800"
                   required
                 />
@@ -167,16 +172,17 @@ const AddCarForm = ({ setCars, fetchCars, setActiveTab }) => {
                 <input
                   key={name}
                   name={name}
-                  type="text"
+                  type={name === "price" ? "number" : "text"}
                   value={car[name]}
                   onChange={onChange}
-                  placeholder={name[0].toUpperCase() + name.slice(1)}
+                  placeholder={name.charAt(0).toUpperCase() + name.slice(1)}
                   className="w-full px-3 py-2 rounded bg-rose-800"
                   required
                 />
               )
             )}
 
+            {/* Grid selects and inputs */}
             <div className="grid grid-cols-2 gap-2">
               <select
                 name="engineType"
@@ -190,7 +196,6 @@ const AddCarForm = ({ setCars, fetchCars, setActiveTab }) => {
                   </option>
                 ))}
               </select>
-
               <select
                 name="transmission"
                 value={car.transmission}
@@ -203,37 +208,33 @@ const AddCarForm = ({ setCars, fetchCars, setActiveTab }) => {
                   </option>
                 ))}
               </select>
-
               <input
                 name="engineSize"
                 type="number"
+                placeholder="Engine Size"
                 value={car.engineSize}
                 onChange={onChange}
-                placeholder="Engine size"
                 className="px-3 py-2 rounded bg-rose-800"
                 required
               />
-
               <input
                 name="mileage"
                 type="number"
+                placeholder="Mileage"
                 value={car.mileage}
                 onChange={onChange}
-                placeholder="Mileage"
                 className="px-3 py-2 rounded bg-rose-800"
                 required
               />
-
               <input
                 name="year"
                 type="number"
+                placeholder="Year"
                 value={car.year}
                 onChange={onChange}
-                placeholder="Year"
                 className="px-3 py-2 rounded bg-rose-800"
                 required
               />
-
               <select
                 name="carType"
                 value={car.carType}
@@ -255,7 +256,6 @@ const AddCarForm = ({ setCars, fetchCars, setActiveTab }) => {
               onChange={onImages}
               className="w-full pt-2"
             />
-
             {previews.length > 0 && (
               <div className="flex overflow-x-auto space-x-2 py-2">
                 {previews.map((u, i) => (
@@ -264,24 +264,20 @@ const AddCarForm = ({ setCars, fetchCars, setActiveTab }) => {
                     src={u}
                     width={80}
                     height={80}
-                    className="rounded"
                     alt={`Preview ${i}`}
+                    className="rounded"
                   />
                 ))}
               </div>
             )}
-
-            {error && <span className="text-red-400">{error}</span>}
           </div>
         </form>
       </div>
 
-      {/* Fixed Button */}
       <div className="fixed bottom-0 left-0 right-0 bg-rose-950 px-4 py-3 z-50 shadow-inner">
         <div className="max-w-3xl mx-auto">
           <button
-            type="submit"
-            onClick={submit}
+            onClick={onSubmit}
             disabled={loading}
             className="w-full py-3 rounded bg-rose-700 text-white flex justify-center"
           >
@@ -293,8 +289,6 @@ const AddCarForm = ({ setCars, fetchCars, setActiveTab }) => {
           </button>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
-};
-
-export default AddCarForm;
+}

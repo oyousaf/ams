@@ -100,19 +100,28 @@ const Dashboard = () => {
     } else setError("Incorrect passkey");
   };
 
-  if (!hydrated) return <LoadingSpinner />;
-  if (!isAuthenticated)
+  if (!hydrated || (isAuthenticated && loading)) {
+    return (
+      <div className="fixed inset-0 bg-rose-950 flex items-center justify-center z-[99999]">
+        <LoadingSpinner />
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
     return (
       <form
         onSubmit={handlePass}
-        className="min-h-screen flex flex-col justify-center items-center gap-4 p-4"
+        className="min-h-screen flex flex-col justify-center items-center gap-4 p-4 bg-rose-950 text-white"
       >
         <input
           type="password"
           value={passkey}
           onChange={(e) => setPasskey(e.target.value)}
           placeholder="Enter Passkey"
-          className="px-4 py-2 rounded"
+          className={`px-4 py-2 rounded text-black ${
+            error ? "animate-shake border border-red-500" : ""
+          }`}
           maxLength={5}
         />
         {error && <span className="text-red-500">{error}</span>}
@@ -121,6 +130,7 @@ const Dashboard = () => {
         </button>
       </form>
     );
+  }
 
   return (
     <div className="fixed inset-0 h-screen overflow-hidden bg-rose-950 text-white flex flex-col z-[9999]">
@@ -151,7 +161,7 @@ const Dashboard = () => {
         ))}
       </nav>
 
-      {/* Main content */}
+      {/* Main Content */}
       <div className="flex-1 overflow-hidden">
         {activeTab === "carList" && (
           <div className="h-full flex flex-col overflow-y-auto p-4 max-w-7xl mx-auto w-full">

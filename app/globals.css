@@ -52,6 +52,25 @@ body {
     }
   }
 
+  @keyframes shake {
+    0%,
+    100% {
+      transform: translateX(0);
+    }
+    20%,
+    60% {
+      transform: translateX(-6px);
+    }
+    40%,
+    80% {
+      transform: translateX(6px);
+    }
+  }
+
+  .shake {
+    animation: shake 0.4s ease-in-out;
+  }
+
   .mobile-menu {
     @apply backdrop-blur-md bg-gradient-to-br from-zinc-900/80 via-zinc-800/80 to-zinc-900/90 border-t border-rose-900/30;
   }
@@ -113,7 +132,7 @@ body {
   background-color: #000;
 }
 
-/* Vendor Imports */
+/* Vendor imports */
+
 @import "slick-carousel/slick/slick.css";
 @import "slick-carousel/slick/slick-theme.css";
-@import "react-toastify/dist/ReactToastify.css";

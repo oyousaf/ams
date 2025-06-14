@@ -39,7 +39,7 @@ const Dashboard = () => {
       ts + EXPIRY > Date.now()
     ) {
       setIsAuthenticated(true);
-      document.body.style.overflow = "hidden";
+      document.body.classList.add("overflow-hidden");
     }
   }, []);
 
@@ -69,13 +69,7 @@ const Dashboard = () => {
   }, [searchQuery]);
 
   useEffect(() => {
-    let list = [...cars];
-    if (debounced.trim()) {
-      const q = debounced.toLowerCase();
-      list = list.filter((c) =>
-        [c.make, c.model, c.title, c.year].join(" ").toLowerCase().includes(q)
-      );
-    }
+    const q = debounced.toLowerCase().trim();
     const maps = {
       priceLow: (a, b) => a.price - b.price,
       priceHigh: (a, b) => b.price - a.price,
@@ -85,7 +79,11 @@ const Dashboard = () => {
       oldest: (a, b) => new Date(a.createdAt) - new Date(b.createdAt),
       newest: (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
     };
-    list.sort(maps[sortOption] || maps.newest);
+    const list = cars
+      .filter((c) =>
+        [c.make, c.model, c.title, c.year].join(" ").toLowerCase().includes(q)
+      )
+      .sort(maps[sortOption] || maps.newest);
     setFilteredCars(list);
   }, [cars, debounced, sortOption]);
 
@@ -95,14 +93,16 @@ const Dashboard = () => {
       sessionStorage.setItem(SESSION_KEY, passkey);
       sessionStorage.setItem(SESSION_TS, Date.now().toString());
       setIsAuthenticated(true);
-      document.body.style.overflow = "hidden";
       setError("");
-    } else setError("Incorrect passkey");
+      document.body.classList.add("overflow-hidden");
+    } else {
+      setError("Incorrect passkey");
+    }
   };
 
   if (!hydrated || (isAuthenticated && loading)) {
     return (
-      <div className="fixed inset-0 bg-rose-950 flex items-center justify-center z-[99999]">
+      <div className="fixed inset-0 bg-rose-950 flex items-center justify-center z-[100]">
         <LoadingSpinner />
       </div>
     );
@@ -110,31 +110,47 @@ const Dashboard = () => {
 
   if (!isAuthenticated) {
     return (
-      <form
-        onSubmit={handlePass}
-        className="min-h-screen flex flex-col justify-center items-center gap-4 p-4 bg-rose-950 text-white"
-      >
-        <input
-          type="password"
-          value={passkey}
-          onChange={(e) => setPasskey(e.target.value)}
-          placeholder="Enter Passkey"
-          className={`px-4 py-2 rounded text-black ${
-            error ? "shake border border-red-500" : ""
-          }`}
-          maxLength={5}
-        />
-        {error && <span className="text-red-500">{error}</span>}
-        <button type="submit" className="bg-rose-700 p-2 rounded text-white">
-          <IoIosReturnRight size={24} />
-        </button>
-      </form>
+      <div className="fixed inset-0 bg-rose-950 z-[100] flex items-center justify-center px-4">
+        <form
+          onSubmit={handlePass}
+          className="flex flex-col gap-4 items-center text-white w-full max-w-sm"
+        >
+          <input
+            type="password"
+            value={passkey}
+            onChange={(e) => setPasskey(e.target.value)}
+            placeholder="Enter Passkey"
+            maxLength={5}
+            className={`px-4 py-2 rounded text-black w-full ${
+              error ? "shake border border-red-500" : ""
+            }`}
+          />
+          {error && <span className="text-red-500">{error}</span>}
+          <button type="submit" className="bg-rose-700 p-2 rounded">
+            <IoIosReturnRight size={24} />
+          </button>
+        </form>
+      </div>
     );
   }
 
+  const tabs = [
+    { key: "carList", label: "Cars" },
+    { key: "addCar", label: "Add Car" },
+  ];
+
+  const sortOptions = [
+    ["newest", "Newest"],
+    ["oldest", "Oldest"],
+    ["priceLow", "Price ↑"],
+    ["priceHigh", "Price ↓"],
+    ["mileage", "Mileage"],
+    ["engineLow", "Engine ↑"],
+    ["engineHigh", "Engine ↓"],
+  ];
+
   return (
-    <div className="fixed inset-0 h-screen overflow-hidden bg-rose-950 text-white flex flex-col z-[9999]">
-      {/* Header */}
+    <div className="fixed inset-0 h-screen overflow-hidden bg-rose-950 text-white flex flex-col z-[100]">
       <header className="h-[80px] flex-shrink-0 px-4 shadow-md">
         <div className="max-w-7xl mx-auto w-full flex justify-between items-center h-full">
           <h1 className="text-2xl font-bold">Dashboard</h1>
@@ -144,26 +160,24 @@ const Dashboard = () => {
         </div>
       </header>
 
-      {/* Tabs */}
       <nav className="flex-shrink-0 flex justify-center gap-4 p-2">
-        {["carList", "addCar"].map((t) => (
+        {tabs.map(({ key, label }) => (
           <button
-            key={t}
-            onClick={() => setActiveTab(t)}
+            key={key}
+            onClick={() => setActiveTab(key)}
             className={`px-4 py-2 rounded-full font-medium ${
-              activeTab === t
+              activeTab === key
                 ? "bg-rose-700 text-white glow-pulse"
                 : "bg-rose-300 text-rose-900"
             }`}
           >
-            {t === "carList" ? "Cars" : "Add Car"}
+            {label}
           </button>
         ))}
       </nav>
 
-      {/* Main Content */}
       <div className="flex-1 overflow-hidden">
-        {activeTab === "carList" && (
+        {activeTab === "carList" ? (
           <div className="h-full flex flex-col overflow-y-auto p-4 max-w-7xl mx-auto w-full">
             <div className="flex flex-col md:flex-row md:justify-between gap-4 mb-4">
               <input
@@ -179,17 +193,7 @@ const Dashboard = () => {
                   className="w-full px-4 py-2 rounded-lg text-white bg-gradient-to-br from-rose-900 via-rose-800 to-rose-950 shadow font-semibold"
                 >
                   Sort By:{" "}
-                  {
-                    {
-                      newest: "Newest",
-                      oldest: "Oldest",
-                      priceLow: "Price ↑",
-                      priceHigh: "Price ↓",
-                      mileage: "Mileage",
-                      engineLow: "Engine ↑",
-                      engineHigh: "Engine ↓",
-                    }[sortOption]
-                  }
+                  {sortOptions.find(([key]) => key === sortOption)?.[1]}
                 </button>
 
                 <AnimatePresence>
@@ -201,28 +205,18 @@ const Dashboard = () => {
                       transition={{ duration: 0.2 }}
                       className="absolute w-full mt-2 border border-rose-700 bg-rose-800 rounded-lg shadow-lg z-10"
                     >
-                      {[
-                        ["newest", "Newest"],
-                        ["oldest", "Oldest"],
-                        ["priceLow", "Price ↑"],
-                        ["priceHigh", "Price ↓"],
-                        ["mileage", "Mileage"],
-                        ["engineLow", "Engine ↑"],
-                        ["engineHigh", "Engine ↓"],
-                      ].map(([key, label]) => (
+                      {sortOptions.map(([key, label]) => (
                         <li
                           key={key}
                           onClick={() => {
                             setSortOption(key);
                             setDropdown(false);
                           }}
-                          className={`p-2 cursor-pointer text-center rounded-md transition 
-                            hover:bg-rose-100 hover:text-rose-700
-                            ${
-                              sortOption === key
-                                ? "bg-rose-700 text-white font-bold"
-                                : "text-white"
-                            }`}
+                          className={`p-2 cursor-pointer text-center rounded-md transition hover:bg-rose-100 hover:text-rose-700 ${
+                            sortOption === key
+                              ? "bg-rose-700 text-white font-bold"
+                              : "text-white"
+                          }`}
                         >
                           {label}
                         </li>
@@ -243,9 +237,7 @@ const Dashboard = () => {
               />
             )}
           </div>
-        )}
-
-        {activeTab === "addCar" && (
+        ) : (
           <AnimatePresence mode="wait">
             <motion.div
               key="addCar"

@@ -285,12 +285,10 @@ export default function AddCarForm({ setCars, fetchCars, setActiveTab }) {
               >
                 {previews.map((u, i) => (
                   <motion.div key={i} layout>
-                    <Image
+                    <img
                       src={u}
-                      width={80}
-                      height={80}
                       alt={`Preview ${i}`}
-                      className="rounded"
+                      className="rounded w-20 h-auto object-cover"
                     />
                   </motion.div>
                 ))}

@@ -127,7 +127,7 @@ const AddCarForm = ({ setCars, fetchCars, setActiveTab }) => {
         payload
       );
 
-      toast.success("Added!", { id: "add-car" });
+      toast.success("Car added successfully!", { id: "add-car" });
       setCars((p) => [...p, doc]);
       fetchCars();
       setActiveTab("carList");
@@ -268,21 +268,20 @@ const AddCarForm = ({ setCars, fetchCars, setActiveTab }) => {
           )}
 
           {error && <span className="text-red-400">{error}</span>}
-        <div className="p-4">
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full py-3 rounded bg-rose-700 text-white flex justify-center"
-          >
-            {loading ? (
-              <AiOutlineLoading className="animate-spin" />
-            ) : (
-              "Add Car"
-            )}
-          </button>
+          <div className="p-4">
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full py-3 rounded bg-rose-700 text-white flex justify-center"
+            >
+              {loading ? (
+                <AiOutlineLoading className="animate-spin" />
+              ) : (
+                "Add Car"
+              )}
+            </button>
+          </div>
         </div>
-        </div>
-
       </form>
     </div>
   );

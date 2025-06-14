@@ -163,44 +163,74 @@ const Dashboard = () => {
                 placeholder="Search..."
                 className="px-4 py-2 rounded bg-rose-800 w-full md:w-1/2"
               />
-              <div className="relative w-64 z-[100]">
+              <div className="relative w-64 mx-auto">
                 <button
                   onClick={() => setDropdown(!dropdown)}
-                  className="w-full text-left px-4 py-2 rounded bg-rose-800 "
+                  className="w-full px-4 py-2 rounded-lg text-white bg-gradient-to-br from-rose-900 via-rose-800 to-rose-950 shadow font-semibold"
                 >
-                  Sort: {sortOption}
+                  Sort By:{" "}
+                  {
+                    {
+                      newest: "Newest",
+                      oldest: "Oldest",
+                      priceLow: "Price ↑",
+                      priceHigh: "Price ↓",
+                      mileage: "Mileage",
+                      engineLow: "Engine ↑",
+                      engineHigh: "Engine ↓",
+                    }[sortOption]
+                  }
                 </button>
-                {dropdown && (
-                  <ul className="absolute bg-rose-800 w-full mt-2 rounded shadow-lg">
-                    {[
-                      "newest",
-                      "oldest",
-                      "priceLow",
-                      "priceHigh",
-                      "mileage",
-                      "engineLow",
-                      "engineHigh",
-                    ].map((opt) => (
-                      <li
-                        key={opt}
-                        onClick={() => {
-                          setSortOption(opt);
-                          setDropdown(false);
-                        }}
-                        className="px-4 py-2 hover:bg-rose-700 cursor-pointer"
-                      >
-                        {opt}
-                      </li>
-                    ))}
-                  </ul>
-                )}
+
+                <AnimatePresence>
+                  {dropdown && (
+                    <motion.ul
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      transition={{ duration: 0.2 }}
+                      className="absolute w-full mt-2 border border-rose-700 bg-rose-800 rounded-lg shadow-lg z-10"
+                    >
+                      {[
+                        ["newest", "Newest"],
+                        ["oldest", "Oldest"],
+                        ["priceLow", "Price ↑"],
+                        ["priceHigh", "Price ↓"],
+                        ["mileage", "Mileage"],
+                        ["engineLow", "Engine ↑"],
+                        ["engineHigh", "Engine ↓"],
+                      ].map(([key, label]) => (
+                        <li
+                          key={key}
+                          onClick={() => {
+                            setSortOption(key);
+                            setDropdown(false);
+                          }}
+                          className={`p-2 cursor-pointer text-center rounded-md transition 
+              hover:bg-rose-100 hover:text-rose-700
+              ${
+                sortOption === key
+                  ? "bg-rose-700 text-white font-bold"
+                  : "text-white"
+              }`}
+                        >
+                          {label}
+                        </li>
+                      ))}
+                    </motion.ul>
+                  )}
+                </AnimatePresence>
               </div>
             </div>
 
             {loading ? (
               <LoadingSpinner />
             ) : (
-              <CarList cars={filteredCars} setCars={setCars} fetchCars={fetchCars} />
+              <CarList
+                cars={filteredCars}
+                setCars={setCars}
+                fetchCars={fetchCars}
+              />
             )}
           </div>
         )}

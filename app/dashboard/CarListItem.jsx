@@ -8,6 +8,9 @@ import ConfirmModal from "./ConfirmModal";
 
 const FALLBACK_IMAGE = "/fallback.webp";
 
+const formatNumber = (num) =>
+  typeof num === "number" ? num.toLocaleString("en-UK") : num;
+
 const CarListItem = ({ car, setCars }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedCar, setEditedCar] = useState({ ...car });
@@ -100,11 +103,12 @@ const CarListItem = ({ car, setCars }) => {
         isEditing ? "animate-glow-pulse" : ""
       }`}
     >
-      <figure className="w-full sm:w-1/3 mr-4 mb-4 sm:mb-0">
+      {/* IMAGE */}
+      <figure className="w-full sm:w-1/3 mr-0 sm:mr-4 mb-4 sm:mb-0">
         <img
           src={imageUrl}
           alt={car.title}
-          className="rounded-md object-cover"
+          className="rounded-md object-cover w-full h-auto"
           width={500}
           height={500}
           onError={() => setHasError(true)}
@@ -112,7 +116,50 @@ const CarListItem = ({ car, setCars }) => {
         <figcaption className="sr-only">Image of {car.title}</figcaption>
       </figure>
 
-      <div className="w-full sm:w-2/3 space-y-2">
+      {/* DETAILS */}
+      <div className="w-full sm:w-2/3 space-y-2 relative">
+        {/* BUTTONS */}
+        <div className="flex justify-end gap-3 sm:absolute sm:top-0 sm:right-0 z-10 mb-2 sm:mb-0">
+          {isEditing ? (
+            <>
+              <button
+                onClick={handleSave}
+                disabled={saving}
+                className="text-green-400 hover:text-green-600"
+                title="Save"
+              >
+                💾
+              </button>
+              <button
+                onClick={() => {
+                  setIsEditing(false);
+                  setEditedCar({ ...car });
+                }}
+                className="text-gray-300 hover:text-white"
+                title="Cancel"
+              >
+                ❌
+              </button>
+            </>
+          ) : (
+            <button
+              onClick={() => setIsEditing(true)}
+              className="text-blue-400 hover:text-blue-600"
+              title="Edit"
+            >
+              ✏️
+            </button>
+          )}
+          <button
+            onClick={() => setConfirmOpen(true)}
+            className="text-rose-400 hover:text-rose-600"
+            title="Delete"
+          >
+            🗑️
+          </button>
+        </div>
+
+        {/* TITLE */}
         {isEditing ? (
           <input
             name="title"
@@ -122,14 +169,16 @@ const CarListItem = ({ car, setCars }) => {
             className="w-full px-2 py-1 bg-rose-200 text-rose-900 rounded font-semibold text-lg glow-pulse"
           />
         ) : (
-          <h3 className="font-bold text-white text-2xl ">{car.title}</h3>
+          <h3 className="font-bold text-white text-2xl">{car.title}</h3>
         )}
+
         <p className="text-gray-300 mb-2">{car.description}</p>
 
+        {/* STATS */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-white">
           {[
             ["Price", "price", "£"],
-            ["Mileage", "mileage", ""],
+            ["Mileage", "mileage"],
             ["Engine Type", "engineType"],
             ["Engine Size", "engineSize", "L"],
             ["Transmission", "transmission"],
@@ -190,9 +239,11 @@ const CarListItem = ({ car, setCars }) => {
                 </select>
               ) : (
                 <span className="font-semibold text-rose-300">
-                  {key === "engineSize"
+                  {key === "price" || key === "mileage"
+                    ? `${unit}${formatNumber(car[key])}`
+                    : key === "engineSize"
                     ? `${car[key]}L`
-                    : `${unit || ""}${car[key]}`}
+                    : `${unit}${car[key]}`}
                 </span>
               )}
             </p>
@@ -200,47 +251,7 @@ const CarListItem = ({ car, setCars }) => {
         </div>
       </div>
 
-      <div className="absolute top-4 right-4 flex gap-2">
-        {isEditing ? (
-          <>
-            <button
-              onClick={handleSave}
-              disabled={saving}
-              className="text-green-400 hover:text-green-600"
-              title="Save"
-            >
-              💾
-            </button>
-            <button
-              onClick={() => {
-                setIsEditing(false);
-                setEditedCar({ ...car });
-              }}
-              className="text-gray-300 hover:text-white"
-              title="Cancel"
-            >
-              ❌
-            </button>
-          </>
-        ) : (
-          <button
-            onClick={() => setIsEditing(true)}
-            className="text-blue-400 hover:text-blue-600"
-            title="Edit"
-          >
-            ✏️
-          </button>
-        )}
-        <button
-          onClick={() => setConfirmOpen(true)}
-          className="text-rose-400 hover:text-rose-600"
-          title="Delete"
-        >
-          🗑️
-        </button>
-      </div>
-
-      {/* 🔒 Inline Modal Only for This Car */}
+      {/* DELETE CONFIRM */}
       <ConfirmModal
         isOpen={confirmOpen}
         onClose={() => setConfirmOpen(false)}

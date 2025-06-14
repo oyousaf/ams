@@ -279,11 +279,7 @@ export default function AddCarForm({ setCars, fetchCars, setActiveTab }) {
             disabled={loading}
             className="w-full py-3 rounded bg-rose-700 text-white flex justify-center"
           >
-            {loading ? (
-              <LoadingSpinner />
-            ) : (
-              "Add Car"
-            )}
+            {loading ? <LoadingSpinner /> : "Add Car"}
           </button>
         </div>
       </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, memo } from "react";
+import React, { useState, forwardRef, memo } from "react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 import { databases } from "../lib/appwrite";
@@ -11,7 +11,7 @@ const FALLBACK_IMAGE = "/fallback.webp";
 const formatNumber = (num) =>
   typeof num === "number" ? num.toLocaleString("en-GB") : num;
 
-const CarListItem = ({ car, setCars }) => {
+const CarListItem = ({ car, setCars }, ref) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedCar, setEditedCar] = useState({ ...car });
   const [saving, setSaving] = useState(false);
@@ -33,25 +33,12 @@ const CarListItem = ({ car, setCars }) => {
   const handleSave = async () => {
     if (saving) return;
     setSaving(true);
-
     try {
-      const {
-        title,
-        description,
-        price,
-        mileage,
-        engineSize,
-        year,
-        transmission,
-        engineType,
-        carType,
-      } = editedCar;
-
-      const result = await databases.updateDocument(
+      const updated = await databases.updateDocument(
         process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID,
         process.env.NEXT_PUBLIC_APPWRITE_COLLECTION_ID,
         car.$id,
-        {
+        (({
           title,
           description,
           price,
@@ -61,10 +48,20 @@ const CarListItem = ({ car, setCars }) => {
           transmission,
           engineType,
           carType,
-        }
+        }) => ({
+          title,
+          description,
+          price,
+          mileage,
+          engineSize,
+          year,
+          transmission,
+          engineType,
+          carType,
+        }))(editedCar)
       );
 
-      if (result?.$id) {
+      if (updated?.$id) {
         setCars((prev) =>
           prev.map((c) => (c.$id === car.$id ? { ...c, ...editedCar } : c))
         );
@@ -108,13 +105,13 @@ const CarListItem = ({ car, setCars }) => {
 
   return (
     <motion.li
+      ref={ref}
       initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.3 }}
-      className={`border border-rose-200 rounded-md p-4 mb-3 flex flex-col sm:flex-row items-start bg-rose-900 text-gray-200 relative`}
+      className="border border-rose-200 rounded-md p-4 mb-3 flex flex-col sm:flex-row items-start bg-rose-900 text-gray-200 relative"
     >
-      {/* IMAGE */}
       <figure className="w-full sm:w-1/3 mr-0 sm:mr-4 mb-4 sm:mb-0">
         <img
           src={imageUrl}
@@ -127,14 +124,12 @@ const CarListItem = ({ car, setCars }) => {
         <figcaption className="sr-only">Image of {car.title}</figcaption>
       </figure>
 
-      {/* DETAILS */}
       <div className="w-full sm:w-2/3 space-y-2 relative">
-        {/* BUTTONS */}
-        <div className="flex justify-end gap-3 sm:absolute sm:top-0 sm:right-0 z-10 mb-2 sm:mb-0">
+        <div className="absolute top-0 right-0 z-10 flex justify-end gap-3 mb-2">
           {isEditing ? (
             <>
               <button onClick={handleSave} disabled={saving} title="Save">
-                💾
+                📎
               </button>
               <button
                 onClick={() => {
@@ -156,7 +151,6 @@ const CarListItem = ({ car, setCars }) => {
           </button>
         </div>
 
-        {/* TITLE */}
         {isEditing ? (
           <input
             name="title"
@@ -169,7 +163,6 @@ const CarListItem = ({ car, setCars }) => {
           <h3 className="font-bold text-white text-2xl">{car.title}</h3>
         )}
 
-        {/* DESCRIPTION */}
         {isEditing ? (
           <textarea
             name="description"
@@ -183,7 +176,6 @@ const CarListItem = ({ car, setCars }) => {
           <p className="text-gray-300 mb-2">{car.description}</p>
         )}
 
-        {/* STATS */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-white">
           {[
             ["Price", "price", "£"],
@@ -248,7 +240,7 @@ const CarListItem = ({ car, setCars }) => {
                 </select>
               ) : (
                 <span className="font-semibold text-rose-300">
-                  {key === "price" || key === "mileage"
+                  {["price", "mileage"].includes(key)
                     ? `${unit}${formatNumber(car[key])}`
                     : key === "engineSize"
                     ? `${car[key]}L`
@@ -260,7 +252,6 @@ const CarListItem = ({ car, setCars }) => {
         </div>
       </div>
 
-      {/* CONFIRM DELETE */}
       <ConfirmModal
         isOpen={confirmOpen}
         onClose={() => setConfirmOpen(false)}
@@ -272,4 +263,4 @@ const CarListItem = ({ car, setCars }) => {
   );
 };
 
-export default memo(CarListItem);
+export default memo(forwardRef(CarListItem));

@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { databases, storage, ID } from "../lib/appwrite";
 import { toast } from "sonner";
 import Image from "next/image";
-import LoadingSpinner from "./LoadingSpinner";
+import { AiOutlineLoading } from "react-icons/ai";
 
 const shakeVariant = {
   idle: { x: 0 },
@@ -279,7 +279,11 @@ export default function AddCarForm({ setCars, fetchCars, setActiveTab }) {
             disabled={loading}
             className="w-full py-3 rounded bg-rose-700 text-white flex justify-center"
           >
-            {loading ? <LoadingSpinner /> : "Add Car"}
+            {loading ? (
+              <AiOutlineLoading className="animate-spin text-xl" />
+            ) : (
+              "Add Car"
+            )}
           </button>
         </div>
       </div>

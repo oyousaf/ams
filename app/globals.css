@@ -13,6 +13,13 @@ body {
   font-family: "GeistMono", monospace;
 }
 
+/* Protect images */
+img {
+  user-select: none;
+  -webkit-user-drag: none;
+  pointer-events: none;
+}
+
 /* Utilities */
 @layer utilities {
   .text-balance {

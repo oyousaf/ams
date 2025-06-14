@@ -126,7 +126,9 @@ const Dashboard = () => {
             alt="Logo"
             width={200}
             height={100}
+            priority
             className="mb-2"
+            style={{ width: "auto", height: "auto" }}
           />
           <input
             type="password"

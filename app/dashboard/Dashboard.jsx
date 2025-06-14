@@ -6,28 +6,14 @@ import { GoHomeFill } from "react-icons/go";
 import { IoIosReturnRight } from "react-icons/io";
 import Link from "next/link";
 import Image from "next/image";
-
 import AddCarForm from "./AddCarForm";
 import CarList from "./CarList";
 import LoadingSpinner from "./LoadingSpinner";
 import { databases } from "../lib/appwrite";
-
-const SESSION_KEY = "dashboard_session";
-const SESSION_TIMESTAMP_KEY = "dashboard_session_timestamp";
-const SESSION_EXPIRY_DAYS = 7;
-const DEBOUNCE_DELAY = 300;
-
-const sortOptions = [
-  { key: "newest", label: "Newest" },
-  { key: "oldest", label: "Oldest" },
-  { key: "priceLow", label: "Price ↑" },
-  { key: "priceHigh", label: "Price ↓" },
-  { key: "mileage", label: "Mileage" },
-  { key: "engineLow", label: "Engine ↑" },
-  { key: "engineHigh", label: "Engine ↓" },
-];
+import { toast } from "sonner";
 
 const Dashboard = () => {
+  const [hydrated, setHydrated] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [passkey, setPasskey] = useState("");
   const [error, setError] = useState("");
@@ -35,45 +21,29 @@ const Dashboard = () => {
   const [filteredCars, setFilteredCars] = useState([]);
   const [activeTab, setActiveTab] = useState("carList");
   const [loading, setLoading] = useState(false);
-  const [hydrated, setHydrated] = useState(false);
-
   const [searchQuery, setSearchQuery] = useState("");
-  const [debouncedQuery, setDebouncedQuery] = useState("");
+  const [debounced, setDebounced] = useState("");
   const [sortOption, setSortOption] = useState("newest");
-  const [isDropdownOpen, setDropdownOpen] = useState(false);
+  const [dropdown, setDropdown] = useState(false);
 
+  const SESSION_KEY = "dashboard_session";
+  const SESSION_TS = "dashboard_session_timestamp";
+  const EXPIRY = 7 * 86400000;
+  const DEBOUNCE = 300;
+
+  // Authentication check
   useEffect(() => {
     setHydrated(true);
-    const savedPasskey = sessionStorage.getItem(SESSION_KEY);
-    const savedTimestamp = sessionStorage.getItem(SESSION_TIMESTAMP_KEY);
-    const isValid =
-      savedPasskey === process.env.NEXT_PUBLIC_DASHBOARD_PASSKEY &&
-      savedTimestamp &&
-      Date.now() - parseInt(savedTimestamp, 10) <=
-        SESSION_EXPIRY_DAYS * 86400000;
-    if (isValid) {
+    const p = sessionStorage.getItem(SESSION_KEY);
+    const ts = +sessionStorage.getItem(SESSION_TS);
+    if (
+      p === process.env.NEXT_PUBLIC_DASHBOARD_PASSKEY &&
+      ts + EXPIRY > Date.now()
+    ) {
       setIsAuthenticated(true);
-      document.documentElement.style.overflow = "hidden";
       document.body.style.overflow = "hidden";
     }
   }, []);
-
-  const handlePasskeySubmit = useCallback(
-    (e) => {
-      e.preventDefault();
-      if (passkey === process.env.NEXT_PUBLIC_DASHBOARD_PASSKEY) {
-        sessionStorage.setItem(SESSION_KEY, passkey);
-        sessionStorage.setItem(SESSION_TIMESTAMP_KEY, Date.now().toString());
-        setIsAuthenticated(true);
-        setError("");
-        document.documentElement.style.overflow = "hidden";
-        document.body.style.overflow = "hidden";
-      } else {
-        setError("Incorrect passkey. Please try again.");
-      }
-    },
-    [passkey]
-  );
 
   const fetchCars = useCallback(async () => {
     setLoading(true);
@@ -84,8 +54,8 @@ const Dashboard = () => {
       );
       setCars(res.documents);
       setFilteredCars(res.documents);
-    } catch {
-      toast.error("Failed to load cars.");
+    } catch (e) {
+      toast.error("Failed to load cars");
     } finally {
       setLoading(false);
     }
@@ -96,166 +66,154 @@ const Dashboard = () => {
   }, [isAuthenticated, fetchCars]);
 
   useEffect(() => {
-    const timeout = setTimeout(
-      () => setDebouncedQuery(searchQuery),
-      DEBOUNCE_DELAY
-    );
-    return () => clearTimeout(timeout);
+    const handler = setTimeout(() => setDebounced(searchQuery), DEBOUNCE);
+    return () => clearTimeout(handler);
   }, [searchQuery]);
 
   useEffect(() => {
-    let filtered = [...cars];
-    if (debouncedQuery.trim()) {
-      const q = debouncedQuery.toLowerCase();
-      filtered = filtered.filter((car) =>
-        [car.make, car.model, car.title, car.year]
-          .join(" ")
-          .toLowerCase()
-          .includes(q)
+    let list = [...cars];
+    if (debounced.trim()) {
+      const q = debounced.toLowerCase();
+      list = list.filter((c) =>
+        [c.make, c.model, c.title, c.year]?.join(" ").toLowerCase().includes(q)
       );
     }
+    const maps = {
+      priceLow: (a, b) => a.price - b.price,
+      priceHigh: (a, b) => b.price - a.price,
+      mileage: (a, b) => a.mileage - b.mileage,
+      engineLow: (a, b) => a.engineSize - b.engineSize,
+      engineHigh: (a, b) => b.engineSize - a.engineSize,
+      oldest: (a, b) => new Date(a.createdAt) - new Date(b.createdAt),
+      newest: (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
+    };
+    list.sort(maps[sortOption] || maps.newest);
+    setFilteredCars(list);
+  }, [cars, debounced, sortOption]);
 
-    switch (sortOption) {
-      case "priceLow":
-        filtered.sort((a, b) => a.price - b.price);
-        break;
-      case "priceHigh":
-        filtered.sort((a, b) => b.price - a.price);
-        break;
-      case "mileage":
-        filtered.sort((a, b) => a.mileage - b.mileage);
-        break;
-      case "engineLow":
-        filtered.sort((a, b) => a.engineSize - b.engineSize);
-        break;
-      case "engineHigh":
-        filtered.sort((a, b) => b.engineSize - a.engineSize);
-        break;
-      case "oldest":
-        filtered.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
-        break;
-      default:
-        filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-    }
+  const handlePass = (e) => {
+    e.preventDefault();
+    if (passkey === process.env.NEXT_PUBLIC_DASHBOARD_PASSKEY) {
+      sessionStorage.setItem(SESSION_KEY, passkey);
+      sessionStorage.setItem(SESSION_TS, Date.now().toString());
+      setIsAuthenticated(true);
+      document.body.style.overflow = "hidden";
+      setError("");
+    } else setError("Incorrect passkey");
+  };
 
-    setFilteredCars(filtered);
-  }, [cars, debouncedQuery, sortOption]);
-
-  const renderSearchAndSort = () => (
-    <div className="flex flex-col items-center gap-4 mt-6">
-      <input
-        type="text"
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-        className="w-full max-w-md px-4 py-2 rounded-xl border border-rose-300 bg-rose-900 placeholder:text-rose-400 shadow-md"
-        placeholder="Search..."
-      />
-      <div className="relative w-64">
-        <button
-          onClick={() => setDropdownOpen(!isDropdownOpen)}
-          className="w-full px-4 py-2 rounded-lg text-white bg-gradient-to-br from-rose-900 via-rose-800 to-rose-950 shadow font-semibold"
-        >
-          Sort By: {sortOptions.find((opt) => opt.key === sortOption)?.label}
+  if (!hydrated) return <LoadingSpinner />;
+  if (!isAuthenticated)
+    return (
+      <form
+        onSubmit={handlePass}
+        className="min-h-screen flex flex-col justify-center items-center gap-4 p-4"
+      >
+        <input
+          type="password"
+          value={passkey}
+          onChange={(e) => setPasskey(e.target.value)}
+          placeholder="Enter Passkey"
+          className="px-4 py-2 rounded"
+          maxLength={5}
+        />
+        {error && <span className="text-red-500">{error}</span>}
+        <button type="submit" className="bg-rose-700 p-2 rounded text-white">
+          <IoIosReturnRight size={24} />
         </button>
-
-        <AnimatePresence>
-          {isDropdownOpen && (
-            <motion.ul
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.2 }}
-              className="absolute w-full mt-2 border border-rose-700 bg-rose-800 rounded-lg shadow-lg z-10"
-            >
-              {sortOptions.map(({ key, label }) => (
-                <li
-                  key={key}
-                  onClick={() => {
-                    setSortOption(key);
-                    setDropdownOpen(false);
-                  }}
-                  className={`p-2 cursor-pointer text-center rounded-md transition 
-                    hover:bg-rose-100 hover:text-rose-700
-                    ${
-                      sortOption === key
-                        ? "bg-rose-700 text-white font-bold"
-                        : "text-white"
-                    }`}
-                >
-                  {label}
-                </li>
-              ))}
-            </motion.ul>
-          )}
-        </AnimatePresence>
-      </div>
-    </div>
-  );
+      </form>
+    );
 
   return (
-    <div className="fixed inset-0 h-screen w-screen bg-rose-950 text-white p-4 z-[9999] overflow-hidden">
-      {!hydrated ? (
-        <LoadingSpinner />
-      ) : isAuthenticated ? (
-        <div className="max-w-7xl mx-auto">
-          <header className="relative flex justify-center items-center h-[80px] mb-6">
-            <Link href="/" className="absolute right-0 top-1">
-              <GoHomeFill
-                size={36}
-                className="hover:text-rose-300 transition"
+    <div className="fixed inset-0 h-screen overflow-hidden bg-rose-950 text-white flex flex-col z-[9999]">
+      {/* Header */}
+      <header className="h-[80px] flex-shrink-0 flex justify-between items-center px-4 shadow-md">
+        <h1 className="text-2xl font-bold">Dashboard</h1>
+        <Link href="/" className="text-white hover:text-rose-400">
+          <GoHomeFill size={28} />
+        </Link>
+      </header>
+
+      {/* Tabs */}
+      <nav className="flex-shrink-0 flex justify-center gap-4 p-2">
+        {["carList", "addCar"].map((t) => (
+          <button
+            key={t}
+            onClick={() => setActiveTab(t)}
+            className={`px-4 py-2 rounded-full font-medium ${
+              activeTab === t
+                ? "bg-rose-700 text-white"
+                : "bg-rose-300 text-rose-900"
+            }`}
+          >
+            {t === "carList" ? "Cars" : "Add Car"}
+          </button>
+        ))}
+      </nav>
+
+      {/* Main content */}
+      <div className="flex-1 overflow-hidden">
+        {activeTab === "carList" && (
+          <div className="h-full flex flex-col overflow-y-auto p-4">
+            <div className="flex flex-col md:flex-row md:justify-between gap-4 mb-4">
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search..."
+                className="px-4 py-2 rounded bg-rose-800 w-full md:w-1/2"
               />
-            </Link>
-            <Image src="/logo.png" alt="Logo" width={120} height={80} />
-          </header>
-
-          <div className="flex flex-col items-center gap-4 mb-8">
-            <h1 className="text-4xl font-bold tracking-wide">Dashboard</h1>
-            <div className="flex justify-center gap-4">
-              {["carList", "addCar"].map((tab, idx) => (
+              <div className="relative w-full md:w-1/4">
                 <button
-                  key={idx}
-                  onClick={() => setActiveTab(tab)}
-                  className={`px-4 py-2 rounded-full shadow transition text-sm md:text-base relative ${
-                    activeTab === tab
-                      ? "bg-rose-700 text-white glow-pulse"
-                      : "bg-rose-300 text-rose-900 hover:bg-rose-400"
-                  }`}
+                  onClick={() => setDropdown(!dropdown)}
+                  className="w-full text-left px-4 py-2 rounded bg-rose-800"
                 >
-                  {tab === "carList" ? "Current Cars" : "Add Car"}
+                  Sort: {sortOption}
                 </button>
-              ))}
+                {dropdown && (
+                  <ul className="absolute bg-rose-800 w-full mt-2 rounded shadow-lg">
+                    {[
+                      "newest",
+                      "oldest",
+                      "priceLow",
+                      "priceHigh",
+                      "mileage",
+                      "engineLow",
+                      "engineHigh",
+                    ].map((opt) => (
+                      <li
+                        key={opt}
+                        onClick={() => {
+                          setSortOption(opt);
+                          setDropdown(false);
+                        }}
+                        className="px-4 py-2 hover:bg-rose-700 cursor-pointer"
+                      >
+                        {opt}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
             </div>
-            {activeTab === "carList" && renderSearchAndSort()}
+
+            {loading ? (
+              <LoadingSpinner />
+            ) : (
+              <CarList cars={filteredCars} setCars={setCars} fetchCars={fetchCars} />
+            )}
           </div>
+        )}
 
-          {activeTab === "carList" && (
-            <motion.div
-              key={debouncedQuery + sortOption}
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -30 }}
-              transition={{ duration: 0.4 }}
-              className="mt-4"
-            >
-              {loading ? (
-                <LoadingSpinner />
-              ) : (
-                <CarList
-                  cars={filteredCars}
-                  setCars={setCars}
-                  fetchCars={fetchCars}
-                />
-              )}
-            </motion.div>
-          )}
-
-          {activeTab === "addCar" && (
+        {activeTab === "addCar" && (
+          <AnimatePresence mode="wait">
             <motion.div
               key="addCar"
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -50 }}
               transition={{ duration: 0.3 }}
+              className="h-full"
             >
               <AddCarForm
                 setCars={setCars}
@@ -263,30 +221,9 @@ const Dashboard = () => {
                 setActiveTab={setActiveTab}
               />
             </motion.div>
-          )}
-        </div>
-      ) : (
-        <form
-          onSubmit={handlePasskeySubmit}
-          className="flex flex-col items-center justify-center min-h-screen gap-4"
-        >
-          <input
-            type="password"
-            value={passkey}
-            maxLength={5}
-            onChange={(e) => setPasskey(e.target.value)}
-            className="px-4 py-2 rounded bg-white text-rose-800"
-            placeholder="Enter Passkey"
-          />
-          {error && <p className="text-rose-300">{error}</p>}
-          <button
-            type="submit"
-            className="px-6 py-2 bg-rose-700 rounded text-white hover:bg-rose-800 transition"
-          >
-            <IoIosReturnRight size={28} />
-          </button>
-        </form>
-      )}
+          </AnimatePresence>
+        )}
+      </div>
     </div>
   );
 };

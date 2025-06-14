@@ -95,7 +95,7 @@ const CarListItem = ({ car, setCars }, ref) => {
       );
 
       setCars((prev) => prev.filter((c) => c.$id !== car.$id));
-      toast.success("Car deleted!", { id: `toast-delete-${car.$id}` });
+      toast.success("Car deleted successfully!", { id: `toast-delete-${car.$id}` });
       setConfirmOpen(false);
     } catch (err) {
       console.error(err);

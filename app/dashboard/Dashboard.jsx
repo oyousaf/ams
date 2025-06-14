@@ -186,12 +186,12 @@ const Dashboard = () => {
         </div>
       </header>
 
-      <nav className="flex-shrink-0 flex justify-center gap-4 p-2">
+      <nav className="flex-shrink-0 flex justify-center gap-4 p-2 text-2xl">
         {tabs.map(({ key, label }) => (
           <button
             key={key}
             onClick={() => setActiveTab(key)}
-            className={`px-4 py-2 rounded-full font-medium ${
+            className={`px-4 py-2 rounded-full font-extrabold ${
               activeTab === key
                 ? "bg-rose-700 text-white glow-pulse"
                 : "bg-rose-300 text-rose-900"

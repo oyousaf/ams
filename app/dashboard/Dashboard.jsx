@@ -214,7 +214,7 @@ const Dashboard = () => {
                 placeholder="Search..."
                 className="px-4 py-2 rounded bg-rose-800 w-full md:w-1/2"
               />
-              <div className="relative w-64 mx-auto">
+              <div className="relative w-64 mx-auto z-50">
                 <button
                   onClick={() => setDropdown(!dropdown)}
                   className="w-full px-4 py-2 rounded-lg text-white bg-gradient-to-br from-rose-900 via-rose-800 to-rose-950 shadow font-semibold"

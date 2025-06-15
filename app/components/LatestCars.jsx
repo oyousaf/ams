@@ -52,24 +52,26 @@ const LatestCars = () => {
   }, []);
 
   const sortedCars = useMemo(() => {
-    return [...cars].sort((a, b) => {
-      switch (sortOption) {
-        case "priceLow":
-          return a.price - b.price;
-        case "priceHigh":
-          return b.price - a.price;
-        case "mileage":
-          return a.mileage - b.mileage;
-        case "engineLow":
-          return a.engineSize - b.engineSize;
-        case "engineHigh":
-          return b.engineSize - a.engineSize;
-        case "oldest":
-          return new Date(a.createdAt) - new Date(b.createdAt);
-        default:
-          return new Date(b.createdAt) - new Date(a.createdAt);
-      }
-    });
+    return [...cars]
+      .sort((a, b) => {
+        switch (sortOption) {
+          case "priceLow":
+            return a.price - b.price;
+          case "priceHigh":
+            return b.price - a.price;
+          case "mileage":
+            return a.mileage - b.mileage;
+          case "engineLow":
+            return a.engineSize - b.engineSize;
+          case "engineHigh":
+            return b.engineSize - a.engineSize;
+          case "oldest":
+            return new Date(a.createdAt) - new Date(b.createdAt);
+          default:
+            return new Date(b.createdAt) - new Date(a.createdAt); // newest
+        }
+      })
+      .sort((a, b) => (b.isFeatured ? 1 : 0) - (a.isFeatured ? 1 : 0)); // Featured pinned
   }, [cars, sortOption]);
 
   return (

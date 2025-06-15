@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { toast } from "sonner";
 import { databases } from "../lib/appwrite";
 import ConfirmModal from "./ConfirmModal";
+import Toggle from "./Toggle";
 
 const FALLBACK_IMAGE = "/fallback.webp";
 
@@ -21,12 +22,15 @@ const CarListItem = ({ car, setCars }, ref) => {
   const imageUrl = hasError ? FALLBACK_IMAGE : car.imageUrl;
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
     setEditedCar((prev) => ({
       ...prev,
-      [name]: ["price", "mileage", "engineSize", "year"].includes(name)
-        ? Number(value)
-        : value,
+      [name]:
+        type === "checkbox"
+          ? checked
+          : ["price", "mileage", "engineSize", "year"].includes(name)
+          ? Number(value)
+          : value,
     }));
   };
 
@@ -38,34 +42,26 @@ const CarListItem = ({ car, setCars }, ref) => {
         process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID,
         process.env.NEXT_PUBLIC_APPWRITE_COLLECTION_ID,
         car.$id,
-        (({
-          title,
-          description,
-          price,
-          mileage,
-          engineSize,
-          year,
-          transmission,
-          engineType,
-          carType,
-        }) => ({
-          title,
-          description,
-          price,
-          mileage,
-          engineSize,
-          year,
-          transmission,
-          engineType,
-          carType,
-        }))(editedCar)
+        {
+          title: editedCar.title,
+          description: editedCar.description,
+          price: editedCar.price,
+          mileage: editedCar.mileage,
+          engineSize: editedCar.engineSize,
+          year: editedCar.year,
+          transmission: editedCar.transmission,
+          engineType: editedCar.engineType,
+          carType: editedCar.carType,
+          isFeatured: editedCar.isFeatured ?? false,
+          isSold: editedCar.isSold ?? false,
+        }
       );
 
       if (updated?.$id) {
         setCars((prev) =>
           prev.map((c) => (c.$id === car.$id ? { ...c, ...editedCar } : c))
         );
-        toast.success("Car updated!", { id: `toast-${car.$id}` });
+        toast.success("Car updated successfully!", { id: `toast-${car.$id}` });
         setIsEditing(false);
       } else {
         throw new Error("No valid response from Appwrite.");
@@ -126,15 +122,40 @@ const CarListItem = ({ car, setCars }, ref) => {
       transition={{ duration: 0.3 }}
       className="border border-rose-200 rounded-md p-4 mb-3 flex flex-col sm:flex-row items-start bg-rose-900 text-gray-200 relative"
     >
-      <figure className="w-full sm:w-1/3 mr-0 sm:mr-4 mb-4 sm:mb-0">
+      <figure className="w-full sm:w-1/3 mr-0 sm:mr-4 mb-4 sm:mb-0 relative">
+        {/* Badges in top left */}
+        <div className="absolute top-2 left-2 flex flex-col gap-2 z-10 uppercase">
+          {car.isFeatured && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.3 }}
+              className="bg-yellow-400 text-rose-950 text-xs font-bold px-2 py-1 rounded shadow"
+            >
+              Featured
+            </motion.div>
+          )}
+        </div>
+
+        {/* Main image */}
         <img
           src={imageUrl}
           alt={car.title}
-          className="rounded-md object-cover w-full h-auto"
+          className={`rounded-md object-cover w-full h-auto transition-opacity duration-300 ${
+            car.isSold ? "opacity-60" : "opacity-100"
+          }`}
           width={500}
           height={500}
           onError={() => setHasError(true)}
         />
+
+        {/* SOLD overlay */}
+        {car.isSold && (
+          <div className="absolute inset-0 flex items-center justify-center bg-rose-950/50 text-rose-300 text-4xl font-extrabold tracking-widest rounded-md">
+            SOLD
+          </div>
+        )}
+
         <figcaption className="sr-only">Image of {car.title}</figcaption>
       </figure>
 
@@ -256,6 +277,35 @@ const CarListItem = ({ car, setCars }, ref) => {
             </p>
           ))}
         </div>
+
+        {isEditing && (
+          <div className="mt-4 flex flex-col sm:flex-row gap-4 text-xl text-white">
+            <div className="flex items-center gap-2">
+              <Toggle
+                checked={!!editedCar.isFeatured}
+                onChange={(val) =>
+                  setEditedCar((prev) => ({ ...prev, isFeatured: val }))
+                }
+                color="bg-yellow-400"
+              />
+              <span className="text-yellow-300 font-semibold select-none">
+                Featured
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Toggle
+                checked={!!editedCar.isSold}
+                onChange={(val) =>
+                  setEditedCar((prev) => ({ ...prev, isSold: val }))
+                }
+                color="bg-red-500"
+              />
+              <span className="text-red-400 font-semibold select-none">
+                Sold
+              </span>
+            </div>
+          </div>
+        )}
       </div>
 
       <ConfirmModal

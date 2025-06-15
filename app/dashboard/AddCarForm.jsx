@@ -3,8 +3,8 @@ import React, { useState, useEffect, useMemo } from "react";
 import { motion } from "framer-motion";
 import { databases, storage, ID } from "../lib/appwrite";
 import { toast } from "sonner";
-import Image from "next/image";
 import { AiOutlineLoading } from "react-icons/ai";
+import Toggle from "./Toggle"; 
 
 const shakeVariant = {
   idle: { x: 0 },
@@ -36,6 +36,8 @@ export default function AddCarForm({ setCars, fetchCars, setActiveTab }) {
       images: [],
       year: "",
       carType: "Convertible",
+      isFeatured: false,
+      isSold: false,
     }),
     []
   );
@@ -132,6 +134,8 @@ export default function AddCarForm({ setCars, fetchCars, setActiveTab }) {
         imageUrl: urls,
         imageFileIds: ids,
         createdAt: new Date().toISOString(),
+        isFeatured: car.isFeatured,
+        isSold: car.isSold,
       };
       delete payload.images;
       const doc = await databases.createDocument(
@@ -268,6 +272,17 @@ export default function AddCarForm({ setCars, fetchCars, setActiveTab }) {
                   </option>
                 ))}
               </motion.select>
+            </div>
+
+            <div className="flex items-center gap-4 text-xl justify-center mt-4">
+              <Toggle
+                checked={car.isFeatured}
+                onChange={(val) =>
+                  setCar((prev) => ({ ...prev, isFeatured: val }))
+                }
+                color="bg-yellow-400"
+              />
+              <span className="font-semibold text-yellow-300">Featured</span>
             </div>
 
             <motion.input

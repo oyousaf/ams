@@ -30,16 +30,42 @@ const CarCard = React.memo(({ car, logo, onOpen }) => {
       transition={{ duration: 0.3 }}
       className="cursor-pointer rounded-xl p-4 flex flex-col tile-glow bg-gradient-to-br from-rose-900 via-rose-800 to-rose-950 text-white shadow-md focus:outline-none focus:ring-2 focus:ring-rose-400"
     >
-      <Image
-        src={firstImage}
-        alt={car.title}
-        width={500}
-        height={192}
-        style={{ height: "auto", width: "100%" }}
-        className="w-full object-cover rounded-md"
-        blurDataURL="/fallback.webp"
-        placeholder="blur"
-      />
+      <div className="relative">
+        {/* FEATURED Badge */}
+        {car.isFeatured && (
+          <div className="absolute top-2 left-2 z-10">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.3 }}
+              className="bg-yellow-400 text-rose-950 text-xs font-bold px-2 py-1 rounded shadow uppercase"
+            >
+              Featured
+            </motion.div>
+          </div>
+        )}
+
+        {/* Image with optional dimming */}
+        <Image
+          src={firstImage}
+          alt={car.title}
+          width={500}
+          height={192}
+          style={{ height: "auto", width: "100%" }}
+          className={`w-full object-cover rounded-md transition-opacity duration-300 ${
+            car.isSold ? "opacity-60" : "opacity-100"
+          }`}
+          blurDataURL="/fallback.webp"
+          placeholder="blur"
+        />
+
+        {/* SOLD Overlay */}
+        {car.isSold && (
+          <div className="absolute inset-0 flex items-center justify-center bg-rose-950/50 text-rose-300 text-4xl font-extrabold tracking-widest rounded-md pointer-events-none">
+            SOLD
+          </div>
+        )}
+      </div>
 
       {logo && <div className="w-full my-4 flex justify-center">{logo}</div>}
 

@@ -105,13 +105,24 @@ const CarListItem = ({ car, setCars }, ref) => {
     }
   };
 
+  const carFields = [
+    ["Price", "price", "£"],
+    ["Mileage", "mileage"],
+    ["Engine Type", "engineType"],
+    ["Engine Size", "engineSize", "L"],
+    ["Transmission", "transmission"],
+    ["Year", "year"],
+    ["Type", "carType"],
+  ];
+
   return (
     <motion.li
       ref={ref}
       layout
+      layoutId={car.$id}
       initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0 }}
+      exit={{ opacity: 0, y: -15 }}
       transition={{ duration: 0.3 }}
       className="border border-rose-200 rounded-md p-4 mb-3 flex flex-col sm:flex-row items-start bg-rose-900 text-gray-200 relative"
     >
@@ -180,15 +191,7 @@ const CarListItem = ({ car, setCars }, ref) => {
         )}
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-white">
-          {[
-            ["Price", "price", "£"],
-            ["Mileage", "mileage"],
-            ["Engine Type", "engineType"],
-            ["Engine Size", "engineSize", "L"],
-            ["Transmission", "transmission"],
-            ["Year", "year"],
-            ["Type", "carType"],
-          ].map(([label, key, unit = ""]) => (
+          {carFields.map(([label, key, unit = ""]) => (
             <p key={key}>
               {label}:{" "}
               {isEditing &&

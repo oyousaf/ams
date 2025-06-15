@@ -97,7 +97,7 @@ const CarModal = ({ car, logo, onClose }) => {
       >
         <motion.div
           ref={modalRef}
-          className="relative bg-gradient-to-br from-rose-900 via-rose-800 to-rose-950 text-white w-full max-w-screen-md md:max-h-[95vh] rounded-xl tile-glow p-6 shadow-xl overflow-hidden"
+          className="relative bg-gradient-to-br from-rose-900 via-rose-800 to-rose-950 text-white w-full max-w-screen-md max-h-full md:max-h-[95vh] rounded-xl tile-glow p-6 shadow-xl overflow-hidden"
           initial={{ scale: 0.95 }}
           animate={{ scale: 1 }}
           exit={{ scale: 0.95 }}
@@ -106,14 +106,20 @@ const CarModal = ({ car, logo, onClose }) => {
           aria-modal="true"
           aria-label={`${car.title} details`}
         >
-          {/* Close Button */}
-          <button
-            className="absolute top-4 right-4 text-white text-2xl hover:text-rose-400 transition z-50"
-            onClick={onClose}
-            aria-label="Close Modal"
-          >
-            <FaTimes />
-          </button>
+          {/* Fixed Top Bar */}
+          <div className="sticky top-0 z-40 rounded-t-xl pb-4 pt-3 mb-4 text-center">
+            <div className="flex justify-center items-center flex-col gap-2">
+              {logo && <div className="w-12 h-12">{logo}</div>}
+              <h2 className="text-xl md:text-2xl font-bold">{car.title}</h2>
+            </div>
+            <button
+              className="absolute top-3 right-4 text-white text-2xl hover:text-rose-400 transition"
+              onClick={onClose}
+              aria-label="Close Modal"
+            >
+              <FaTimes />
+            </button>
+          </div>
 
           {/* Image Slider */}
           <div
@@ -146,7 +152,6 @@ const CarModal = ({ car, logo, onClose }) => {
                       }`}
                       style={{ width: "auto", height: "auto" }}
                       loading={i === 0 ? "eager" : "lazy"}
-                      placeholder="empty"
                       onLoad={() => setIsLoaded(true)}
                     />
                   </div>
@@ -155,7 +160,7 @@ const CarModal = ({ car, logo, onClose }) => {
             </Slider>
           </div>
 
-          {/* Badges & CTA */}
+          {/* Badges & Price */}
           <div className="flex flex-wrap gap-3 mb-6 justify-center items-center">
             {car.isFeatured && (
               <span className="bg-yellow-400 text-black text-sm px-4 py-1 rounded-full font-semibold uppercase shadow">
@@ -175,15 +180,9 @@ const CarModal = ({ car, logo, onClose }) => {
             </a>
           </div>
 
-          {logo && <div className="flex justify-center mb-4">{logo}</div>}
-
-          {/* Title */}
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-2">
-            {car.title}
-          </h2>
-
           <Divider />
 
+          {/* Description */}
           <p className="text-center text-zinc-100 mb-6 text-base md:text-lg leading-relaxed">
             {car.description}
           </p>

@@ -108,6 +108,7 @@ const CarListItem = ({ car, setCars }, ref) => {
   return (
     <motion.li
       ref={ref}
+      layout
       initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0 }}

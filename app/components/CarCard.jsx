@@ -43,7 +43,7 @@ const CarCard = React.memo(({ car, logo, onOpen }) => {
 
       {logo && <div className="w-full my-4 flex justify-center">{logo}</div>}
 
-      <h3 className="font-bold text-white text-2xl md:text-3xl mb-2 text-center">
+      <h3 className="font-bold text-white text-2xl md:text-3xl mb-2 text-center uppercase">
         {car.title}
       </h3>
 

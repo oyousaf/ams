@@ -97,7 +97,7 @@ const CarModal = ({ car, logo, onClose }) => {
       >
         <motion.div
           ref={modalRef}
-          className="relative bg-gradient-to-br from-rose-900 via-rose-800 to-rose-950 text-white w-full max-w-screen-md max-h-[100dvh] md:max-h-[95vh] rounded-xl tile-glow p-6 shadow-xl overflow-y-auto overscroll-contain"
+          className="relative bg-gradient-to-br from-rose-900 via-rose-800 to-rose-950 text-white w-full max-w-screen-md max-h-full md:max-h-[95vh] rounded-xl tile-glow p-6 shadow-xl overflow-hidden"
           initial={{ scale: 0.95 }}
           animate={{ scale: 1 }}
           exit={{ scale: 0.95 }}
@@ -107,10 +107,10 @@ const CarModal = ({ car, logo, onClose }) => {
           aria-label={`${car.title} details`}
         >
           {/* Fixed Top Bar */}
-          <div className="sticky top-0 z-40 rounded-t-xl pb-4 pt-3 mb-4 text-center bg-rose-950">
+          <div className="sticky top-0 z-40 rounded-t-xl pb-4 pt-3 mb-4 text-center">
             <div className="flex justify-center items-center flex-col gap-2">
               {logo && <div className="w-12 h-12">{logo}</div>}
-              <h2 className="text-xl md:text-2xl font-bold">{car.title}</h2>
+              <h2 className="text-xl md:text-2xl font-bold uppercase">{car.title}</h2>
             </div>
             <button
               className="absolute top-3 right-4 text-white text-2xl hover:text-rose-400 transition"
@@ -190,7 +190,7 @@ const CarModal = ({ car, logo, onClose }) => {
           <Divider />
 
           {/* Specs */}
-          <div className="grid grid-cols-2 md:flex md:flex-wrap md:justify-center gap-6 text-center font-semibold text-lg md:text-xl mb-6">
+          <div className="grid grid-cols-3 md:flex md:flex-wrap md:justify-center gap-6 text-center font-semibold text-lg md:text-xl mb-6">
             <div>
               <PiEngineFill size={28} className="mx-auto mb-1 text-rose-200" />
               <p>{car.engineType}</p>

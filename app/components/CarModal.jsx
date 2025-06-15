@@ -97,7 +97,7 @@ const CarModal = ({ car, logo, onClose }) => {
       >
         <motion.div
           ref={modalRef}
-          className="relative bg-gradient-to-br from-rose-900 via-rose-800 to-rose-950 text-white w-full max-w-screen-md max-h-full md:max-h-[95vh] rounded-xl tile-glow p-6 shadow-xl overflow-hidden"
+          className="relative bg-gradient-to-br from-rose-900 via-rose-800 to-rose-950 text-white w-full max-w-screen-md max-h-[100dvh] md:max-h-[95vh] rounded-xl tile-glow p-6 shadow-xl overflow-y-auto overscroll-contain"
           initial={{ scale: 0.95 }}
           animate={{ scale: 1 }}
           exit={{ scale: 0.95 }}
@@ -107,7 +107,7 @@ const CarModal = ({ car, logo, onClose }) => {
           aria-label={`${car.title} details`}
         >
           {/* Fixed Top Bar */}
-          <div className="sticky top-0 z-40 rounded-t-xl pb-4 pt-3 mb-4 text-center">
+          <div className="sticky top-0 z-40 rounded-t-xl pb-4 pt-3 mb-4 text-center bg-rose-950">
             <div className="flex justify-center items-center flex-col gap-2">
               {logo && <div className="w-12 h-12">{logo}</div>}
               <h2 className="text-xl md:text-2xl font-bold">{car.title}</h2>

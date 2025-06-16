@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { databases, storage, ID } from "../lib/appwrite";
 import { toast } from "sonner";
 import { AiOutlineLoading } from "react-icons/ai";
-import Toggle from "./Toggle"; 
+import Toggle from "./Toggle";
 
 const shakeVariant = {
   idle: { x: 0 },
@@ -66,10 +66,11 @@ export default function AddCarForm({ setCars, fetchCars, setActiveTab }) {
     []
   );
 
-  useEffect(
-    () => () => previews.forEach((u) => URL.revokeObjectURL(u)),
-    [previews]
-  );
+  useEffect(() => {
+    return () => {
+      previews.forEach((u) => URL.revokeObjectURL(u));
+    };
+  }, [previews]);
 
   const onChange = (e) => {
     const { name, value } = e.target;

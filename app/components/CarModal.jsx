@@ -62,11 +62,14 @@ const CarModal = ({ car, logo, onClose }) => {
     }
   };
 
-  const handleOutsideClick = (e) => {
-    if (modalRef.current && !modalRef.current.contains(e.target)) {
-      onClose();
-    }
-  };
+  const handleOutsideClick = useCallback(
+    (e) => {
+      if (modalRef.current && !modalRef.current.contains(e.target)) {
+        onClose();
+      }
+    },
+    [onClose]
+  );
 
   useEffect(() => {
     const scrollBarWidth =
@@ -83,7 +86,7 @@ const CarModal = ({ car, logo, onClose }) => {
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("mousedown", handleOutsideClick);
     };
-  }, [handleKeyDown]);
+  }, [handleKeyDown, handleOutsideClick]);
 
   return (
     <AnimatePresence>
@@ -110,7 +113,9 @@ const CarModal = ({ car, logo, onClose }) => {
           <div className="sticky top-0 z-40 rounded-t-xl pb-4 pt-3 mb-4 text-center">
             <div className="flex justify-center items-center flex-col gap-2">
               {logo && <div className="w-12 h-12">{logo}</div>}
-              <h2 className="text-xl md:text-2xl font-bold uppercase">{car.title}</h2>
+              <h2 className="text-xl md:text-2xl font-bold uppercase">
+                {car.title}
+              </h2>
             </div>
             <button
               className="absolute top-3 right-4 text-white text-2xl hover:text-rose-400 transition"

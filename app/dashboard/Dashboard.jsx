@@ -48,7 +48,7 @@ const Dashboard = () => {
     ) {
       setIsAuthenticated(true);
     }
-  }, []);
+  }, [EXPIRY]);
 
   const fetchCars = useCallback(async () => {
     setLoading(true);

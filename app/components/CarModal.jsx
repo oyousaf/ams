@@ -118,7 +118,7 @@ const CarModal = ({ car, logo, onClose }) => {
               </h2>
             </div>
             <button
-              className="absolute top-3 right-4 text-white text-2xl hover:text-rose-400 transition"
+              className="absolute top-3 right-4 text-white text-2xl md:text-4xl hover:text-rose-400 transition"
               onClick={onClose}
               aria-label="Close Modal"
             >

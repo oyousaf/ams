@@ -29,7 +29,7 @@ export const aboutTiles = [
     icon: FaShieldAlt,
     title: "Flexibility",
     description:
-      "Reserve your next car for £99, explore flexible financing or sell your current vehicle with zero hassle.",
+      "Reserve your next car for £99, explore flexible financing, sell your current vehicle with zero hassle, or opt for part exchange — whatever suits you best.",
   },
   {
     icon: FaHistory,

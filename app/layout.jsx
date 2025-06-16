@@ -86,15 +86,23 @@ const structuredData = {
 
 export default function RootLayout({ children }) {
   return (
-    <html
-      lang="en-gb"
-      className="min-h-full scroll-smooth antialiased bg-black"
-    >
+    <html lang="en-gb" className="min-h-full scroll-smooth antialiased">
       <head>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
         />
+        <meta
+          name="description"
+          content="Certified, pre-owned vehicles at Ace Motor Sales. Quality, reliability, and performance guaranteed."
+        />
+        <meta property="og:title" content="Ace Motor Sales" />
+        <meta
+          property="og:description"
+          content="Explore our range of carefully inspected pre-owned vehicles."
+        />
+        <meta property="og:image" content="/hero.jpg" />
+        <meta name="twitter:card" content="summary_large_image" />
       </head>
       <body className="min-h-screen text-zinc-100">
         <Navbar />

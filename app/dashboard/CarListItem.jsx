@@ -60,7 +60,15 @@ const CarListItem = ({ car, setCars }, ref) => {
         process.env.NEXT_PUBLIC_APPWRITE_COLLECTION_ID,
         car.$id,
         {
-          ...editedCar,
+          title: editedCar.title,
+          description: editedCar.description,
+          price: editedCar.price,
+          mileage: editedCar.mileage,
+          engineSize: editedCar.engineSize,
+          year: editedCar.year,
+          transmission: editedCar.transmission,
+          engineType: editedCar.engineType,
+          carType: editedCar.carType,
           isFeatured: editedCar.isFeatured ?? false,
           isSold: editedCar.isSold ?? false,
         }

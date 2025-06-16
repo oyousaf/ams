@@ -5,6 +5,7 @@ import { databases, storage, ID } from "../lib/appwrite";
 import { toast } from "sonner";
 import { AiOutlineLoading } from "react-icons/ai";
 import Toggle from "./Toggle";
+import Image from "next/image";
 
 const shakeVariant = {
   idle: { x: 0 },
@@ -67,9 +68,7 @@ export default function AddCarForm({ setCars, fetchCars, setActiveTab }) {
   );
 
   useEffect(() => {
-    return () => {
-      previews.forEach((u) => URL.revokeObjectURL(u));
-    };
+    return () => previews.forEach((u) => URL.revokeObjectURL(u));
   }, [previews]);
 
   const onChange = (e) => {
@@ -139,12 +138,14 @@ export default function AddCarForm({ setCars, fetchCars, setActiveTab }) {
         isSold: car.isSold,
       };
       delete payload.images;
+
       const doc = await databases.createDocument(
         process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID,
         process.env.NEXT_PUBLIC_APPWRITE_COLLECTION_ID,
         ID.unique(),
         payload
       );
+
       toast.success("Car added successfully!");
       setCars((p) => [...p, doc]);
       fetchCars();
@@ -183,7 +184,7 @@ export default function AddCarForm({ setCars, fetchCars, setActiveTab }) {
                   name={name}
                   value={car[name]}
                   onChange={onChange}
-                  placeholder={name.charAt(0).toUpperCase() + name.slice(1)}
+                  placeholder="Description"
                   className="w-full px-3 py-2 rounded bg-rose-800"
                   required
                   layout
@@ -294,17 +295,24 @@ export default function AddCarForm({ setCars, fetchCars, setActiveTab }) {
               className="w-full pt-2"
               layout
             />
+
             {previews.length > 0 && (
               <motion.div
                 className="flex overflow-x-auto space-x-2 py-2"
                 layout
               >
-                {previews.map((u, i) => (
-                  <motion.div key={i} layout>
-                    <img
-                      src={u}
+                {previews.map((url, i) => (
+                  <motion.div
+                    key={i}
+                    className="relative w-20 h-16 rounded overflow-hidden"
+                    layout
+                  >
+                    <Image
+                      src={url}
                       alt={`Preview ${i}`}
-                      className="rounded w-20 h-auto object-cover"
+                      fill
+                      className="rounded object-cover"
+                      unoptimized
                     />
                   </motion.div>
                 ))}

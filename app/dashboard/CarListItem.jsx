@@ -131,8 +131,14 @@ const CarListItem = ({ car, setCars }, ref) => {
       exit={{ opacity: 0, y: -15 }}
       transition={{ duration: 0.3 }}
       className="border border-rose-200 rounded-md p-4 mb-3 flex flex-col sm:flex-row items-start bg-rose-900 text-gray-200 relative"
+      role="region"
+      aria-label={`Listing for ${car.title}`}
     >
-      <figure className="w-full sm:w-1/3 mr-0 sm:mr-4 mb-4 sm:mb-0 relative">
+      <figure
+        className="w-full sm:w-1/3 mr-0 sm:mr-4 mb-4 sm:mb-0 relative"
+        role="img"
+        aria-label={`Image of ${car.title}`}
+      >
         {car.isFeatured && (
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
@@ -153,21 +159,26 @@ const CarListItem = ({ car, setCars }, ref) => {
             car.isSold ? "opacity-60" : "opacity-100"
           }`}
           unoptimized={imageUrl.startsWith("blob:")}
-          priority
         />
         {car.isSold && (
-          <div className="absolute inset-0 flex items-center justify-center bg-rose-950/50 text-rose-300 text-4xl font-extrabold tracking-widest rounded-md">
+          <div
+            className="absolute inset-0 flex items-center justify-center bg-rose-950/50 text-rose-300 text-4xl font-extrabold tracking-widest rounded-md"
+            aria-hidden="true"
+          >
             SOLD
           </div>
         )}
-        <figcaption className="sr-only">Image of {car.title}</figcaption>
       </figure>
 
       <div className="w-full sm:w-2/3 space-y-2 relative">
         <div className="flex justify-end gap-3 sm:absolute sm:top-0 sm:right-0 z-10 mb-2 sm:mb-0 text-xl">
           {isEditing ? (
             <>
-              <button onClick={handleSave} disabled={saving}>
+              <button
+                onClick={handleSave}
+                disabled={saving}
+                aria-label="Save changes"
+              >
                 💾
               </button>
               <button
@@ -175,35 +186,46 @@ const CarListItem = ({ car, setCars }, ref) => {
                   setEditedCar({ ...car });
                   setIsEditing(false);
                 }}
+                aria-label="Cancel edit"
               >
                 ❌
               </button>
             </>
           ) : (
-            <button onClick={() => setIsEditing(true)}>✏️</button>
+            <button onClick={() => setIsEditing(true)} aria-label="Edit car">
+              ✏️
+            </button>
           )}
-          <button onClick={() => setConfirmOpen(true)}>🗑️</button>
+          <button onClick={() => setConfirmOpen(true)} aria-label="Delete car">
+            🗑️
+          </button>
         </div>
 
         {isEditing ? (
-          <input
-            name="title"
-            value={editedCar.title}
-            onChange={handleChange}
-            className="w-full px-2 py-1 mt-10 sm:mt-12 bg-rose-200 text-rose-900 rounded font-semibold text-lg"
-          />
+          <label className="block mt-10 sm:mt-12">
+            <span className="sr-only">Car title</span>
+            <input
+              name="title"
+              value={editedCar.title}
+              onChange={handleChange}
+              className="w-full px-2 py-1 bg-rose-200 text-rose-900 rounded font-semibold text-lg"
+            />
+          </label>
         ) : (
           <h3 className="text-white text-2xl font-bold">{car.title}</h3>
         )}
 
         {isEditing ? (
-          <textarea
-            name="description"
-            value={editedCar.description}
-            onChange={handleChange}
-            rows={3}
-            className="w-full px-2 py-1 bg-rose-200 text-rose-900 rounded"
-          />
+          <label className="block">
+            <span className="sr-only">Car description</span>
+            <textarea
+              name="description"
+              value={editedCar.description}
+              onChange={handleChange}
+              rows={3}
+              className="w-full px-2 py-1 bg-rose-200 text-rose-900 rounded"
+            />
+          </label>
         ) : (
           <p className="text-gray-300 mb-2">{car.description}</p>
         )}
@@ -220,6 +242,7 @@ const CarListItem = ({ car, setCars }, ref) => {
                     type="number"
                     step={key === "engineSize" ? "0.1" : "1"}
                     onChange={handleChange}
+                    aria-label={label}
                     className="px-2 py-1 rounded bg-rose-200 text-rose-900"
                   />
                 ) : (
@@ -227,6 +250,7 @@ const CarListItem = ({ car, setCars }, ref) => {
                     name={key}
                     value={editedCar[key]}
                     onChange={handleChange}
+                    aria-label={label}
                     className="px-2 py-1 rounded bg-rose-200 text-rose-900"
                   >
                     {key === "engineType" &&
@@ -277,7 +301,11 @@ const CarListItem = ({ car, setCars }, ref) => {
 
         {isEditing && (
           <div className="mt-4 flex flex-col sm:flex-row gap-4 text-xl text-white">
-            <div className="flex items-center gap-2">
+            <div
+              className="flex items-center gap-2"
+              role="switch"
+              aria-checked={!!editedCar.isFeatured}
+            >
               <Toggle
                 checked={!!editedCar.isFeatured}
                 onChange={(val) =>
@@ -289,7 +317,11 @@ const CarListItem = ({ car, setCars }, ref) => {
                 Featured
               </span>
             </div>
-            <div className="flex items-center gap-2">
+            <div
+              className="flex items-center gap-2"
+              role="switch"
+              aria-checked={!!editedCar.isSold}
+            >
               <Toggle
                 checked={!!editedCar.isSold}
                 onChange={(val) =>

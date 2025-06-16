@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useRef } from "react";
 import { databases } from "../lib/appwrite";
 import { carMakes, carLogos } from "../constants";
 import CarCard from "./CarCard";
@@ -31,6 +31,7 @@ const LatestCars = () => {
   const [sortOption, setSortOption] = useState("newest");
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [selectedCar, setSelectedCar] = useState(null);
+  const sortListRef = useRef(null);
 
   useEffect(() => {
     const fetchCars = async () => {
@@ -75,16 +76,28 @@ const LatestCars = () => {
   }, [cars, sortOption]);
 
   return (
-    <section id="cars" className="py-24 px-6 md:px-12">
-      <h2 className="text-4xl md:text-5xl font-bold text-center mb-12 text-white">
+    <section
+      id="cars"
+      role="region"
+      aria-labelledby="latest-cars-heading"
+      className="py-24 px-6 md:px-12"
+    >
+      <h2
+        id="latest-cars-heading"
+        className="text-4xl md:text-5xl font-bold text-center mb-12 text-white"
+      >
         Latest Cars
       </h2>
 
+      {/* Sort Dropdown */}
       <div className="flex justify-center mb-12">
         <div className="relative">
           <button
             className="w-64 bg-gradient-to-br from-rose-900 via-rose-800 to-rose-950 text-white text-lg font-semibold rounded-lg p-3 shadow-md text-center"
             onClick={() => setDropdownOpen((prev) => !prev)}
+            aria-haspopup="listbox"
+            aria-expanded={isDropdownOpen}
+            aria-controls="sort-options"
           >
             Sort By: {sortOptions.find((opt) => opt.key === sortOption)?.label}
           </button>
@@ -92,6 +105,10 @@ const LatestCars = () => {
           <AnimatePresence>
             {isDropdownOpen && (
               <motion.ul
+                id="sort-options"
+                role="listbox"
+                aria-activedescendant={`option-${sortOption}`}
+                ref={sortListRef}
                 className="absolute w-64 mt-2 border border-rose-700 bg-rose-800 rounded-lg shadow-lg z-10"
                 initial="hidden"
                 animate="visible"
@@ -100,7 +117,10 @@ const LatestCars = () => {
               >
                 {sortOptions.map(({ key, label }) => (
                   <li
+                    id={`option-${key}`}
                     key={key}
+                    role="option"
+                    aria-selected={sortOption === key}
                     onClick={() => {
                       setSortOption(key);
                       setDropdownOpen(false);
@@ -120,14 +140,31 @@ const LatestCars = () => {
         </div>
       </div>
 
+      {/* Car Grid or Status */}
       {loading ? (
-        <div className="flex justify-center items-center h-48">
+        <div
+          role="status"
+          className="flex justify-center items-center h-48"
+          aria-live="polite"
+        >
           <LoadingSpinner />
         </div>
       ) : error ? (
-        <p className="text-center text-red-500">{error}</p>
+        <p
+          role="alert"
+          className="text-center text-red-500"
+          aria-live="assertive"
+        >
+          {error}
+        </p>
       ) : sortedCars.length === 0 ? (
-        <p className="text-center text-lg text-zinc-200">No cars available.</p>
+        <p
+          className="text-center text-lg text-zinc-200"
+          role="status"
+          aria-live="polite"
+        >
+          No cars available.
+        </p>
       ) : (
         <motion.ul
           layout
@@ -148,6 +185,7 @@ const LatestCars = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, amount: 0.2 }}
                   transition={{ duration: 0.5, ease: "easeOut" }}
+                  aria-label={`Car listing: ${car.title}`}
                 >
                   <CarCard
                     car={car}
@@ -161,6 +199,7 @@ const LatestCars = () => {
         </motion.ul>
       )}
 
+      {/* Modal */}
       {selectedCar && (
         <CarModal
           car={selectedCar}

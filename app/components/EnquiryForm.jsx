@@ -45,49 +45,90 @@ const EnquiryForm = () => {
       onSubmit={handleSubmit(onSubmit)}
       className="w-full max-w-md p-6 space-y-4 rounded-xl neon-tile bg-gradient-to-br from-rose-900 via-rose-800 to-rose-950 shadow-lg"
       autoComplete="off"
+      aria-describedby="form-status"
     >
-      <input
-        {...register("name")}
-        placeholder="Name"
-        autoComplete="name"
-        className="w-full p-3 rounded-md border border-gray-300 focus:glow-pulse focus:ring-rose-600 focus:border-rose-600 text-black"
-      />
-      {errors.name && (
-        <p className="text-red-200 text-sm">{errors.name.message}</p>
-      )}
+      <div>
+        <label htmlFor="name" className="sr-only">
+          Name
+        </label>
+        <input
+          id="name"
+          {...register("name")}
+          placeholder="Name"
+          autoComplete="name"
+          className="w-full p-3 rounded-md border border-gray-300 focus:glow-pulse focus:ring-rose-600 focus:border-rose-600 text-black"
+        />
+        {errors.name && (
+          <p className="text-red-200 text-sm" role="alert">
+            {errors.name.message}
+          </p>
+        )}
+      </div>
 
-      <input
-        {...register("email")}
-        type="email"
-        placeholder="Email"
-        autoComplete="email"
-        className="w-full p-3 rounded-md border border-gray-300 focus:glow-pulse focus:ring-rose-600 focus:border-rose-600 text-black"
-      />
-      {errors.email && (
-        <p className="text-red-200 text-sm">{errors.email.message}</p>
-      )}
+      <div>
+        <label htmlFor="email" className="sr-only">
+          Email
+        </label>
+        <input
+          id="email"
+          {...register("email")}
+          type="email"
+          placeholder="Email"
+          autoComplete="email"
+          className="w-full p-3 rounded-md border border-gray-300 focus:glow-pulse focus:ring-rose-600 focus:border-rose-600 text-black"
+        />
+        {errors.email && (
+          <p className="text-red-200 text-sm" role="alert">
+            {errors.email.message}
+          </p>
+        )}
+      </div>
 
-      <input
-        {...register("phone")}
-        type="tel"
-        placeholder="Phone"
-        autoComplete="tel"
-        className="w-full p-3 rounded-md border border-gray-300 focus:glow-pulse focus:ring-rose-600 focus:border-rose-600 text-black"
-      />
-      {errors.phone && (
-        <p className="text-red-200 text-sm">{errors.phone.message}</p>
-      )}
+      <div>
+        <label htmlFor="phone" className="sr-only">
+          Phone
+        </label>
+        <input
+          id="phone"
+          {...register("phone")}
+          type="tel"
+          placeholder="Phone"
+          autoComplete="tel"
+          className="w-full p-3 rounded-md border border-gray-300 focus:glow-pulse focus:ring-rose-600 focus:border-rose-600 text-black"
+        />
+        {errors.phone && (
+          <p className="text-red-200 text-sm" role="alert">
+            {errors.phone.message}
+          </p>
+        )}
+      </div>
 
-      <textarea
-        {...register("message")}
-        placeholder="Message..."
-        className="w-full h-32 p-3 rounded-md border border-gray-300 focus:glow-pulse focus:ring-rose-600 focus:border-rose-600 text-black"
-      />
-      {errors.message && (
-        <p className="text-red-200 text-sm">{errors.message.message}</p>
-      )}
+      <div>
+        <label htmlFor="message" className="sr-only">
+          Message
+        </label>
+        <textarea
+          id="message"
+          {...register("message")}
+          placeholder="Message..."
+          className="w-full h-32 p-3 rounded-md border border-gray-300 focus:glow-pulse focus:ring-rose-600 focus:border-rose-600 text-black"
+        />
+        {errors.message && (
+          <p className="text-red-200 text-sm" role="alert">
+            {errors.message.message}
+          </p>
+        )}
+      </div>
 
-      {status && <p className="text-green-200 text-sm">{status}</p>}
+      {status && (
+        <p
+          id="form-status"
+          aria-live="polite"
+          className="text-green-200 text-sm"
+        >
+          {status}
+        </p>
+      )}
 
       <button
         type="submit"
@@ -95,6 +136,7 @@ const EnquiryForm = () => {
         className={`w-full py-3 bg-rose-600 text-white rounded-md font-semibold hover:glow-pulse hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-rose-600 ${
           isSubmitting && "opacity-70 cursor-not-allowed"
         }`}
+        aria-busy={isSubmitting}
       >
         {isSubmitting ? "Sending..." : "Submit Enquiry"}
       </button>

@@ -70,6 +70,28 @@ const Footer = () => {
           </motion.a>
         ))}
       </div>
+      <div className="text-xl flex justify-center items-center gap-1">
+        Built with{" "}
+        <motion.span
+          animate={{ rotate: 360 }}
+          transition={{
+            repeat: Infinity,
+            duration: 4,
+            ease: "linear",
+          }}
+          className="inline-block"
+        >
+          💚
+        </motion.span>
+        by
+        <a
+          href="https://t.me/+ypTYelRWWm1iNmY0"
+          target="_blank"
+          className="hover:underline"
+        >
+          Legxcy Solutions
+        </a>
+      </div>
     </footer>
   );
 };

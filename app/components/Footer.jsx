@@ -73,7 +73,7 @@ const Footer = () => {
       <div className="text-xl flex justify-center items-center gap-1">
         Built with{" "}
         <motion.span
-          animate={{ rotate: 360 }}
+          animate={{ rotate: -360 }}
           transition={{
             repeat: Infinity,
             duration: 4,

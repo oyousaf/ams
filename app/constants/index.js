@@ -83,6 +83,11 @@ export const gallery = [
 
 export const reviews = [
   {
+    name: "S A",
+    feedback:
+      " Thrilled with my car I brought from these guys. Good prices and top service. Recommend to all.",
+  },
+  {
     name: "Hamzah H",
     feedback:
       "Thank you to Ace Motor Sales for providing me with a beautiful motor. I am over the moon! First time I bought a car without physically seeing the car beforehand. However, Fes made it a very swift experience and made me feel very reassured all the way through the process. He did a live video call with me and arranged everything over the phone and got the car delivered to me on the day I requested. Very impressed with the vehicle and the service. I will definitely be back in the future and will be recommending this company to my friends and family 👌",

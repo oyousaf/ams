@@ -1,13 +1,13 @@
 "use client";
 
 import React, { useEffect, useState, useMemo } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { databases } from "../lib/appwrite";
 import { carMakes, carLogos } from "../constants";
 import CarCard from "./CarCard";
 import CarModal from "./CarModal";
 import SkeletonCarCard from "./SkeletonCarCard";
 import SortDropdown from "./SortDropdown";
-import { motion, AnimatePresence } from "framer-motion";
 
 const sortOptions = [
   { key: "mileage", label: "Mileage" },

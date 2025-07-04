@@ -85,7 +85,7 @@ export const reviews = [
   {
     name: "Hamza N",
     feedback:
-      "I part-exchanged my previous car for a stunning German whip from Faisal. The process was smooth and hassle-free. I’d definitely recommend anyone looking to buy a car to visit here — excellent customer service! I’m already looking forward to coming back in the future!",
+      "I part-exchanged my previous car for a stunning German whip from Faisal. The process was smooth and hassle-free. I’d definitely recommend anyone looking to buy or part-exchange their car to visit here — excellent customer service! I’m already looking forward to coming back in the future!",
   },
   {
     name: "S A",

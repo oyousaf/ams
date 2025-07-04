@@ -60,10 +60,6 @@ const SortDropdown = ({ options, selected, onSelect, isOpen, onToggle }) => {
         Sort By: {options.find((opt) => opt.key === selected)?.label}
       </button>
 
-      <span className="block md:hidden text-sm text-white text-center mt-2">
-        Tap to choose sort order
-      </span>
-
       <AnimatePresence>
         {isOpen && (
           <motion.ul

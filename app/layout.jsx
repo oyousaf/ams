@@ -25,6 +25,7 @@ export const metadata = {
     "trusted local car dealership",
     "nationwide car delivery UK",
     "pre-owned cars with delivery",
+    "Ace Motor Sales Heckmondwike",
   ],
   openGraph: {
     title: "Ace Motor Sales - Certified Used Cars with Nationwide Delivery",

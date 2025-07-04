@@ -14,7 +14,7 @@ const HeroSection = () => {
 
   return (
     <>
-    {/* SEO Fallback */}
+      {/* SEO Fallback */}
       <h1 className="sr-only">
         Explore our selection of certified, pre-owned vehicles — thoroughly
         inspected for quality, reliability, and performance.
@@ -46,7 +46,7 @@ const HeroSection = () => {
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="relative z-20 text-white max-w-4xl mx-auto"
         >
-          <h1 className="text-2xl md:text-4xl font-bold mb-6 leading-relaxed tracking-tight">
+          <h1 className="text-2xl md:text-4xl font-bold mb-6 leading-relaxed tracking-tight bg-rose-950/30 backdrop-blur-md rounded-xl px-4 py-2 shadow-md text-white">
             Explore our selection of certified, pre-owned vehicles — thoroughly
             inspected for quality, reliability, and performance.
           </h1>

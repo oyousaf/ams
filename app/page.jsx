@@ -10,6 +10,11 @@ import Snow from "./components/Snow";
 const Home = () => {
   return (
     <div>
+      {/* SEO Fallback for accessibility */}
+      <h1 className="sr-only">
+        Explore our selection of certified, pre-owned vehicles — thoroughly
+        inspected for quality, reliability, and performance.
+      </h1>
       <HeroSection />
       <About />
       <LatestCars />

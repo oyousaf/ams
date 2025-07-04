@@ -83,6 +83,11 @@ export const gallery = [
 
 export const reviews = [
   {
+    name: "Hamza N",
+    feedback:
+      "I part-exchanged my previous car for a stunning German whip from Faisal. The process was smooth and hassle-free. I’d definitely recommend anyone looking to buy a car to visit here — excellent customer service! I’m already looking forward to coming back in the future!",
+  },
+  {
     name: "S A",
     feedback:
       " Thrilled with my car I brought from these guys. Good prices and top service. Recommend to all.",
@@ -116,11 +121,6 @@ export const reviews = [
     name: "Kathryn J",
     feedback:
       "Great service from a very friendly and professional young man. Excellent communication throughout, and he followed through on everything he said he would. I would highly recommend him and would buy from him again if the right car became available. Thank you!",
-  },
-  {
-    name: "Hamza N",
-    feedback:
-      "I bought a stunning BMW from Faisal - very easy process definitely recommend to everyone to come here to buy a car; great customer service too! Look forward to coming again in the future!",
   },
   {
     name: "Paul C",

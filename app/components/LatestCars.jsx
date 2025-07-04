@@ -1,37 +1,33 @@
 "use client";
 
-import React, { useEffect, useState, useMemo, useRef } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { databases } from "../lib/appwrite";
 import { carMakes, carLogos } from "../constants";
 import CarCard from "./CarCard";
 import CarModal from "./CarModal";
+import SkeletonCarCard from "./SkeletonCarCard";
+import SortDropdown from "./SortDropdown";
 import { motion, AnimatePresence } from "framer-motion";
-import LoadingSpinner from "../dashboard/LoadingSpinner";
 
 const sortOptions = [
   { key: "mileage", label: "Mileage" },
-  { key: "newest", label: "Newest" },
+  { key: "newest", label: "Newest Added" },
   { key: "oldest", label: "Oldest" },
   { key: "engineLow", label: "Engine ↑" },
   { key: "engineHigh", label: "Engine ↓" },
   { key: "priceLow", label: "Price ↑" },
   { key: "priceHigh", label: "Price ↓" },
+  { key: "titleAsc", label: "A-Z" },
+  { key: "titleDesc", label: "Z-A" },
 ];
-
-const dropdownVariants = {
-  hidden: { opacity: 0, y: -10, scale: 0.95 },
-  visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.2 } },
-  exit: { opacity: 0, y: -10, scale: 0.95, transition: { duration: 0.15 } },
-};
 
 const LatestCars = () => {
   const [cars, setCars] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [sortOption, setSortOption] = useState("newest");
-  const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [selectedCar, setSelectedCar] = useState(null);
-  const sortListRef = useRef(null);
+  const [isDropdownOpen, setDropdownOpen] = useState(false);
 
   useEffect(() => {
     const fetchCars = async () => {
@@ -40,7 +36,19 @@ const LatestCars = () => {
           process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID,
           process.env.NEXT_PUBLIC_APPWRITE_COLLECTION_ID
         );
-        setCars(res.documents);
+
+        const processed = res.documents.map((car) => {
+          const make = carMakes.find((m) =>
+            car.title.toLowerCase().includes(m.toLowerCase())
+          );
+          return {
+            ...car,
+            make,
+            logo: make ? carLogos[make] : null,
+          };
+        });
+
+        setCars(processed);
       } catch (err) {
         setError("Error fetching cars. Please try again.");
         console.error(err);
@@ -53,27 +61,40 @@ const LatestCars = () => {
   }, []);
 
   const sortedCars = useMemo(() => {
-    return [...cars]
-      .sort((a, b) => {
-        switch (sortOption) {
-          case "priceLow":
-            return a.price - b.price;
-          case "priceHigh":
-            return b.price - a.price;
-          case "mileage":
-            return a.mileage - b.mileage;
-          case "engineLow":
-            return a.engineSize - b.engineSize;
-          case "engineHigh":
-            return b.engineSize - a.engineSize;
-          case "oldest":
-            return new Date(a.createdAt) - new Date(b.createdAt);
-          default:
-            return new Date(b.createdAt) - new Date(a.createdAt); // newest
-        }
-      })
-      .sort((a, b) => (b.isFeatured ? 1 : 0) - (a.isFeatured ? 1 : 0)); // Featured pinned
+    return [...cars].sort((a, b) => {
+      if (b.isFeatured && !a.isFeatured) return 1;
+      if (a.isFeatured && !b.isFeatured) return -1;
+
+      switch (sortOption) {
+        case "priceLow":
+          return a.price - b.price;
+        case "priceHigh":
+          return b.price - a.price;
+        case "mileage":
+          return a.mileage - b.mileage;
+        case "engineLow":
+          return a.engineSize - b.engineSize;
+        case "engineHigh":
+          return b.engineSize - a.engineSize;
+        case "oldest":
+          return new Date(a.createdAt) - new Date(b.createdAt);
+        case "titleAsc":
+          return a.title.localeCompare(b.title);
+        case "titleDesc":
+          return b.title.localeCompare(a.title);
+        default:
+          return new Date(b.createdAt) - new Date(a.createdAt); // newest
+      }
+    });
   }, [cars, sortOption]);
+
+  const debounceToggle = (() => {
+    let timeout;
+    return (callback) => {
+      clearTimeout(timeout);
+      timeout = setTimeout(callback, 150);
+    };
+  })();
 
   return (
     <section
@@ -89,65 +110,28 @@ const LatestCars = () => {
         Latest Cars
       </h2>
 
-      {/* Sort Dropdown */}
       <div className="flex justify-center mb-12">
-        <div className="relative">
-          <button
-            className="w-64 bg-gradient-to-br from-rose-900 via-rose-800 to-rose-950 text-white text-lg font-semibold rounded-lg p-3 shadow-md text-center"
-            onClick={() => setDropdownOpen((prev) => !prev)}
-            aria-haspopup="listbox"
-            aria-expanded={isDropdownOpen}
-            aria-controls="sort-options"
-          >
-            Sort By: {sortOptions.find((opt) => opt.key === sortOption)?.label}
-          </button>
-
-          <AnimatePresence>
-            {isDropdownOpen && (
-              <motion.ul
-                id="sort-options"
-                role="listbox"
-                aria-activedescendant={`option-${sortOption}`}
-                ref={sortListRef}
-                className="absolute w-64 mt-2 border border-rose-700 bg-rose-800 rounded-lg shadow-lg z-10"
-                initial="hidden"
-                animate="visible"
-                exit="exit"
-                variants={dropdownVariants}
-              >
-                {sortOptions.map(({ key, label }) => (
-                  <li
-                    id={`option-${key}`}
-                    key={key}
-                    role="option"
-                    aria-selected={sortOption === key}
-                    onClick={() => {
-                      setSortOption(key);
-                      setDropdownOpen(false);
-                    }}
-                    className={`p-2 cursor-pointer hover:bg-rose-100 hover:text-rose-700 rounded-md text-center ${
-                      sortOption === key
-                        ? "font-bold text-white bg-rose-700 bg-opacity-50 glow-pulse"
-                        : ""
-                    }`}
-                  >
-                    {label}
-                  </li>
-                ))}
-              </motion.ul>
-            )}
-          </AnimatePresence>
-        </div>
+        <SortDropdown
+          options={sortOptions}
+          selected={sortOption}
+          onSelect={(key) => {
+            setSortOption(key);
+            setDropdownOpen(false);
+          }}
+          isOpen={isDropdownOpen}
+          onToggle={setDropdownOpen}
+        />
       </div>
 
-      {/* Car Grid or Status */}
       {loading ? (
         <div
           role="status"
-          className="flex justify-center items-center h-48"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto"
           aria-live="polite"
         >
-          <LoadingSpinner />
+          {Array.from({ length: 6 }).map((_, i) => (
+            <SkeletonCarCard key={i} />
+          ))}
         </div>
       ) : error ? (
         <p
@@ -171,35 +155,27 @@ const LatestCars = () => {
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto"
         >
           <AnimatePresence mode="popLayout">
-            {sortedCars.map((car) => {
-              const make = carMakes.find((m) =>
-                car.title.toLowerCase().includes(m.toLowerCase())
-              );
-              const logo = make ? carLogos[make] : null;
-
-              return (
-                <motion.li
-                  key={car.$id}
-                  layout
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, amount: 0.2 }}
-                  transition={{ duration: 0.5, ease: "easeOut" }}
-                  aria-label={`Car listing: ${car.title}`}
-                >
-                  <CarCard
-                    car={car}
-                    logo={logo}
-                    onOpen={() => setSelectedCar({ ...car, logo })}
-                  />
-                </motion.li>
-              );
-            })}
+            {sortedCars.map((car) => (
+              <motion.li
+                key={car.$id}
+                layout
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{ duration: 0.5, ease: "easeOut" }}
+                aria-label={`Car listing: ${car.title}`}
+              >
+                <CarCard
+                  car={car}
+                  logo={car.logo}
+                  onOpen={() => setSelectedCar(car)}
+                />
+              </motion.li>
+            ))}
           </AnimatePresence>
         </motion.ul>
       )}
 
-      {/* Modal */}
       {selectedCar && (
         <CarModal
           car={selectedCar}

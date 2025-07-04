@@ -11,7 +11,7 @@ import SortDropdown from "./SortDropdown";
 
 const sortOptions = [
   { key: "mileage", label: "Mileage" },
-  { key: "newest", label: "Newest Added" },
+  { key: "newest", label: "Recently Added" },
   { key: "oldest", label: "Oldest" },
   { key: "engineLow", label: "Engine ↑" },
   { key: "engineHigh", label: "Engine ↓" },

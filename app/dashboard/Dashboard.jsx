@@ -34,7 +34,7 @@ const Dashboard = () => {
   const DEBOUNCE = 300;
 
   const sortOptions = [
-    { key: "newest", label: "Newest Added" },
+    { key: "newest", label: "Recently Added" },
     { key: "oldest", label: "Oldest" },
     { key: "priceLow", label: "Price ↑" },
     { key: "priceHigh", label: "Price ↓" },

@@ -4,14 +4,9 @@ import { useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const dropdownVariants = {
-  hidden: { opacity: 0, y: -8, scale: 0.98, transition: { duration: 0.12 } },
-  visible: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: { type: "spring", stiffness: 200, damping: 20 },
-  },
-  exit: { opacity: 0, y: -8, scale: 0.96, transition: { duration: 0.1 } },
+  hidden: { opacity: 0, y: -10, scale: 0.95 },
+  visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.2 } },
+  exit: { opacity: 0, y: -10, scale: 0.95, transition: { duration: 0.15 } },
 };
 
 const SortDropdown = ({ options, selected, onSelect, isOpen, onToggle }) => {

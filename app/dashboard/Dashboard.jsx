@@ -8,7 +8,8 @@ import Link from "next/link";
 import Image from "next/image";
 import AddCarForm from "./AddCarForm";
 import CarList from "./CarList";
-import LoadingSpinner from "./LoadingSpinner";
+import SortDropdown from "../components/SortDropdown";
+import SkeletonCarCard from "../components/SkeletonCarCard";
 import { databases } from "../lib/appwrite";
 import { toast } from "sonner";
 
@@ -24,12 +25,22 @@ const Dashboard = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [debounced, setDebounced] = useState("");
   const [sortOption, setSortOption] = useState("newest");
-  const [dropdown, setDropdown] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const SESSION_KEY = "dashboard_session";
   const SESSION_TS = "dashboard_session_timestamp";
   const EXPIRY = 7 * 86400000;
   const DEBOUNCE = 300;
+
+  const sortOptions = [
+    ["newest", "Newest"],
+    ["oldest", "Oldest"],
+    ["priceLow", "Price ↑"],
+    ["priceHigh", "Price ↓"],
+    ["mileage", "Mileage"],
+    ["engineLow", "Engine ↑"],
+    ["engineHigh", "Engine ↓"],
+  ];
 
   useEffect(() => {
     document.body.classList.add("overflow-hidden");
@@ -106,10 +117,14 @@ const Dashboard = () => {
     }
   };
 
-  if (!hydrated || (isAuthenticated && loading)) {
+  if (!hydrated || (isAuthenticated && loading && cars.length === 0)) {
     return (
       <div className="fixed inset-0 bg-rose-950 flex items-center justify-center z-[100]">
-        <LoadingSpinner />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl w-full px-4">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <SkeletonCarCard key={i} />
+          ))}
+        </div>
       </div>
     );
   }
@@ -161,16 +176,6 @@ const Dashboard = () => {
     { key: "addCar", label: "Add Car" },
   ];
 
-  const sortOptions = [
-    ["newest", "Newest"],
-    ["oldest", "Oldest"],
-    ["priceLow", "Price ↑"],
-    ["priceHigh", "Price ↓"],
-    ["mileage", "Mileage"],
-    ["engineLow", "Engine ↑"],
-    ["engineHigh", "Engine ↓"],
-  ];
-
   return (
     <div className="fixed inset-0 h-screen overflow-hidden bg-rose-950 text-white flex flex-col z-[100]">
       <header className="h-[80px] flex-shrink-0 px-4 shadow-md">
@@ -214,50 +219,30 @@ const Dashboard = () => {
                 placeholder="Search..."
                 className="px-4 py-2 rounded bg-rose-800 w-full md:w-1/2"
               />
-              <div className="relative w-64 mx-auto z-50">
-                <button
-                  onClick={() => setDropdown(!dropdown)}
-                  className="w-full px-4 py-2 rounded-lg text-white bg-gradient-to-br from-rose-900 via-rose-800 to-rose-950 shadow font-semibold"
-                  aria-label="Toggle sort options"
-                >
-                  Sort By:{" "}
-                  {sortOptions.find(([key]) => key === sortOption)?.[1]}
-                </button>
 
-                <AnimatePresence>
-                  {dropdown && (
-                    <motion.ul
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      transition={{ duration: 0.2 }}
-                      className="absolute w-full mt-2 border border-rose-700 bg-rose-800 rounded-lg shadow-lg z-10"
-                    >
-                      {sortOptions.map(([key, label]) => (
-                        <li
-                          key={key}
-                          onClick={() => {
-                            setSortOption(key);
-                            setDropdown(false);
-                          }}
-                          className={`p-2 cursor-pointer text-center rounded-md transition hover:bg-rose-100 hover:text-rose-700 ${
-                            sortOption === key
-                              ? "bg-rose-700 text-white font-bold"
-                              : "text-white"
-                          }`}
-                          aria-label={`Sort by ${label}`}
-                        >
-                          {label}
-                        </li>
-                      ))}
-                    </motion.ul>
-                  )}
-                </AnimatePresence>
+              <div className="w-64">
+                <SortDropdown
+                  options={sortOptions.map(([key, label]) => ({
+                    key,
+                    label,
+                  }))}
+                  selected={sortOption}
+                  onSelect={(key) => {
+                    setSortOption(key);
+                    setDropdownOpen(false);
+                  }}
+                  isOpen={dropdownOpen}
+                  onToggle={setDropdownOpen}
+                />
               </div>
             </div>
 
-            {loading ? (
-              <LoadingSpinner />
+            {loading && cars.length > 0 ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <SkeletonCarCard key={i} />
+                ))}
+              </div>
             ) : (
               <CarList
                 cars={filteredCars}

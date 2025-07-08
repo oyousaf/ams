@@ -103,7 +103,7 @@ const Navbar = () => {
 
       {/* Mobile Full-Screen Menu */}
       <motion.div
-        className="fixed inset-0 mobile-menu flex flex-col md:hidden "
+        className="fixed inset-0 mobile-menu flex flex-col md:hidden"
         initial={{ x: "100%" }}
         animate={{ x: menuOpen ? 0 : "100%" }}
         transition={{

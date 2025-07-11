@@ -13,7 +13,6 @@ import SortDropdown from "../components/SortDropdown";
 import LoadingSpinner from "./LoadingSpinner";
 import { databases } from "../lib/appwrite";
 
-
 const Dashboard = () => {
   const [hydrated, setHydrated] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -34,13 +33,17 @@ const Dashboard = () => {
   const DEBOUNCE = 300;
 
   const sortOptions = [
-    { key: "newest", label: "Recently Added" },
-    { key: "oldest", label: "Oldest" },
+    { key: "mileage", label: "Mileage" },
     { key: "priceLow", label: "Price ↑" },
     { key: "priceHigh", label: "Price ↓" },
-    { key: "mileage", label: "Mileage" },
+    { key: "newest", label: "Recently Added" },
+    { key: "oldest", label: "Oldest" },
+    { key: "automatic", label: "Automatic" },
+    { key: "manual", label: "Manual" },
     { key: "engineLow", label: "Engine ↑" },
     { key: "engineHigh", label: "Engine ↓" },
+    { key: "titleAsc", label: "A-Z" },
+    { key: "titleDesc", label: "Z-A" },
   ];
 
   useEffect(() => {
@@ -89,21 +92,49 @@ const Dashboard = () => {
 
   useEffect(() => {
     const q = debounced.toLowerCase().trim();
-    const maps = {
-      priceLow: (a, b) => a.price - b.price,
-      priceHigh: (a, b) => b.price - a.price,
-      mileage: (a, b) => a.mileage - b.mileage,
-      engineLow: (a, b) => a.engineSize - b.engineSize,
-      engineHigh: (a, b) => b.engineSize - a.engineSize,
-      oldest: (a, b) => new Date(a.createdAt) - new Date(b.createdAt),
-      newest: (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
-    };
-    const list = cars
-      .filter((c) =>
-        [c.make, c.model, c.title, c.year].join(" ").toLowerCase().includes(q)
-      )
-      .sort(maps[sortOption] || maps.newest);
-    setFilteredCars(list);
+    const searched = cars.filter((c) =>
+      [c.make, c.model, c.title, c.year].join(" ").toLowerCase().includes(q)
+    );
+
+    let filtered = [...searched];
+
+    switch (sortOption) {
+      case "automatic":
+      case "manual":
+        filtered = filtered.filter(
+          (c) => c.transmission && c.transmission.toLowerCase() === sortOption
+        );
+        filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        break;
+      case "priceLow":
+        filtered.sort((a, b) => a.price - b.price);
+        break;
+      case "priceHigh":
+        filtered.sort((a, b) => b.price - a.price);
+        break;
+      case "mileage":
+        filtered.sort((a, b) => a.mileage - b.mileage);
+        break;
+      case "engineLow":
+        filtered.sort((a, b) => a.engineSize - b.engineSize);
+        break;
+      case "engineHigh":
+        filtered.sort((a, b) => b.engineSize - a.engineSize);
+        break;
+      case "oldest":
+        filtered.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+        break;
+      case "titleAsc":
+        filtered.sort((a, b) => a.title.localeCompare(b.title));
+        break;
+      case "titleDesc":
+        filtered.sort((a, b) => b.title.localeCompare(a.title));
+        break;
+      default:
+        filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    }
+
+    setFilteredCars(filtered);
   }, [cars, debounced, sortOption]);
 
   const handlePass = (e) => {

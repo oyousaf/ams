@@ -11,12 +11,14 @@ import SortDropdown from "./SortDropdown";
 
 const sortOptions = [
   { key: "mileage", label: "Mileage" },
-  { key: "newest", label: "Recently Added" },
-  { key: "engineLow", label: "Engine ↑" },
-  { key: "oldest", label: "Oldest" },
-  { key: "engineHigh", label: "Engine ↓" },
   { key: "priceLow", label: "Price ↑" },
   { key: "priceHigh", label: "Price ↓" },
+  { key: "newest", label: "Recently Added" },
+  { key: "oldest", label: "Oldest" },
+  { key: "automatic", label: "Automatic" },
+  { key: "manual", label: "Manual" },
+  { key: "engineLow", label: "Engine ↑" },
+  { key: "engineHigh", label: "Engine ↓" },
   { key: "titleAsc", label: "A-Z" },
   { key: "titleDesc", label: "Z-A" },
 ];
@@ -61,47 +63,59 @@ const LatestCars = () => {
   }, []);
 
   const sortedCars = useMemo(() => {
-    return [...cars].sort((a, b) => {
-      if (b.isFeatured && !a.isFeatured) return 1;
-      if (a.isFeatured && !b.isFeatured) return -1;
+    let filtered = [...cars];
 
-      switch (sortOption) {
-        case "priceLow":
-          return a.price - b.price;
-        case "priceHigh":
-          return b.price - a.price;
-        case "mileage":
-          return a.mileage - b.mileage;
-        case "engineLow":
-          return a.engineSize - b.engineSize;
-        case "engineHigh":
-          return b.engineSize - a.engineSize;
-        case "oldest":
-          return new Date(a.createdAt) - new Date(b.createdAt);
-        case "titleAsc":
-          return a.title.localeCompare(b.title);
-        case "titleDesc":
-          return b.title.localeCompare(a.title);
-        default:
-          return new Date(b.createdAt) - new Date(a.createdAt); // newest
-      }
+    switch (sortOption) {
+      case "automatic":
+      case "manual":
+        filtered = filtered.filter(
+          (car) =>
+            car.transmission && car.transmission.toLowerCase() === sortOption
+        );
+        filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        break;
+      case "priceLow":
+        filtered.sort((a, b) => a.price - b.price);
+        break;
+      case "priceHigh":
+        filtered.sort((a, b) => b.price - a.price);
+        break;
+      case "mileage":
+        filtered.sort((a, b) => a.mileage - b.mileage);
+        break;
+      case "engineLow":
+        filtered.sort((a, b) => a.engineSize - b.engineSize);
+        break;
+      case "engineHigh":
+        filtered.sort((a, b) => b.engineSize - a.engineSize);
+        break;
+      case "oldest":
+        filtered.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+        break;
+      case "titleAsc":
+        filtered.sort((a, b) => a.title.localeCompare(b.title));
+        break;
+      case "titleDesc":
+        filtered.sort((a, b) => b.title.localeCompare(a.title));
+        break;
+      default:
+        filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    }
+
+    // Always prioritise featured
+    return filtered.sort((a, b) => {
+      if (a.isFeatured && !b.isFeatured) return -1;
+      if (!a.isFeatured && b.isFeatured) return 1;
+      return 0;
     });
   }, [cars, sortOption]);
-
-  const debounceToggle = (() => {
-    let timeout;
-    return (callback) => {
-      clearTimeout(timeout);
-      timeout = setTimeout(callback, 150);
-    };
-  })();
 
   return (
     <section
       id="cars"
+      className="py-24 px-6 md:px-12"
       role="region"
       aria-labelledby="latest-cars-heading"
-      className="py-24 px-6 md:px-12"
     >
       <h2
         id="latest-cars-heading"
@@ -163,7 +177,6 @@ const LatestCars = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.2 }}
                 transition={{ duration: 0.5, ease: "easeOut" }}
-                aria-label={`Car listing: ${car.title}`}
               >
                 <CarCard
                   car={car}

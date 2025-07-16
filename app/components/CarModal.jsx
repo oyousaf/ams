@@ -117,14 +117,14 @@ const CarModal = ({ car, logo, onClose }) => {
                 {car.title}
               </h2>
             </div>
-            <button
-              className="absolute top-3 right-4 text-white text-2xl md:text-4xl hover:text-rose-400 transition"
-              onClick={onClose}
-              aria-label="Close Modal"
-            >
-              <FaTimes />
-            </button>
           </div>
+          <button
+            className="absolute top-5 right-5 text-white text-2xl md:text-4xl hover:text-rose-400 transition z-40"
+            onClick={onClose}
+            aria-label="Close Modal"
+          >
+            <FaTimes />
+          </button>
 
           {/* Image Slider */}
           <div

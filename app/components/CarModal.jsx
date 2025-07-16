@@ -21,7 +21,6 @@ const CarModal = ({ car, logo, onClose }) => {
   const sliderRef = useRef(null);
   const modalRef = useRef(null);
   const [isLoaded, setIsLoaded] = useState(false);
-  const touchStartY = useRef(null);
 
   const formattedMileage =
     car.mileage >= 1000
@@ -51,22 +50,9 @@ const CarModal = ({ car, logo, onClose }) => {
     [onClose]
   );
 
-  const handleTouchStart = (e) => {
-    touchStartY.current = e.touches[0].clientY;
-  };
-
-  const handleTouchEnd = (e) => {
-    const touchEndY = e.changedTouches[0].clientY;
-    if (touchStartY.current !== null && touchEndY - touchStartY.current > 100) {
-      onClose();
-    }
-  };
-
   const handleOutsideClick = useCallback(
     (e) => {
-      if (modalRef.current && !modalRef.current.contains(e.target)) {
-        onClose();
-      }
+      if (modalRef.current && !modalRef.current.contains(e.target)) onClose();
     },
     [onClose]
   );
@@ -95,21 +81,34 @@ const CarModal = ({ car, logo, onClose }) => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        onTouchStart={handleTouchStart}
-        onTouchEnd={handleTouchEnd}
+        transition={{ duration: 0.3 }}
       >
         <motion.div
           ref={modalRef}
           className="relative bg-gradient-to-br from-rose-900 via-rose-800 to-rose-950 text-white w-full max-w-screen-md max-h-full md:max-h-[95vh] rounded-xl tile-glow p-6 shadow-xl overflow-hidden"
-          initial={{ scale: 0.95 }}
-          animate={{ scale: 1 }}
-          exit={{ scale: 0.95 }}
-          transition={{ duration: 0.3 }}
+          drag="y"
+          dragConstraints={{ top: 0, bottom: 0 }}
+          onDragEnd={(e, info) => {
+            if (info.offset.y > 100) onClose();
+          }}
+          initial={{ scale: 0.95, opacity: 0, y: 50 }}
+          animate={{ scale: 1, opacity: 1, y: 0 }}
+          exit={{ scale: 0.9, opacity: 0, y: 80 }}
+          transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
           role="dialog"
           aria-modal="true"
           aria-label={`${car.title} details`}
         >
-          {/* Fixed Top Bar */}
+          {/* Close Button */}
+          <button
+            className="absolute top-4 right-4 z-50 p-2.5 md:p-3 rounded-full bg-white/5 hover:bg-white/10 backdrop-blur-sm border border-white/10 transition duration-200 ease-in-out text-white"
+            onClick={onClose}
+            aria-label="Close Modal"
+          >
+            <FaTimes className="text-xl md:text-2xl text-white/80" />
+          </button>
+
+          {/* Header */}
           <div className="sticky top-0 z-40 rounded-t-xl pb-4 pt-3 mb-4 text-center">
             <div className="flex justify-center items-center flex-col gap-2">
               {logo && <div className="w-12 h-12">{logo}</div>}
@@ -118,23 +117,12 @@ const CarModal = ({ car, logo, onClose }) => {
               </h2>
             </div>
           </div>
-          <button
-            className="absolute top-5 right-5 text-white text-2xl md:text-4xl hover:text-rose-400 transition z-40"
-            onClick={onClose}
-            aria-label="Close Modal"
-          >
-            <FaTimes />
-          </button>
 
           {/* Image Slider */}
           <div
             onWheel={(e) => {
-              if (!sliderRef.current) return;
-              if (e.deltaY > 0 || e.deltaX > 0) {
-                sliderRef.current.slickNext();
-              } else if (e.deltaY < 0 || e.deltaX < 0) {
-                sliderRef.current.slickPrev();
-              }
+              if (e.deltaY > 0 || e.deltaX > 0) sliderRef.current?.slickNext();
+              else sliderRef.current?.slickPrev();
             }}
             className="rounded-md overflow-hidden mb-6"
           >
@@ -155,7 +143,6 @@ const CarModal = ({ car, logo, onClose }) => {
                       className={`object-cover w-full h-[300px] md:h-[400px] rounded-md transition-opacity duration-300 ${
                         isLoaded ? "opacity-100" : "opacity-0"
                       }`}
-                      style={{ width: "auto", height: "auto" }}
                       loading={i === 0 ? "eager" : "lazy"}
                       onLoad={() => setIsLoaded(true)}
                     />

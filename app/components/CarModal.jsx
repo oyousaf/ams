@@ -140,7 +140,7 @@ const CarModal = ({ car, logo, onClose }) => {
                       alt={`${car.title} ${i + 1}`}
                       width={800}
                       height={400}
-                      className={`object-cover w-full h-[300px] md:h-[400px] rounded-md transition-opacity duration-300 ${
+                      className={`object-cover w-full h-[300px] md:h-[500px] rounded-md transition-opacity duration-300 ${
                         isLoaded ? "opacity-100" : "opacity-0"
                       }`}
                       loading={i === 0 ? "eager" : "lazy"}

@@ -10,9 +10,9 @@ const ScrollToTop = dynamic(() => import("./components/ScrollToTop"), {
 const Snow = dynamic(() => import("./components/Snow"), { ssr: false });
 
 export const metadata = {
-  title: "Buy Certified Used Cars - Ace Motor Sales UK",
+  title: "Ace Motor Sales - Certified Used Cars with Nationwide Delivery",
   description:
-    "Discover quality pre-owned vehicles at Ace Motor Sales in Heckmondwike. Certified, inspected, and delivered nationwide.",
+    "Explore our selection of certified, pre-owned vehicles — thoroughly inspected for quality, reliability, and performance.",
 };
 
 export default function Home() {

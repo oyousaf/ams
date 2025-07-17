@@ -1,3 +1,4 @@
+// app/layout.tsx or layout.js
 import "./globals.css";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
@@ -27,6 +28,7 @@ export const metadata = {
     "pre-owned cars with delivery",
     "Ace Motor Sales Heckmondwike",
   ],
+  metadataBase: new URL("https://acemotorsales.uk"),
   openGraph: {
     title: "Ace Motor Sales - Certified Used Cars with Nationwide Delivery",
     description:
@@ -51,7 +53,19 @@ export const metadata = {
       "Explore certified, pre-owned vehicles with top quality, reliability, and performance.",
     images: ["/hero.jpg"],
   },
-  canonicalUrl: "https://acemotorsales.uk",
+  robots: {
+    index: true,
+    follow: true,
+    nocache: false,
+  },
+  viewport: {
+    width: "device-width",
+    initialScale: 1,
+    maximumScale: 1,
+  },
+  alternates: {
+    canonical: "https://acemotorsales.uk",
+  },
 };
 
 const structuredData = {
@@ -59,7 +73,7 @@ const structuredData = {
   "@type": "CarDealer",
   name: "Ace Motor Sales",
   alternateName: "Ace Motor Sales Ltd",
-  url: metadata.canonicalUrl,
+  url: "https://acemotorsales.uk",
   logo: "/apple-touch-icon.png",
   image: "/hero.jpg",
   description: metadata.description,
@@ -84,32 +98,50 @@ const structuredData = {
   },
 };
 
+const orgSchema = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "Ace Motor Sales",
+  url: "https://acemotorsales.uk",
+  logo: "/apple-touch-icon.png",
+  sameAs: structuredData.sameAs,
+};
+
+const websiteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "Ace Motor Sales",
+  url: "https://acemotorsales.uk",
+};
+
 export default function RootLayout({ children }) {
   return (
-    <html lang="en-gb" className="min-h-full scroll-smooth antialiased">
+    <html lang="en-GB" className="min-h-full scroll-smooth antialiased">
       <head>
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify([structuredData, orgSchema, websiteSchema]),
+          }}
         />
-        <meta
-          name="description"
-          content="Certified, pre-owned vehicles at Ace Motor Sales. Quality, reliability, and performance guaranteed."
-        />
-        <meta property="og:title" content="Ace Motor Sales" />
-        <meta
-          property="og:description"
-          content="Explore our range of carefully inspected pre-owned vehicles."
-        />
-        <meta property="og:image" content="/hero.jpg" />
-        <meta name="twitter:card" content="summary_large_image" />
       </head>
-      <body className="min-h-screen text-zinc-100">
-        <Navbar />
-        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <body className="min-h-screen text-zinc-100 bg-black">
+        <header>
+          <Navbar />
+        </header>
+
+        <main
+          id="main-content"
+          aria-label="Ace Motor Sales Main Content"
+          className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+        >
           {children}
         </main>
-        <Footer />
+
+        <footer>
+          <Footer />
+        </footer>
+
         <Toaster
           position="top-right"
           duration={3000}

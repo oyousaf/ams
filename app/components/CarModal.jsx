@@ -55,17 +55,13 @@ const CarModal = ({ car, logo, onClose }) => {
   }, []);
 
   useEffect(() => {
-    const scrollBarWidth =
-      window.innerWidth - document.documentElement.clientWidth;
     document.body.style.overflow = "hidden";
-    document.body.style.paddingRight = `${scrollBarWidth}px`;
 
     window.addEventListener("keydown", handleKeyDown);
     window.addEventListener("mousedown", handleOutsideClick);
 
     return () => {
       document.body.style.overflow = "auto";
-      document.body.style.paddingRight = "0px";
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("mousedown", handleOutsideClick);
     };

@@ -13,6 +13,11 @@ body {
   font-family: "GeistMono", monospace;
 }
 
+html {
+  scrollbar-gutter: stable;
+}
+
+
 /* Protect images */
 img {
   user-select: none;

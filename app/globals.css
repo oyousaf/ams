@@ -17,7 +17,6 @@ html {
   scrollbar-gutter: stable;
 }
 
-
 /* Protect images */
 img {
   user-select: none;
@@ -32,7 +31,6 @@ img {
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
-
 
 /* Utilities */
 @layer utilities {

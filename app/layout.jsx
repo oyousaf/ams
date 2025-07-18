@@ -68,6 +68,53 @@ export const metadata = {
   },
 };
 
+// Structured Data (JSON-LD)
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "CarDealer",
+  name: "Ace Motor Sales",
+  alternateName: "Ace Motor Sales Ltd",
+  url: "https://acemotorsales.uk",
+  logo: "/apple-touch-icon.png",
+  image: "/hero.jpg",
+  description: metadata.description,
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: "4 Westgate",
+    addressLocality: "Heckmondwike",
+    addressRegion: "West Yorkshire",
+    postalCode: "WF16 0EH",
+    addressCountry: "UK",
+  },
+  telephone: "+447809107655",
+  sameAs: [
+    "https://www.facebook.com/acemotorsales1",
+    "https://www.instagram.com/acemotorsltd",
+  ],
+  openingHours: "Mo-Su 09:00-20:00",
+  geo: {
+    "@type": "GeoCoordinates",
+    latitude: 53.70825741357984,
+    longitude: -1.6782300556791774,
+  },
+};
+
+const orgSchema = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "Ace Motor Sales",
+  url: "https://acemotorsales.uk",
+  logo: "/apple-touch-icon.png",
+  sameAs: structuredData.sameAs,
+};
+
+const websiteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "Ace Motor Sales",
+  url: "https://acemotorsales.uk",
+};
+
 export default function RootLayout({ children }) {
   return (
     <html lang="en-GB" className="min-h-full scroll-smooth antialiased">
@@ -79,7 +126,7 @@ export default function RootLayout({ children }) {
           }}
         />
       </head>
-      <body className="min-h-screen text-zinc-100">
+      <body className="min-h-screen text-zinc-100 bg-neutral-900">
         <header>
           <Navbar />
         </header>

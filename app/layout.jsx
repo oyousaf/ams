@@ -125,7 +125,7 @@ export default function RootLayout({ children }) {
           }}
         />
       </head>
-      <body className="min-h-screen text-zinc-100 bg-black">
+      <body className="min-h-screen text-zinc-100">
         <header>
           <Navbar />
         </header>

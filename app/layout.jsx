@@ -1,9 +1,14 @@
-// app/layout.tsx or layout.js
 import "./globals.css";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Toaster } from "sonner";
+
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+};
 
 export const metadata = {
   title: "Ace Motor Sales - Certified Used Cars with Nationwide Delivery",
@@ -58,60 +63,9 @@ export const metadata = {
     follow: true,
     nocache: false,
   },
-  viewport: {
-    width: "device-width",
-    initialScale: 1,
-    maximumScale: 1,
-  },
   alternates: {
     canonical: "https://acemotorsales.uk",
   },
-};
-
-const structuredData = {
-  "@context": "https://schema.org",
-  "@type": "CarDealer",
-  name: "Ace Motor Sales",
-  alternateName: "Ace Motor Sales Ltd",
-  url: "https://acemotorsales.uk",
-  logo: "/apple-touch-icon.png",
-  image: "/hero.jpg",
-  description: metadata.description,
-  address: {
-    "@type": "PostalAddress",
-    streetAddress: "4 Westgate",
-    addressLocality: "Heckmondwike",
-    addressRegion: "West Yorkshire",
-    postalCode: "WF16 0EH",
-    addressCountry: "UK",
-  },
-  telephone: "+447809107655",
-  sameAs: [
-    "https://www.facebook.com/acemotorsales1",
-    "https://www.instagram.com/acemotorsltd",
-  ],
-  openingHours: "Mo-Su 09:00-20:00",
-  geo: {
-    "@type": "GeoCoordinates",
-    latitude: 53.70825741357984,
-    longitude: -1.6782300556791774,
-  },
-};
-
-const orgSchema = {
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  name: "Ace Motor Sales",
-  url: "https://acemotorsales.uk",
-  logo: "/apple-touch-icon.png",
-  sameAs: structuredData.sameAs,
-};
-
-const websiteSchema = {
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  name: "Ace Motor Sales",
-  url: "https://acemotorsales.uk",
 };
 
 export default function RootLayout({ children }) {

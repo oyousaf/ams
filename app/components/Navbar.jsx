@@ -33,7 +33,7 @@ const Navbar = () => {
 
   return (
     <nav className="bg-black text-white fixed top-0 left-0 right-0 p-4 z-50 shadow-md">
-      <div className="container mx-auto flex items-center justify-between">
+      <div className="container mx-auto max-w-screen-xl px-4 md:px-8 flex items-center justify-between">
         {/* Logo */}
         <motion.div
           initial={{ scale: 1 }}
@@ -46,12 +46,12 @@ const Navbar = () => {
             src={logo}
             alt="logo"
             priority={true}
-            className="w-[120px] sm:w-[150px] md:w-[200px]"
+            className="w-[120px] sm:w-[150px] md:w-[180px]"
           />
         </motion.div>
 
         {/* Desktop & Tablet Menu */}
-        <ul className="hidden md:flex space-x-6 lg:space-x-8">
+        <ul className="hidden md:flex gap-4 md:gap-6 lg:gap-8 items-center">
           {navLinks.map(({ id, href, name }) => (
             <motion.li
               key={id}
@@ -61,7 +61,7 @@ const Navbar = () => {
             >
               <button
                 onClick={() => handleScroll(href)}
-                className="text-xl lg:text-2xl hover:text-rose-600 transition-colors duration-300 ease-in-out cursor-pointer"
+                className="text-lg md:text-xl lg:text-2xl hover:text-rose-600 transition-colors duration-300 ease-in-out cursor-pointer"
               >
                 {name}
               </button>
@@ -70,7 +70,7 @@ const Navbar = () => {
         </ul>
 
         {/* Social Media Icons (Desktop & Tablet) */}
-        <div className="hidden md:flex space-x-4 lg:space-x-6">
+        <div className="hidden md:flex gap-3 md:gap-5 lg:gap-6 items-center">
           {socialLinks.map(({ id, href, icon }) => (
             <motion.a
               key={id}

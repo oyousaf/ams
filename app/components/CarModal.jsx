@@ -106,9 +106,9 @@ const CarModal = ({ car, logo, onClose }) => {
             <div className="sticky top-0 z-40 rounded-t-xl pb-4 pt-3 mb-4 text-center">
               <div className="flex justify-center items-center flex-col gap-2">
                 {logo && <div className="w-12 h-12">{logo}</div>}
-                <h2 className="text-xl md:text-2xl font-bold uppercase">
+                <h4 className="text-xl md:text-2xl font-bold uppercase">
                   {car.title}
-                </h2>
+                </h4>
               </div>
             </div>
 

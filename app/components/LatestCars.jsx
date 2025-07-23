@@ -117,10 +117,7 @@ const LatestCars = () => {
       role="region"
       aria-labelledby="latest-cars-heading"
     >
-      <h2
-        id="latest-cars-heading"
-        className="text-4xl md:text-5xl font-bold text-center mb-12 text-white"
-      >
+      <h2 className="text-4xl md:text-5xl font-bold text-center mb-12 text-white">
         Latest Cars
       </h2>
 

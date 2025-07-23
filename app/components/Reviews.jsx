@@ -11,10 +11,7 @@ const Reviews = () => {
       id="reviews"
       className="py-24 px-4 sm:px-6 md:px-8 lg:px-12"
     >
-      <h2
-        aria-labelledby="reviews-heading"
-        className="text-4xl md:text-5xl font-bold text-center mb-16 text-white"
-      >
+      <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 text-white">
         Reviews
       </h2>
 

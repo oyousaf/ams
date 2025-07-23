@@ -42,9 +42,9 @@ const Footer = () => {
         viewport={{ once: true }}
         transition={{ duration: 0.6 }}
       >
-        <h4 className="text-2xl font-semibold">
+        <h3 className="text-2xl font-semibold">
           © {new Date().getFullYear()} Ace Motor Sales
-        </h4>
+        </h3>
         <p>4 Westgate, Heckmondwike, WF16 0EH</p>
         <p>Keys in the ignition from 9am to 8pm — cruise on in anytime!</p>
         <Link

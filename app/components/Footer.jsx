@@ -56,12 +56,13 @@ const Footer = () => {
       </motion.div>
 
       <div className="flex justify-center space-x-6 mt-8">
-        {socialLinks.map(({ id, href, icon }) => (
+        {socialLinks.map(({ id, href, icon, name }) => (
           <motion.a
             key={id}
             href={href}
             target="_blank"
             rel="noopener noreferrer"
+            aria-label={name}
             className="text-2xl hover:text-rose-500"
             whileHover={{ scale: 1.2 }}
             transition={{ type: "spring", stiffness: 300 }}

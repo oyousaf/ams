@@ -48,6 +48,7 @@ export const socialLinks = [
     icon: (
       <FaFacebook className="text-4xl md:text-3xl hover:text-rose-600 transition-all ease-in-out duration-300" />
     ),
+    name: "Facebook",
   },
   {
     id: 2,
@@ -55,6 +56,7 @@ export const socialLinks = [
     icon: (
       <FaInstagram className="text-4xl md:text-3xl hover:text-rose-600 transition-all ease-in-out duration-300" />
     ),
+    name: "Instagram",
   },
   {
     id: 3,
@@ -62,6 +64,7 @@ export const socialLinks = [
     icon: (
       <IoMail className="text-4xl md:text-3xl hover:text-rose-600 transition-all ease-in-out duration-300" />
     ),
+    name: "Email",
   },
   {
     id: 4,
@@ -69,6 +72,7 @@ export const socialLinks = [
     icon: (
       <FaPhone className="text-4xl md:text-3xl hover:text-rose-600 transition-all ease-in-out duration-300" />
     ),
+    name: "Phone",
   },
 ];
 

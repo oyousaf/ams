@@ -73,12 +73,12 @@ export const socialLinks = [
 ];
 
 export const gallery = [
-  "/forecourt1.jpg",
-  "/forecourt2.jpg",
-  "/forecourt3.jpg",
-  "/forecourt4.jpg",
-  "/forecourt5.jpg",
-  "/forecourt6.jpg",
+  "/forecourt1.webp",
+  "/forecourt2.webp",
+  "/forecourt3.webp",
+  "/forecourt4.webp",
+  "/forecourt5.webp",
+  "/forecourt6.webp",
 ];
 
 export const reviews = [

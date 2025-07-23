@@ -113,9 +113,8 @@ const LatestCars = () => {
   return (
     <section
       id="cars"
-      className="py-24 px-6 md:px-12"
-      role="region"
       aria-labelledby="latest-cars-heading"
+      className="py-24 px-6 md:px-12"
     >
       <h2 className="text-4xl md:text-5xl font-bold text-center mb-12 text-white">
         Latest Cars

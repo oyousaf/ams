@@ -135,12 +135,13 @@ const Navbar = () => {
 
         {/* Social Media Icons (Mobile) */}
         <div className="flex space-x-6 mb-20 justify-center">
-          {socialLinks.map(({ id, href, icon }) => (
+          {socialLinks.map(({ id, href, icon, name }) => (
             <motion.a
               key={id}
               href={href}
               target="_blank"
               rel="noopener noreferrer"
+              aria-label={name}
               className="hover:text-rose-600 transition-colors duration-300 ease-in-out"
               whileHover={{ scale: 1.2 }}
               transition={{ type: "spring", stiffness: 200 }}

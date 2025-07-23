@@ -23,7 +23,7 @@ const HeroSection = () => {
 
       {/* Background image */}
       <Image
-        src="/hero.webp" // or AVIF if you're exporting that
+        src="/hero.webp"
         alt="Showroom background with premium used cars"
         fill
         priority

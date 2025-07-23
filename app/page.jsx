@@ -18,6 +18,7 @@ export const metadata = {
 export default function Home() {
   return (
     <main aria-label="Homepage of Ace Motor Sales">
+      {/* Hidden h1 for SEO */}
       <h1 className="sr-only">
         Explore our selection of certified, pre-owned vehicles — thoroughly
         inspected for quality, reliability, and performance.
@@ -25,15 +26,15 @@ export default function Home() {
 
       <HeroSection />
 
-      <section aria-labelledby="about-heading">
+      <section aria-labelledby="about-heading" id="about">
         <About />
       </section>
 
-      <section aria-labelledby="latest-heading">
+      <section aria-labelledby="latest-heading" id="latest">
         <LatestCars />
       </section>
 
-      <section aria-labelledby="reviews-heading">
+      <section aria-labelledby="reviews-heading" id="reviews">
         <Reviews />
       </section>
 

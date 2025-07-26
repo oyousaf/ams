@@ -86,7 +86,7 @@ const Footer = () => {
         </motion.span>
         by
         <a
-          href="https://t.me/+ypTYelRWWm1iNmY0"
+          href="https://legxcysol.dev"
           target="_blank"
           className="hover:underline"
         >

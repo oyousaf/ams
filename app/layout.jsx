@@ -2,6 +2,7 @@ import "./globals.css";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Analytics } from "@vercel/analytics/next";
 import { Toaster } from "sonner";
 
 export const viewport = {
@@ -150,6 +151,7 @@ export default function RootLayout({ children }) {
           visibleToasts={5}
         />
         <SpeedInsights />
+        <Analytics />
       </body>
     </html>
   );

@@ -28,8 +28,7 @@ const Dashboard = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const SESSION_KEY = "dashboard_session";
-  const SESSION_TS = "dashboard_session_timestamp";
-  const EXPIRY = 7 * 86400000;
+  const SESSION_EXPIRY = "dashboard_session_expiry";
   const DEBOUNCE = 300;
 
   const sortOptions = [
@@ -46,6 +45,12 @@ const Dashboard = () => {
     { key: "titleDesc", label: "Z-A" },
   ];
 
+  function getExpiryDate(months = 6) {
+    const expiry = new Date();
+    expiry.setMonth(expiry.getMonth() + months);
+    return expiry;
+  }
+
   useEffect(() => {
     document.body.classList.add("overflow-hidden");
     return () => {
@@ -56,14 +61,18 @@ const Dashboard = () => {
   useEffect(() => {
     setHydrated(true);
     const p = sessionStorage.getItem(SESSION_KEY);
-    const ts = +sessionStorage.getItem(SESSION_TS);
-    if (
-      p === process.env.NEXT_PUBLIC_DASHBOARD_PASSKEY &&
-      ts + EXPIRY > Date.now()
-    ) {
-      setIsAuthenticated(true);
+    const expiryStr = sessionStorage.getItem(SESSION_EXPIRY);
+
+    if (p === process.env.NEXT_PUBLIC_DASHBOARD_PASSKEY && expiryStr) {
+      const expiry = new Date(expiryStr);
+      if (expiry > new Date()) {
+        setIsAuthenticated(true);
+      } else {
+        sessionStorage.removeItem(SESSION_KEY);
+        sessionStorage.removeItem(SESSION_EXPIRY);
+      }
     }
-  }, [EXPIRY]);
+  }, []);
 
   const fetchCars = useCallback(async () => {
     setLoading(true);
@@ -104,7 +113,10 @@ const Dashboard = () => {
         filtered = filtered.filter(
           (c) => c.transmission && c.transmission.toLowerCase() === sortOption
         );
-        filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        filtered.sort(
+          (a, b) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
         break;
       case "priceLow":
         filtered.sort((a, b) => a.price - b.price);
@@ -122,7 +134,10 @@ const Dashboard = () => {
         filtered.sort((a, b) => b.engineSize - a.engineSize);
         break;
       case "oldest":
-        filtered.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+        filtered.sort(
+          (a, b) =>
+            new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+        );
         break;
       case "titleAsc":
         filtered.sort((a, b) => a.title.localeCompare(b.title));
@@ -131,7 +146,10 @@ const Dashboard = () => {
         filtered.sort((a, b) => b.title.localeCompare(a.title));
         break;
       default:
-        filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        filtered.sort(
+          (a, b) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
     }
 
     setFilteredCars(filtered);
@@ -140,8 +158,9 @@ const Dashboard = () => {
   const handlePass = (e) => {
     e.preventDefault();
     if (passkey === process.env.NEXT_PUBLIC_DASHBOARD_PASSKEY) {
+      const expiryDate = getExpiryDate(6);
       sessionStorage.setItem(SESSION_KEY, passkey);
-      sessionStorage.setItem(SESSION_TS, Date.now().toString());
+      sessionStorage.setItem(SESSION_EXPIRY, expiryDate.toISOString());
       setIsAuthenticated(true);
       setError("");
     } else {

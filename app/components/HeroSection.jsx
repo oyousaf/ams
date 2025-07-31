@@ -24,7 +24,7 @@ const HeroSection = () => {
       {/* Background image */}
       <Image
         src="/hero.webp"
-        alt="Showroom background with premium used cars"
+        alt="Forecourt"
         fill
         priority
         placeholder="blur"

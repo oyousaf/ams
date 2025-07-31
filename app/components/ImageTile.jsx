@@ -23,7 +23,9 @@ const ImageTile = ({ src, alt, priority = false }) => {
         placeholder="blur"
         blurDataURL="/fallback.webp"
         loading={priority ? "eager" : "lazy"}
-        sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+        sizes="(max-width: 768px) 100vw,
+       (max-width: 1024px) 50vw,
+       (min-width: 1025px) 25vw"
         className="object-cover w-full h-full rounded-lg"
       />
     </motion.div>

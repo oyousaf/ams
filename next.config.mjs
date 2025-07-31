@@ -7,14 +7,14 @@ const nextConfig = {
     // Allow optimized images from trusted remote sources
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'cdn.elferspot.com',
-        pathname: '/**',
+        protocol: "https",
+        hostname: "cdn.elferspot.com",
+        pathname: "/**",
       },
       {
-        protocol: 'https',
-        hostname: 'cloud.appwrite.io',
-        pathname: '/**',
+        protocol: "https",
+        hostname: "cloud.appwrite.io",
+        pathname: "/**",
       },
     ],
   },

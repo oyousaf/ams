@@ -87,6 +87,11 @@ export const gallery = [
 
 export const reviews = [
   {
+    name: "Kieran M",
+    feedback:
+      "Hands down the best used car dealer I've ever had the pleasure of dealing with. From start to finish the service provided was nothing short of amazing, any questions were answered promptly and nothing was too much of a hassle for Faisal. He really does go above and beyond for his customers, I would have no problem recommending buying a car for him, top class service!",
+  },
+  {
     name: "Hamza N",
     feedback:
       "I part-exchanged my previous car for a stunning German whip from Faisal. The process was smooth and hassle-free. I’d definitely recommend anyone looking to buy or part-exchange their car to visit here — excellent customer service! I’m already looking forward to coming back in the future!",
@@ -125,11 +130,6 @@ export const reviews = [
     name: "Kathryn J",
     feedback:
       "Great service from a very friendly and professional young man. Excellent communication throughout, and he followed through on everything he said he would. I would highly recommend him and would buy from him again if the right car became available. Thank you!",
-  },
-  {
-    name: "Paul C",
-    feedback:
-      "I bought a BMW 3 series last week and the car is spot on. The garage is friendly, helpful and great to deal with. Would totally recommend.",
   },
   {
     name: "Omar 🍉",

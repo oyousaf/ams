@@ -99,7 +99,7 @@ export const reviews = [
   {
     name: "S A",
     feedback:
-      " Thrilled with my car I brought from these guys. Good prices and top service. Recommend to all.",
+      "Thrilled with my car I brought from these guys. Good prices and top service. Recommend to all.",
   },
   {
     name: "Hamzah H",

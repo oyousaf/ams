@@ -86,7 +86,7 @@ const CarCard = React.memo(({ car, logo, onOpen }) => {
           £{formattedPrice}
         </p>
         <FaEye
-          size={24}
+          size={30}
           className="mx-auto text-white hover:text-rose-300 transition"
         />
       </div>

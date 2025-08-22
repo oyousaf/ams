@@ -2,7 +2,7 @@
 
 import React, { useMemo } from "react";
 import Image from "next/image";
-import { FaSearch } from "react-icons/fa";
+import { FaEye } from "react-icons/fa";
 import Divider from "./Divider";
 import { motion } from "framer-motion";
 
@@ -85,7 +85,7 @@ const CarCard = React.memo(({ car, logo, onOpen }) => {
         <p className="md:text-3xl text-2xl font-bold text-white hover:text-rose-300 mb-4">
           £{formattedPrice}
         </p>
-        <FaSearch
+        <FaEye
           size={24}
           className="mx-auto text-white hover:text-rose-300 transition"
         />

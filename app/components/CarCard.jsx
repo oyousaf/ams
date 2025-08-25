@@ -2,7 +2,7 @@
 
 import React, { useMemo } from "react";
 import Image from "next/image";
-import { FaEye } from "react-icons/fa";
+import { FaEye, FaTag } from "react-icons/fa";
 import Divider from "./Divider";
 import { motion } from "framer-motion";
 
@@ -66,37 +66,36 @@ const CarCard = React.memo(({ car, logo, onOpen }) => {
           </div>
         )}
       </div>
-
       {logo && <div className="w-full my-4 flex justify-center">{logo}</div>}
-
       <h3 className="font-bold text-white text-2xl md:text-3xl mb-2 text-center uppercase">
         {car.title}
       </h3>
-
       <Divider />
-
       <p className="text-zinc-100 mb-4 text-center text-base md:text-lg line-clamp-3">
         {car.description}
       </p>
-
       <Divider />
 
       <motion.div className="text-center mt-auto" layout initial={false}>
         <motion.button
           type="button"
           aria-label="View product pricing details"
-          className="md:text-3xl text-2xl font-bold text-white mb-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-300/50"
+          className="inline-flex items-center gap-2 md:text-3xl text-2xl font-bold
+               text-white bg-rose-500/20 px-4 py-2 rounded-full mb-4
+               transition-colors duration-300 hover:text-rose-300 hover:bg-rose-500/30
+               focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-300/50"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           transition={{ type: "spring", stiffness: 300, damping: 20 }}
         >
-          £{formattedPrice}
+          <FaTag className="text-rose-300" size={22} />£{formattedPrice}
         </motion.button>
 
         <motion.button
           type="button"
           aria-label="View product details"
-          className="mx-auto grid place-items-center rounded-full p-2 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-300/50"
+          className="mx-auto grid place-items-center rounded-full p-2 cursor-pointer
+               focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-300/50"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           transition={{ type: "spring", stiffness: 300, damping: 20 }}

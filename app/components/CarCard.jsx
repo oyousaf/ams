@@ -88,7 +88,7 @@ const CarCard = React.memo(({ car, logo, onOpen }) => {
           whileTap={{ scale: 0.95 }}
           transition={{ type: "spring", stiffness: 300, damping: 20 }}
         >
-          <FaTag className="text-rose-300" size={22} />£{formattedPrice}
+          £{formattedPrice}
         </motion.button>
 
         <motion.button

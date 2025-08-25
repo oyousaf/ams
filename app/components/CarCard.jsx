@@ -81,15 +81,32 @@ const CarCard = React.memo(({ car, logo, onOpen }) => {
 
       <Divider />
 
-      <div className="text-center mt-auto">
-        <p className="md:text-3xl text-2xl font-bold text-white hover:text-rose-300 mb-4">
+      <motion.div className="text-center mt-auto" layout initial={false}>
+        <motion.button
+          type="button"
+          aria-label="View product pricing details"
+          className="md:text-3xl text-2xl font-bold text-white mb-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-300/50"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          transition={{ type: "spring", stiffness: 300, damping: 20 }}
+        >
           £{formattedPrice}
-        </p>
-        <FaEye
-          size={30}
-          className="mx-auto text-white hover:text-rose-300 transition"
-        />
-      </div>
+        </motion.button>
+
+        <motion.button
+          type="button"
+          aria-label="View product details"
+          className="mx-auto grid place-items-center rounded-full p-2 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-300/50"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          transition={{ type: "spring", stiffness: 300, damping: 20 }}
+        >
+          <FaEye
+            size={30}
+            className="text-white transition-colors duration-300 hover:text-rose-300"
+          />
+        </motion.button>
+      </motion.div>
     </motion.div>
   );
 });

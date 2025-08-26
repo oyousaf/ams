@@ -61,25 +61,31 @@ const About = () => {
             },
           }}
         >
-          {gallery.map((src, index) => (
-            <motion.div
-              key={index}
-              className={`flex justify-center ${
-                index === 1 || index === 4 ? "md:col-span-2" : ""
-              }`}
-              variants={{
-                hidden: { opacity: 0, y: 40 },
-                visible: { opacity: 1, y: 0 },
-              }}
-              transition={{ type: "spring", stiffness: 180, damping: 18 }}
-            >
-              <ImageTile
-                src={src}
-                alt={`Gallery image ${index + 1}`}
-                priority={index === 0}
-              />
-            </motion.div>
-          ))}
+          {gallery.map((src, index) => {
+            // Mark wide images (those that span 2 cols)
+            const isWide = index === 1 || index === 4;
+
+            return (
+              <motion.div
+                key={index}
+                className={`flex justify-center ${
+                  isWide ? "md:col-span-2" : ""
+                }`}
+                variants={{
+                  hidden: { opacity: 0, y: 40 },
+                  visible: { opacity: 1, y: 0 },
+                }}
+                transition={{ type: "spring", stiffness: 180, damping: 18 }}
+              >
+                <ImageTile
+                  src={src}
+                  alt={`Gallery image ${index + 1}`}
+                  priority={index === 0}
+                  isWide={isWide}
+                />
+              </motion.div>
+            );
+          })}
         </motion.div>
       </div>
     </section>

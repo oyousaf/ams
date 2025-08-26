@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 
-const ImageTile = ({ src, alt, priority = false }) => {
+const ImageTile = ({ src, alt, priority = false, isWide = false }) => {
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
@@ -23,10 +23,12 @@ const ImageTile = ({ src, alt, priority = false }) => {
         placeholder="blur"
         blurDataURL="/fallback.webp"
         loading={priority ? "eager" : "lazy"}
-        sizes="(max-width: 768px) 100vw,
-       (max-width: 1024px) 50vw,
-       (min-width: 1025px) 25vw"
-        className="object-cover w-full h-full rounded-lg"
+        sizes={
+          isWide
+            ? "(max-width: 768px) 100vw, (max-width: 1024px) 100vw, (min-width: 1025px) 50vw"
+            : "(max-width: 768px) 100vw, (max-width: 1024px) 50vw, (min-width: 1025px) 25vw"
+        }
+        className="object-cover rounded-lg"
       />
     </motion.div>
   );

@@ -62,7 +62,6 @@ const About = () => {
           }}
         >
           {gallery.map((src, index) => {
-            // Mark wide images (those that span 2 cols)
             const isWide = index === 1 || index === 4;
 
             return (

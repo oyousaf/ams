@@ -63,6 +63,7 @@ const About = () => {
         >
           {gallery.map((src, index) => {
             const isWide = index === 1 || index === 4;
+            const isFirst = index === 0;
 
             return (
               <motion.div
@@ -79,8 +80,9 @@ const About = () => {
                 <ImageTile
                   src={src}
                   alt={`Gallery image ${index + 1}`}
-                  priority={index === 0}
+                  priority={isFirst}
                   isWide={isWide}
+                  isFirst={isFirst}
                 />
               </motion.div>
             );

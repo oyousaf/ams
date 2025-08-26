@@ -3,7 +3,13 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 
-const ImageTile = ({ src, alt, priority = false, isWide = false }) => {
+const ImageTile = ({
+  src,
+  alt,
+  priority = false,
+  isWide = false,
+  isFirst = false,
+}) => {
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
@@ -24,7 +30,9 @@ const ImageTile = ({ src, alt, priority = false, isWide = false }) => {
         blurDataURL="/fallback.webp"
         loading={priority ? "eager" : "lazy"}
         sizes={
-          isWide
+          isFirst
+            ? "(max-width: 768px) 100vw, (min-width: 769px) 25vw" // ✅ first tile
+            : isWide
             ? "(max-width: 768px) 100vw, (max-width: 1024px) 100vw, (min-width: 1025px) 50vw"
             : "(max-width: 768px) 100vw, (max-width: 1024px) 50vw, (min-width: 1025px) 25vw"
         }

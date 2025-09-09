@@ -112,7 +112,6 @@ const LatestCars = () => {
 
   return (
     <section
-      id="cars"
       aria-labelledby="latest-cars-heading"
       className="py-24 px-6 md:px-12"
     >

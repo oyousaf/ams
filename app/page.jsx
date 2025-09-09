@@ -20,17 +20,20 @@ export default function Home() {
     <main aria-label="Homepage of Ace Motor Sales">
       {/* Hidden h1 for SEO */}
       <h1 className="sr-only">
-        Explore our selection of certified, pre-owned vehicles — thoroughly
-        inspected for quality, reliability, and performance.
+        Explore our selection of certified used cars for sale in the UK —
+        thoroughly inspected for quality, reliability, and performance at Ace
+        Motor Sales.
       </h1>
 
-      <HeroSection />
+      <section aria-labelledby="hero-heading" id="hero">
+        <HeroSection />
+      </section>
 
       <section aria-labelledby="about-heading" id="about">
         <About />
       </section>
 
-      <section aria-labelledby="latest-heading" id="latest">
+      <section aria-labelledby="latest-heading" id="cars">
         <LatestCars />
       </section>
 

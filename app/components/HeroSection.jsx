@@ -14,7 +14,6 @@ const HeroSection = () => {
 
   return (
     <section
-      id="hero"
       className="relative isolation-auto flex flex-col justify-center items-center min-h-screen px-6 py-12 text-center overflow-hidden"
       aria-label="Hero banner for Ace Motor Sales"
     >

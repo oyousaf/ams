@@ -7,7 +7,6 @@ import { motion } from "framer-motion";
 const Reviews = () => {
   return (
     <section
-      id="reviews"
       aria-labelledby="reviews-heading"
       className="py-24 px-4 sm:px-6 md:px-8 lg:px-12"
     >

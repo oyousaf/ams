@@ -6,12 +6,12 @@ import { motion } from "framer-motion";
 
 const About = () => {
   return (
-    <section
-      aria-labelledby="about-heading"
-      className="py-16 px-4 lg:px-8"
-    >
-      <h2 className="text-4xl md:text-5xl font-bold text-center mb-12 text-white">
-        About
+    <section aria-labelledby="about-heading" className="py-16 px-4 lg:px-8">
+      <h2
+        id="about-heading"
+        className="text-4xl md:text-5xl font-bold text-center mb-12 text-white tracking-tight"
+      >
+        About Us
       </h2>
 
       {/* Feature Tiles */}
@@ -31,8 +31,9 @@ const About = () => {
           <motion.div
             key={index}
             initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ type: "spring", stiffness: 600, damping: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ type: "spring", stiffness: 200, damping: 20 }}
             whileHover={{ scale: 1.05, rotateZ: 1 }}
             className="tile-glow flex flex-col items-center bg-gradient-to-br from-rose-800 via-rose-700 to-rose-900 p-6 rounded-2xl shadow-inner border-2 border-transparent hover:border-rose-500/80 duration-200"
           >
@@ -69,7 +70,7 @@ const About = () => {
                 key={index}
                 className={`flex justify-center ${
                   isWide ? "md:col-span-2" : ""
-                }`}
+                } overflow-hidden rounded-xl shadow-lg`}
                 variants={{
                   hidden: { opacity: 0, y: 40 },
                   visible: { opacity: 1, y: 0 },

@@ -25,19 +25,19 @@ export default function Home() {
         Motor Sales.
       </h1>
 
-      <section aria-labelledby="hero-heading" id="hero">
+      <section aria-labelledby="hero-heading" id="hero" className="scroll-mt-10">
         <HeroSection />
       </section>
 
-      <section aria-labelledby="about-heading" id="about">
+      <section aria-labelledby="about-heading" id="about" className="scroll-mt-20">
         <About />
       </section>
 
-      <section aria-labelledby="latest-heading" id="cars">
+      <section aria-labelledby="latest-heading" id="cars" className="scroll-mt-10">
         <LatestCars />
       </section>
 
-      <section aria-labelledby="reviews-heading" id="reviews">
+      <section aria-labelledby="reviews-heading" id="reviews" className="scroll-mt-10">
         <Reviews />
       </section>
 

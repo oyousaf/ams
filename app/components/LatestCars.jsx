@@ -111,10 +111,7 @@ const LatestCars = () => {
   }, [cars, sortOption]);
 
   return (
-    <section
-      aria-labelledby="cars-heading"
-      className="py-24 px-6 md:px-12"
-    >
+    <section aria-labelledby="cars-heading" className="py-24 px-6 md:px-12">
       <h2
         id="cars-heading"
         className="text-4xl md:text-5xl font-bold text-center mb-12 text-white tracking-tight"
@@ -186,6 +183,17 @@ const LatestCars = () => {
           </AnimatePresence>
         </motion.ul>
       )}
+
+      {/* Car Modal */}
+      <AnimatePresence>
+        {selectedCar && (
+          <CarModal
+            car={selectedCar}
+            logo={selectedCar.logo}
+            onClose={() => setSelectedCar(null)}
+          />
+        )}
+      </AnimatePresence>
     </section>
   );
 };

@@ -33,7 +33,7 @@ export default function Home() {
         <About />
       </section>
 
-      <section aria-labelledby="latest-heading" id="cars" className="scroll-mt-10">
+      <section aria-labelledby="cars-heading" id="cars" className="scroll-mt-10">
         <LatestCars />
       </section>
 

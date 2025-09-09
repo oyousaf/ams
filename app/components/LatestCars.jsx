@@ -112,10 +112,13 @@ const LatestCars = () => {
 
   return (
     <section
-      aria-labelledby="latest-cars-heading"
+      aria-labelledby="cars-heading"
       className="py-24 px-6 md:px-12"
     >
-      <h2 className="text-4xl md:text-5xl font-bold text-center mb-12 text-white">
+      <h2
+        id="cars-heading"
+        className="text-4xl md:text-5xl font-bold text-center mb-12 text-white tracking-tight"
+      >
         Latest Cars
       </h2>
 
@@ -145,18 +148,18 @@ const LatestCars = () => {
       ) : error ? (
         <p
           role="alert"
-          className="text-center text-red-500"
+          className="text-center text-red-500 bg-black/40 rounded-xl px-6 py-4 max-w-md mx-auto"
           aria-live="assertive"
         >
           {error}
         </p>
       ) : sortedCars.length === 0 ? (
         <p
-          className="text-center text-lg text-zinc-200"
+          className="text-center text-lg text-zinc-200 bg-black/40 backdrop-blur-md rounded-xl px-6 py-8 max-w-md mx-auto"
           role="status"
           aria-live="polite"
         >
-          No cars available.
+          No cars available at the moment. Please check back soon.
         </p>
       ) : (
         <motion.ul
@@ -182,14 +185,6 @@ const LatestCars = () => {
             ))}
           </AnimatePresence>
         </motion.ul>
-      )}
-
-      {selectedCar && (
-        <CarModal
-          car={selectedCar}
-          logo={selectedCar.logo}
-          onClose={() => setSelectedCar(null)}
-        />
       )}
     </section>
   );

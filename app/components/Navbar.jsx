@@ -52,11 +52,21 @@ const Navbar = () => {
 
         {/* Desktop & Tablet Menu */}
         <ul className="hidden md:flex gap-6 lg:gap-10 items-center">
-          {navLinks.map(({ id, href, name }) => (
-            <motion.li key={id} whileHover={{ y: -2 }}>
+          {navLinks.map(({ id, href, name }, index) => (
+            <motion.li
+              key={id}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                delay: index * 0.12,
+                duration: 0.4,
+                ease: "easeOut",
+              }}
+              whileHover={{ y: -2 }}
+            >
               <button
                 onClick={() => handleScroll(href)}
-                className="relative text-lg md:text-base lg:text-xl font-medium uppercase tracking-wide text-white/90 hover:text-white transition-colors
+                className="relative text-lg md:text-xl font-bold uppercase tracking-wide text-white/90 hover:text-white transition-colors
                   after:content-[''] after:absolute after:left-0 after:-bottom-1 after:w-0 after:h-[2px] after:bg-rose-600 after:transition-all after:duration-300 hover:after:w-full"
               >
                 {name}

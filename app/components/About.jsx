@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 
 const About = () => {
   return (
-    <section aria-labelledby="about-heading" className="py-16 px-4 lg:px-8">
+    <section aria-labelledby="about-heading" className="py-24 px-4 lg:px-8">
       <h2
         id="about-heading"
         className="text-4xl md:text-5xl font-bold text-center mb-12 text-white tracking-tight"

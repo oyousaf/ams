@@ -29,7 +29,7 @@ export default function Home() {
         <HeroSection />
       </section>
 
-      <section aria-labelledby="about-heading" id="about" className="scroll-mt-20">
+      <section aria-labelledby="about-heading" id="about" className="scroll-mt-10">
         <About />
       </section>
 

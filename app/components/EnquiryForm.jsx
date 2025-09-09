@@ -16,11 +16,12 @@ const formSchema = z.object({
 });
 
 const EnquiryForm = () => {
-  const [status, setStatus] = useState("");
+  const [status, setStatus] = useState({ type: "", message: "" });
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
+    reset, // 👈 added reset from useForm
   } = useForm({
     resolver: zodResolver(formSchema),
   });
@@ -33,9 +34,13 @@ const EnquiryForm = () => {
         formData,
         process.env.NEXT_PUBLIC_EMAILJS_USER_ID
       );
-      setStatus("Message sent successfully!");
+      setStatus({ type: "success", message: "Message sent successfully!" });
+      reset(); // 👈 clears the form after success
     } catch (error) {
-      setStatus("Failed to send message. Please try again.");
+      setStatus({
+        type: "error",
+        message: "Failed to send. Please try again.",
+      });
       console.error("EmailJS Error:", error);
     }
   };
@@ -47,6 +52,7 @@ const EnquiryForm = () => {
       autoComplete="off"
       aria-describedby="form-status"
     >
+      {/* Name */}
       <div>
         <label htmlFor="name" className="sr-only">
           Name
@@ -56,15 +62,17 @@ const EnquiryForm = () => {
           {...register("name")}
           placeholder="Name"
           autoComplete="name"
-          className="w-full p-3 rounded-md border border-gray-300 focus:glow-pulse focus:ring-rose-600 focus:border-rose-600 text-black"
+          aria-invalid={!!errors.name}
+          className="w-full p-3 rounded-md border border-rose-900/40 bg-white/95 text-black focus:ring-2 focus:ring-rose-600 focus:border-rose-600"
         />
         {errors.name && (
-          <p className="text-red-200 text-sm" role="alert">
+          <p className="text-red-200 text-sm mt-1" role="alert">
             {errors.name.message}
           </p>
         )}
       </div>
 
+      {/* Email */}
       <div>
         <label htmlFor="email" className="sr-only">
           Email
@@ -75,15 +83,17 @@ const EnquiryForm = () => {
           type="email"
           placeholder="Email"
           autoComplete="email"
-          className="w-full p-3 rounded-md border border-gray-300 focus:glow-pulse focus:ring-rose-600 focus:border-rose-600 text-black"
+          aria-invalid={!!errors.email}
+          className="w-full p-3 rounded-md border border-rose-900/40 bg-white/95 text-black focus:ring-2 focus:ring-rose-600 focus:border-rose-600"
         />
         {errors.email && (
-          <p className="text-red-200 text-sm" role="alert">
+          <p className="text-red-200 text-sm mt-1" role="alert">
             {errors.email.message}
           </p>
         )}
       </div>
 
+      {/* Phone */}
       <div>
         <label htmlFor="phone" className="sr-only">
           Phone
@@ -94,15 +104,17 @@ const EnquiryForm = () => {
           type="tel"
           placeholder="Phone"
           autoComplete="tel"
-          className="w-full p-3 rounded-md border border-gray-300 focus:glow-pulse focus:ring-rose-600 focus:border-rose-600 text-black"
+          aria-invalid={!!errors.phone}
+          className="w-full p-3 rounded-md border border-rose-900/40 bg-white/95 text-black focus:ring-2 focus:ring-rose-600 focus:border-rose-600"
         />
         {errors.phone && (
-          <p className="text-red-200 text-sm" role="alert">
+          <p className="text-red-200 text-sm mt-1" role="alert">
             {errors.phone.message}
           </p>
         )}
       </div>
 
+      {/* Message */}
       <div>
         <label htmlFor="message" className="sr-only">
           Message
@@ -111,34 +123,46 @@ const EnquiryForm = () => {
           id="message"
           {...register("message")}
           placeholder="Message..."
-          className="w-full h-32 p-3 rounded-md border border-gray-300 focus:glow-pulse focus:ring-rose-600 focus:border-rose-600 text-black"
+          aria-invalid={!!errors.message}
+          className="w-full h-32 p-3 rounded-md border border-rose-900/40 bg-white/95 text-black focus:ring-2 focus:ring-rose-600 focus:border-rose-600"
         />
         {errors.message && (
-          <p className="text-red-200 text-sm" role="alert">
+          <p className="text-red-200 text-sm mt-1" role="alert">
             {errors.message.message}
           </p>
         )}
       </div>
 
-      {status && (
+      {/* Status Message */}
+      {status.message && (
         <p
           id="form-status"
           aria-live="polite"
-          className="text-green-200 text-sm"
+          className={`text-sm mt-2 ${
+            status.type === "success" ? "text-green-200" : "text-red-200"
+          }`}
         >
-          {status}
+          {status.message}
         </p>
       )}
 
+      {/* Submit */}
       <button
         type="submit"
         disabled={isSubmitting}
-        className={`w-full py-3 bg-rose-600 text-white rounded-md font-semibold hover:glow-pulse hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-rose-600 ${
+        className={`w-full flex items-center justify-center gap-2 py-3 bg-rose-600 text-white rounded-md font-semibold hover:glow-pulse hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-rose-600 ${
           isSubmitting && "opacity-70 cursor-not-allowed"
         }`}
         aria-busy={isSubmitting}
       >
-        {isSubmitting ? "Sending..." : "Submit Enquiry"}
+        {isSubmitting ? (
+          <>
+            <span className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+            Sending...
+          </>
+        ) : (
+          "Submit Enquiry"
+        )}
       </button>
     </form>
   );

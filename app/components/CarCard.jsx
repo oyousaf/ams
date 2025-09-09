@@ -2,7 +2,7 @@
 
 import React, { useMemo } from "react";
 import Image from "next/image";
-import { FaEye, FaTag } from "react-icons/fa";
+import { FaEye } from "react-icons/fa";
 import Divider from "./Divider";
 import { motion } from "framer-motion";
 

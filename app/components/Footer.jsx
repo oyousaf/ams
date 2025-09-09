@@ -13,7 +13,7 @@ const Footer = () => {
     <footer id="contact" className="py-24 text-white px-4 lg:px-8 space-y-16">
       {/* Heading */}
       <motion.h2
-        className="text-4xl md:text-5xl font-bold text-center"
+        className="text-4xl md:text-5xl font-bold text-center tracking-tight"
         initial={{ opacity: 0, y: 10 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
@@ -75,6 +75,7 @@ const Footer = () => {
         <p>Keys in the ignition from 9am to 8pm — cruise on in anytime!</p>
         <Link
           href="tel:07809107655"
+          aria-label="Call Ace Motor Sales"
           className="text-2xl font-bold ringing-phone transition"
         >
           07809107655
@@ -88,7 +89,7 @@ const Footer = () => {
             key={id}
             href={href}
             target="_blank"
-            rel="noopener noreferrer"
+            rel="nofollow noopener noreferrer"
             aria-label={name}
             className="text-2xl hover:text-rose-500"
             whileHover={{ scale: 1.2 }}

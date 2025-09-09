@@ -41,10 +41,17 @@ const HeroSection = () => {
         transition={{ duration: 0.8, ease: "easeOut" }}
         className="relative z-20 text-white max-w-4xl mx-auto"
       >
-        <h2 className="text-2xl md:text-4xl font-bold mb-6 leading-relaxed tracking-tight bg-rose-950/30 backdrop-blur-md rounded-xl px-4 py-2 shadow-md">
-          Explore our selection of certified, pre-owned vehicles — thoroughly
-          inspected for quality, reliability, and performance.
+        <h2
+          id="hero-heading"
+          className="text-4xl md:text-6xl font-extrabold leading-tight mb-6 tracking-tight bg-rose-950/30 backdrop-blur-md rounded-xl px-4 py-2 shadow-md"
+        >
+          Drive Away with Confidence
         </h2>
+        <p className="text-lg md:text-xl text-white/90 mb-8 max-w-2xl mx-auto">
+          Discover pre-owned cars for sale in the UK, all professionally
+          certified and thoroughly inspected to guarantee safety, quality, and
+          peace of mind.
+        </p>
 
         {/* Hidden duplicate for SEO (if h1 is in page.tsx) */}
         <p className="sr-only">

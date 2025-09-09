@@ -48,9 +48,8 @@ const HeroSection = () => {
           Drive Away with Confidence
         </h2>
         <p className="text-lg md:text-xl text-white/90 mb-8 max-w-2xl mx-auto bg-rose-950/20 backdrop-blur-sm rounded-lg px-4 py-3 shadow-md">
-          Discover pre-owned cars for sale in the UK, all professionally
-          certified and thoroughly inspected to guarantee safety, quality, and
-          peace of mind.
+          Browse certified pre-owned cars for sale in the UK — professionally
+          inspected for quality, reliability, and long-lasting performance.
         </p>
 
         {/* Hidden duplicate for SEO (if h1 is in page.tsx) */}

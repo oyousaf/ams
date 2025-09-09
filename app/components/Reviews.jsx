@@ -10,11 +10,14 @@ const Reviews = () => {
       aria-labelledby="reviews-heading"
       className="py-24 px-4 sm:px-6 md:px-8 lg:px-12"
     >
-      <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 text-white">
-        Reviews
+      <h2
+        id="reviews-heading"
+        className="text-4xl md:text-5xl font-bold text-center mb-16 text-white tracking-tight"
+      >
+        Customer Reviews
       </h2>
 
-      <div className="space-y-12 max-w-5xl mx-auto ">
+      <div className="space-y-12 max-w-5xl mx-auto">
         {reviews.map(({ name, feedback }, index) => (
           <motion.blockquote
             key={index}
@@ -31,11 +34,11 @@ const Reviews = () => {
             }}
             whileHover={{ scale: 1.03 }}
           >
-            <FaQuoteLeft className="absolute top-4 left-4 text-3xl text-rose-400 opacity-30" />
+            <FaQuoteLeft className="absolute top-6 left-6 text-4xl text-rose-400/40" />
             <p className="text-lg md:text-xl italic leading-relaxed text-center">
               “{feedback}”
             </p>
-            <footer className="mt-6 text-center text-2xl font-semibold text-rose-300">
+            <footer className="mt-6 text-center text-xl md:text-2xl font-semibold text-rose-300">
               — {name}
             </footer>
           </motion.blockquote>

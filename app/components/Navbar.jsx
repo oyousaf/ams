@@ -51,17 +51,13 @@ const Navbar = () => {
         </motion.div>
 
         {/* Desktop & Tablet Menu */}
-        <ul className="hidden md:flex gap-4 md:gap-6 lg:gap-8 items-center">
+        <ul className="hidden md:flex gap-6 lg:gap-10 items-center">
           {navLinks.map(({ id, href, name }) => (
-            <motion.li
-              key={id}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.2 * id, type: "spring", stiffness: 200 }}
-            >
+            <motion.li key={id} whileHover={{ y: -2 }}>
               <button
                 onClick={() => handleScroll(href)}
-                className="text-lg md:text-xl lg:text-2xl hover:text-rose-600 transition-colors duration-300 ease-in-out cursor-pointer"
+                className="relative text-lg md:text-base lg:text-xl font-medium uppercase tracking-wide text-white/90 hover:text-white transition-colors
+                  after:content-[''] after:absolute after:left-0 after:-bottom-1 after:w-0 after:h-[2px] after:bg-rose-600 after:transition-all after:duration-300 hover:after:w-full"
               >
                 {name}
               </button>
@@ -78,7 +74,7 @@ const Navbar = () => {
               target="_blank"
               rel="noopener noreferrer"
               aria-label={name}
-              className="hover:text-rose-600 transition-colors ..."
+              className="hover:text-rose-600 transition-colors"
               whileHover={{ scale: 1.2 }}
               transition={{ type: "spring", stiffness: 300 }}
             >

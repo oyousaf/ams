@@ -52,7 +52,7 @@ const HeroSection = () => {
           inspected for quality, reliability, and long-lasting performance.
         </p>
 
-        {/* Hidden duplicate for SEO (if h1 is in page.tsx) */}
+        {/* Hidden duplicate for SEO */}
         <p className="sr-only">
           Explore our selection of certified, pre-owned vehicles — thoroughly
           inspected for quality, reliability, and performance.

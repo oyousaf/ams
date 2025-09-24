@@ -87,6 +87,11 @@ export const gallery = [
 
 export const reviews = [
   {
+    name: "Mohammad R",
+    feedback:
+      "Bought my car 5 months ago now and I honestly couldn’t ask for much more! Brilliant service. Reasonable prices. Lovely variety of stock. Good luck guys!",
+  },
+  {
     name: "Daniel L",
     feedback:
       "Bought a Mini Cooper a few weeks ago. Amazing service from start to finish. Was very transparent with everything and gave a 5* service. Will definitely buy from Ace Motor Sales again. Daniel and Rebekah.",
@@ -125,11 +130,6 @@ export const reviews = [
     name: "Caitlyn C",
     feedback:
       "It was my first time buying a car and the whole experience was brilliant! The car was exactly as described, really friendly service, even delivered to me. Would highly recommend to anyone buying a car! 10/10 service all around.",
-  },
-  {
-    name: "Erik A",
-    feedback:
-      "Great service, we bought a Volkswagen CC, it was a pleasure doing business with them. I would say, car wasn’t that clean on the inside but they took some money off to get it detailed back home. Worked out even better. Great garage, 2 months in and the car is solid.",
   },
   {
     name: "Omar 🍉",

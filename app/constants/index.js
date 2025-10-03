@@ -94,7 +94,7 @@ export const reviews = [
   {
     name: "Mohammad R",
     feedback:
-      "Bought my car 5 months ago now and I honestly couldn’t ask for much more! Brilliant service. Reasonable prices. Lovely variety of stock. Good luck guys!",
+      "Bought my car 5 months ago now and I honestly couldn’t ask for much more! Brilliant service. Reasonable prices. Lovely variety of stock.",
   },
   {
     name: "Daniel L",

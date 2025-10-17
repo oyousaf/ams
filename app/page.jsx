@@ -18,26 +18,40 @@ export const metadata = {
 export default function Home() {
   return (
     <main aria-label="Homepage of Ace Motor Sales">
-      {/* Hidden h1 for SEO */}
       <h1 className="sr-only">
-        Explore our selection of certified used cars for sale in the UK —
-        thoroughly inspected for quality, reliability, and performance at Ace
-        Motor Sales.
+        Ace Motor Sales – Certified Used Cars with Nationwide Delivery across
+        the UK.
       </h1>
 
-      <section aria-labelledby="hero-heading" id="hero" className="scroll-mt-10">
+      <section
+        id="hero"
+        aria-labelledby="hero-heading"
+        className="scroll-mt-10"
+      >
         <HeroSection />
       </section>
 
-      <section aria-labelledby="about-heading" id="about" className="scroll-mt-10">
+      <section
+        id="about"
+        aria-labelledby="about-heading"
+        className="scroll-mt-10"
+      >
         <About />
       </section>
 
-      <section aria-labelledby="cars-heading" id="cars" className="scroll-mt-10">
+      <section
+        id="cars"
+        aria-labelledby="cars-heading"
+        className="scroll-mt-10"
+      >
         <LatestCars />
       </section>
 
-      <section aria-labelledby="reviews-heading" id="reviews" className="scroll-mt-10">
+      <section
+        id="reviews"
+        aria-labelledby="reviews-heading"
+        className="scroll-mt-10"
+      >
         <Reviews />
       </section>
 

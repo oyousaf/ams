@@ -4,17 +4,23 @@ import Footer from "./components/Footer";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/next";
 import { Toaster } from "sonner";
+import Head from "next/head";
 
 export const viewport = {
   width: "device-width",
   initialScale: 1,
 };
 
+// ---------- Metadata ----------
 export const metadata = {
   title: "Ace Motor Sales - Certified Used Cars with Nationwide Delivery",
   description:
     "Explore a selection of certified, pre-owned vehicles, each thoroughly inspected to ensure top quality, reliability, and performance.",
   applicationName: "Ace Motor Sales",
+  metadataBase: new URL("https://acemotorsales.uk"),
+  alternates: {
+    canonical: "https://acemotorsales.uk",
+  },
   icons: {
     icon: "/favicon.ico",
     apple: "/apple-touch-icon.png",
@@ -33,7 +39,6 @@ export const metadata = {
     "pre-owned cars with delivery",
     "Ace Motor Sales Heckmondwike",
   ],
-  metadataBase: new URL("https://acemotorsales.uk"),
   openGraph: {
     title: "Ace Motor Sales - Certified Used Cars with Nationwide Delivery",
     description:
@@ -42,10 +47,10 @@ export const metadata = {
     siteName: "Ace Motor Sales",
     images: [
       {
-        url: "/hero.jpg",
+        url: "https://acemotorsales.uk/hero.jpg",
         width: 1200,
         height: 630,
-        alt: "Ace Motor Sales Banner Image",
+        alt: "Ace Motor Sales Forecourt with Quality Used Cars",
       },
     ],
     locale: "en_GB",
@@ -56,27 +61,24 @@ export const metadata = {
     title: "Ace Motor Sales - Certified Used Cars with Nationwide Delivery",
     description:
       "Explore certified, pre-owned vehicles with top quality, reliability, and performance.",
-    images: ["/hero.jpg"],
+    images: ["https://acemotorsales.uk/hero.jpg"],
   },
   robots: {
     index: true,
     follow: true,
     nocache: false,
   },
-  alternates: {
-    canonical: "https://acemotorsales.uk",
-  },
 };
 
-// Structured Data (JSON-LD)
+// ---------- Structured Data ----------
 const structuredData = {
   "@context": "https://schema.org",
   "@type": "CarDealer",
   name: "Ace Motor Sales",
   alternateName: "Ace Motor Sales Ltd",
   url: "https://acemotorsales.uk",
-  logo: "/apple-touch-icon.png",
-  image: "/hero.jpg",
+  logo: "https://acemotorsales.uk/apple-touch-icon.png",
+  image: "https://acemotorsales.uk/hero.jpg",
   description: metadata.description,
   address: {
     "@type": "PostalAddress",
@@ -104,7 +106,7 @@ const orgSchema = {
   "@type": "Organization",
   name: "Ace Motor Sales",
   url: "https://acemotorsales.uk",
-  logo: "/apple-touch-icon.png",
+  logo: "https://acemotorsales.uk/apple-touch-icon.png",
   sameAs: structuredData.sameAs,
 };
 
@@ -118,14 +120,23 @@ const websiteSchema = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en-GB" className="min-h-full scroll-smooth antialiased">
-      <head>
+      <Head>
+        {/* Preloads */}
+        <link rel="preload" as="image" href="/hero.webp" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="true"
+        />
+        {/* JSON-LD Structured Data */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify([structuredData, orgSchema, websiteSchema]),
           }}
         />
-      </head>
+      </Head>
       <body className="min-h-screen text-zinc-100 bg-neutral-900">
         <header>
           <Navbar />

@@ -14,31 +14,33 @@ const HeroSection = () => {
 
   return (
     <section
-      className="relative isolation-auto flex flex-col justify-center items-center min-h-screen px-6 py-12 text-center overflow-hidden"
-      aria-label="Hero banner for Ace Motor Sales"
+      className="relative flex flex-col justify-center items-center min-h-screen px-6 py-12 text-center overflow-hidden"
+      aria-labelledby="hero-heading"
     >
-      {/* Background fallback color */}
-      <div className="absolute inset-0 z-0 bg-black/90" />
+      {/* Background overlay for fallback */}
+      <div className="absolute inset-0 bg-black/90 z-0" />
 
-      {/* Background image */}
+      {/* Optimised hero image */}
       <Image
         src="/hero.webp"
-        alt="Forecourt"
-        fill
+        alt="Ace Motor Sales forecourt showcasing certified used cars"
+        width={1920}
+        height={1080}
         priority
-        placeholder="blur"
-        blurDataURL="/fallback.webp"
-        className="object-cover z-0"
+        quality={85}
+        sizes="100vw"
+        className="absolute inset-0 object-cover z-0"
       />
 
-      {/* Glassmorphic gradient overlay */}
+      {/* Gradient glass overlay */}
       <div className="absolute inset-0 z-10 backdrop-blur-sm bg-gradient-to-br from-black/70 via-zinc-900/60 to-black/70" />
 
-      {/* Content */}
+      {/* Text content */}
       <motion.header
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7, ease: "easeOut" }}
+        viewport={{ once: true }}
         className="relative z-20 text-white max-w-4xl mx-auto"
       >
         <h2
@@ -47,32 +49,27 @@ const HeroSection = () => {
         >
           Drive Away with Confidence
         </h2>
-        <p className="text-lg md:text-xl text-white/90 mb-8 max-w-2xl mx-auto bg-rose-950/20 backdrop-blur-sm rounded-lg px-4 py-3 shadow-md">
-          Browse certified pre-owned cars for sale in the UK — professionally
-          inspected for quality, reliability, and long-lasting performance.
-        </p>
 
-        {/* Hidden duplicate for SEO */}
-        <p className="sr-only">
-          Explore our selection of certified, pre-owned vehicles — thoroughly
-          inspected for quality, reliability, and performance.
+        <p className="text-lg md:text-xl text-white/90 mb-8 max-w-2xl mx-auto bg-rose-950/20 backdrop-blur-sm rounded-lg px-4 py-3 shadow-md">
+          Browse certified pre-owned cars across the UK — each vehicle carefully
+          inspected for quality, reliability, and long-term performance.
         </p>
       </motion.header>
 
-      {/* Down arrow */}
+      {/* Down arrow CTA */}
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1.2, delay: 0.8, ease: "easeOut" }}
-        whileHover={{ scale: 1.2 }}
+        transition={{ duration: 1.2, delay: 0.6, ease: "easeOut" }}
+        whileHover={{ scale: 1.15 }}
         whileTap={{ scale: 0.95 }}
         className="z-20 mt-10"
       >
         <FaArrowDown
           onClick={handleScrollToAbout}
-          title="Scroll down to learn more"
+          title="Scroll down to About section"
+          aria-label="Scroll down to About section"
           className="animate-bounce text-5xl text-rose-600 hover:text-rose-400 cursor-pointer"
-          aria-label="Scroll to About section"
         />
       </motion.div>
     </section>

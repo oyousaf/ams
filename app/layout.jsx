@@ -4,13 +4,15 @@ import Footer from "./components/Footer";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/next";
 import { Toaster } from "sonner";
-import Head from "next/head";
+import Script from "next/script";
 
+// ---------- Viewport ----------
 export const viewport = {
   width: "device-width",
   initialScale: 1,
 };
 
+// ---------- Metadata ----------
 export const metadata = {
   title: "Ace Motor Sales - Certified Used Cars with Nationwide Delivery",
   description:
@@ -107,54 +109,20 @@ const websiteSchema = {
   url: "https://acemotorsales.uk",
 };
 
+// ---------- Layout ----------
 export default function RootLayout({ children }) {
   return (
     <html lang="en-GB" className="min-h-full scroll-smooth antialiased">
-      <Head>
-        {/* Metadata */}
-        <title>{metadata.title}</title>
-        <meta name="description" content={metadata.description} />
-        <meta name="keywords" content={metadata.keywords.join(", ")} />
-        <link rel="canonical" href={metadata.alternates.canonical} />
-        <link rel="icon" href={metadata.icons.icon} />
-        <link rel="apple-touch-icon" href={metadata.icons.apple} />
-
-        {/* OpenGraph */}
-        <meta property="og:title" content={metadata.openGraph.title} />
-        <meta
-          property="og:description"
-          content={metadata.openGraph.description}
-        />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content={metadata.openGraph.url} />
-        <meta property="og:image" content={metadata.openGraph.images[0].url} />
-
-        {/* Twitter */}
-        <meta name="twitter:card" content={metadata.twitter.card} />
-        <meta name="twitter:title" content={metadata.twitter.title} />
-        <meta
-          name="twitter:description"
-          content={metadata.twitter.description}
-        />
-        <meta name="twitter:image" content={metadata.twitter.images[0]} />
-
-        {/* Preloads */}
-        <link rel="preload" as="image" href="/hero.webp" />
+      <head>
+        {/* Preconnects and preloads */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
           rel="preconnect"
           href="https://fonts.gstatic.com"
           crossOrigin="true"
         />
-
-        {/* Structured Data */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify([structuredData, orgSchema, websiteSchema]),
-          }}
-        />
-      </Head>
+        <link rel="preload" as="image" href="/hero.webp" />
+      </head>
 
       <body className="min-h-screen text-zinc-100 bg-neutral-900">
         <header>
@@ -179,6 +147,16 @@ export default function RootLayout({ children }) {
           richColors
           closeButton
           visibleToasts={5}
+        />
+
+        {/* Structured Data */}
+        <Script
+          id="structured-data"
+          type="application/ld+json"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify([structuredData, orgSchema, websiteSchema]),
+          }}
         />
 
         <SpeedInsights />

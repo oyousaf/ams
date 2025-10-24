@@ -23,13 +23,12 @@ const HeroSection = () => {
       {/* Optimised hero image */}
       <Image
         src="/hero.webp"
-        alt="Ace Motor Sales forecourt showcasing certified used cars"
-        width={1920}
-        height={1080}
+        alt="Ace Motor Sales forecourt"
+        fill
         priority
         quality={85}
         sizes="100vw"
-        className="absolute inset-0 object-cover z-0"
+        className="absolute inset-0 object-cover object-center z-0 scale-110 md:scale-100 animate-heroZoom"
       />
 
       {/* Gradient glass overlay */}

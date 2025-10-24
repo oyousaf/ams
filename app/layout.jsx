@@ -11,20 +11,14 @@ export const viewport = {
   initialScale: 1,
 };
 
-// ---------- Metadata ----------
 export const metadata = {
   title: "Ace Motor Sales - Certified Used Cars with Nationwide Delivery",
   description:
     "Explore a selection of certified, pre-owned vehicles, each thoroughly inspected to ensure top quality, reliability, and performance.",
   applicationName: "Ace Motor Sales",
   metadataBase: new URL("https://acemotorsales.uk"),
-  alternates: {
-    canonical: "https://acemotorsales.uk",
-  },
-  icons: {
-    icon: "/favicon.ico",
-    apple: "/apple-touch-icon.png",
-  },
+  alternates: { canonical: "https://acemotorsales.uk" },
+  icons: { icon: "/favicon.ico", apple: "/apple-touch-icon.png" },
   keywords: [
     "Ace Motor Sales",
     "Heckmondwike car dealer",
@@ -63,11 +57,7 @@ export const metadata = {
       "Explore certified, pre-owned vehicles with top quality, reliability, and performance.",
     images: ["https://acemotorsales.uk/hero.jpg"],
   },
-  robots: {
-    index: true,
-    follow: true,
-    nocache: false,
-  },
+  robots: { index: true, follow: true, nocache: false },
 };
 
 // ---------- Structured Data ----------
@@ -121,6 +111,33 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en-GB" className="min-h-full scroll-smooth antialiased">
       <Head>
+        {/* Metadata */}
+        <title>{metadata.title}</title>
+        <meta name="description" content={metadata.description} />
+        <meta name="keywords" content={metadata.keywords.join(", ")} />
+        <link rel="canonical" href={metadata.alternates.canonical} />
+        <link rel="icon" href={metadata.icons.icon} />
+        <link rel="apple-touch-icon" href={metadata.icons.apple} />
+
+        {/* OpenGraph */}
+        <meta property="og:title" content={metadata.openGraph.title} />
+        <meta
+          property="og:description"
+          content={metadata.openGraph.description}
+        />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={metadata.openGraph.url} />
+        <meta property="og:image" content={metadata.openGraph.images[0].url} />
+
+        {/* Twitter */}
+        <meta name="twitter:card" content={metadata.twitter.card} />
+        <meta name="twitter:title" content={metadata.twitter.title} />
+        <meta
+          name="twitter:description"
+          content={metadata.twitter.description}
+        />
+        <meta name="twitter:image" content={metadata.twitter.images[0]} />
+
         {/* Preloads */}
         <link rel="preload" as="image" href="/hero.webp" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -129,7 +146,8 @@ export default function RootLayout({ children }) {
           href="https://fonts.gstatic.com"
           crossOrigin="true"
         />
-        {/* JSON-LD Structured Data */}
+
+        {/* Structured Data */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -137,6 +155,7 @@ export default function RootLayout({ children }) {
           }}
         />
       </Head>
+
       <body className="min-h-screen text-zinc-100 bg-neutral-900">
         <header>
           <Navbar />
@@ -161,6 +180,7 @@ export default function RootLayout({ children }) {
           closeButton
           visibleToasts={5}
         />
+
         <SpeedInsights />
         <Analytics />
       </body>

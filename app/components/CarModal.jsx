@@ -88,7 +88,7 @@ const CarModal = ({ car, logo, onClose }) => {
 
   const formattedMileage =
     car.mileage >= 1000
-      ? `${(car.mileage / 1000).toFixed(0)}k`
+      ? `${(car.mileage / 1000).toFixed(0)}K`
       : car.mileage.toLocaleString("en-GB");
 
   const formattedPrice = car.price.toLocaleString("en-GB");

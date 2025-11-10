@@ -86,7 +86,12 @@ export const gallery = [
 ];
 
 export const reviews = [
-    {
+  {
+    name: "Ariana R",
+    feedback:
+      "Had my car delivered to me yesterday evening, very impressed with the car. It was just as described to me over the phone. A very friendly gentleman. I will definitely recommend this business to friends & family.",
+  },
+  {
     name: "Saeed A",
     feedback:
       "Top quality cars & service. Had my car 3 months now and have no complaints whatsoever. I had one issue within the warranty period and it got rectified without hesitation by the guys at Ace Motor Sales. Highly recommend!",
@@ -125,11 +130,6 @@ export const reviews = [
     name: "Samuel R",
     feedback:
       "I went to see a car at AMS and everything was perfect. There wasn't a single problem with the car. The boss gave me a great price too. My family and I were very happy with the car, and the whole process was very simple. I highly recommend AMS because they have a lot of good cars at great prices. This was my first time buying a car in the UK, and I’m a very happy customer. Big shoutout to these guys! 👏🏿",
-  },
-  {
-    name: "Aron S",
-    feedback:
-      "From the first phone call to meeting in person first class service from AMS, I was lucky enough to pick up a brilliant car for a competitive price. Many thanks to Fes for being really informative ensuring I was satisfied and had everything I need. I would highly recommend and I'll be coming back for sure.",
   },
   {
     name: "Omar 🍉",

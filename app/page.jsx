@@ -4,10 +4,8 @@ import About from "./components/About";
 import LatestCars from "./components/LatestCars";
 import Reviews from "./components/Reviews";
 
-const ScrollToTop = dynamic(() => import("./components/ScrollToTop"), {
-  ssr: false,
-});
-const Snow = dynamic(() => import("./components/Snow"), { ssr: false });
+import ScrollToTopWrapper from "./components/ScrollToTopWrapper";
+import SnowWrapper from "./components/SnowWrapper";
 
 export const metadata = {
   title: "Ace Motor Sales - Certified Used Cars with Nationwide Delivery",
@@ -55,8 +53,8 @@ export default function Home() {
         <Reviews />
       </section>
 
-      <ScrollToTop />
-      <Snow />
+      <ScrollToTopWrapper />
+      <SnowWrapper />
     </main>
   );
 }

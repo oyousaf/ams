@@ -1,4 +1,3 @@
-import dynamic from "next/dynamic";
 import HeroSection from "./components/HeroSection";
 import About from "./components/About";
 import LatestCars from "./components/LatestCars";

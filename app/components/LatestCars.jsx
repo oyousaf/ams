@@ -40,9 +40,12 @@ const LatestCars = () => {
         );
 
         const processed = res.documents.map((car) => {
+          const title = car.title.toLowerCase().replace(/\s+/g, "");
+
           const make = carMakes.find((m) =>
-            car.title.toLowerCase().includes(m.toLowerCase())
+            title.includes(m.toLowerCase().replace(/\s+/g, ""))
           );
+
           return {
             ...car,
             make,

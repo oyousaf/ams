@@ -47,12 +47,12 @@ const HeroSection = () => {
         transition={{ duration: 0.7, ease: "easeOut" }}
         className="relative z-20 text-white max-w-4xl mx-auto"
       >
-        <h1
+        <h2
           id="hero-heading"
           className="text-4xl md:text-6xl font-extrabold leading-tight mb-6 tracking-tight bg-rose-950/30 backdrop-blur-md rounded-xl px-4 py-2 shadow-md"
         >
           Drive Away with Confidence
-        </h1>
+        </h2>
 
         <p className="text-lg md:text-xl text-white/90 mb-8 max-w-2xl mx-auto bg-rose-950/20 backdrop-blur-sm rounded-lg px-4 py-3 shadow-md">
           Quality pre-owned cars with nationwide UK delivery — every vehicle

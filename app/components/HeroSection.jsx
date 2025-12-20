@@ -17,45 +17,50 @@ const HeroSection = () => {
       className="relative flex flex-col justify-center items-center min-h-screen px-6 py-12 text-center overflow-hidden"
       aria-labelledby="hero-heading"
     >
-      {/* Background overlay for fallback */}
+      {/* Fallback base */}
       <div className="absolute inset-0 bg-black/90 z-0" />
 
-      {/* Optimised hero image */}
+      {/* Hero image */}
       <Image
         src="/hero.webp"
-        alt="Ace Motor Sales forecourt"
+        alt="Ace Motor Sales forecourt in West Yorkshire"
         fill
         priority
         quality={85}
         sizes="100vw"
-        className="absolute inset-0 object-cover object-center z-0 scale-110 md:scale-100 animate-heroZoom"
+        className="absolute inset-0 object-cover object-center z-0 scale-105 animate-heroZoom"
       />
 
-      {/* Gradient glass overlay */}
+      {/* Glass gradient overlay */}
       <div className="absolute inset-0 z-10 backdrop-blur-sm bg-gradient-to-br from-black/70 via-zinc-900/60 to-black/70" />
 
-      {/* Text content */}
+      {/* SEO assist. Invisible to users. */}
+      <p className="sr-only">
+        Used car dealership in Heckmondwike offering nationwide UK vehicle
+        delivery.
+      </p>
+
+      {/* Content */}
       <motion.header
         initial={{ opacity: 0, y: 40 }}
-        whileInView={{ opacity: 1, y: 0 }}
+        animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7, ease: "easeOut" }}
-        viewport={{ once: true }}
         className="relative z-20 text-white max-w-4xl mx-auto"
       >
-        <h2
+        <h1
           id="hero-heading"
           className="text-4xl md:text-6xl font-extrabold leading-tight mb-6 tracking-tight bg-rose-950/30 backdrop-blur-md rounded-xl px-4 py-2 shadow-md"
         >
           Drive Away with Confidence
-        </h2>
+        </h1>
 
         <p className="text-lg md:text-xl text-white/90 mb-8 max-w-2xl mx-auto bg-rose-950/20 backdrop-blur-sm rounded-lg px-4 py-3 shadow-md">
-          Browse certified pre-owned cars across the UK — each vehicle carefully
-          inspected for quality, reliability, and long-term performance.
+          Quality pre-owned cars with nationwide UK delivery — every vehicle
+          carefully inspected for reliability and long-term performance.
         </p>
       </motion.header>
 
-      {/* Down arrow CTA */}
+      {/* Down arrow */}
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
@@ -66,8 +71,8 @@ const HeroSection = () => {
       >
         <FaArrowDown
           onClick={handleScrollToAbout}
-          title="Scroll down to About section"
-          aria-label="Scroll down to About section"
+          title="Scroll to about section"
+          aria-label="Scroll to about section"
           className="animate-bounce text-5xl text-rose-600 hover:text-rose-400 cursor-pointer"
         />
       </motion.div>

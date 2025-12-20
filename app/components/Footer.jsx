@@ -117,8 +117,8 @@ const Footer = () => {
           </div>
         </motion.div>
 
-        {/* Signature – tighter + closer */}
-        <div className="text-xl flex justify-center items-center gap-2 pt-2 text-white/60">
+        {/* Signature */}
+        <div className="text-xl flex justify-center items-center gap-2 pt-2 text-white/70">
           Built with
           <motion.span
             animate={{ rotate: -360 }}

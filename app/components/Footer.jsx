@@ -91,37 +91,37 @@ const Footer = () => {
           <Link
             href="tel:07809107655"
             className="
-              inline-block mt-2 text-3xl font-bold
+              inline-block text-3xl font-bold
               text-rose-300 hover:text-rose-200 transition
             "
           >
             07809 107655
           </Link>
+
+          {/* Socials inside panel */}
+          <div className="flex justify-center gap-5 pt-3">
+            {socialLinks.map(({ id, href, icon, name }) => (
+              <motion.a
+                key={id}
+                href={href}
+                target="_blank"
+                rel="nofollow noopener noreferrer"
+                aria-label={name}
+                whileHover={{ scale: 1.15 }}
+                transition={{ type: "spring", stiffness: 260 }}
+                className="text-2xl text-white/80 hover:text-rose-300"
+              >
+                {icon}
+              </motion.a>
+            ))}
+          </div>
         </motion.div>
 
-        {/* Socials */}
-        <div className="flex justify-center gap-6">
-          {socialLinks.map(({ id, href, icon, name }) => (
-            <motion.a
-              key={id}
-              href={href}
-              target="_blank"
-              rel="nofollow noopener noreferrer"
-              aria-label={name}
-              whileHover={{ scale: 1.15 }}
-              transition={{ type: "spring", stiffness: 260 }}
-              className="text-2xl text-white/80 hover:text-rose-400"
-            >
-              {icon}
-            </motion.a>
-          ))}
-        </div>
-
-        {/* Signature */}
-        <div className="text-xl flex justify-center items-center gap-1 pt-8">
+        {/* Signature – tighter + closer */}
+        <div className="text-xl flex justify-center items-center gap-2 pt-2 text-white/60">
           Built with
           <motion.span
-            animate={{ rotate: 360 }}
+            animate={{ rotate: -360 }}
             transition={{ repeat: Infinity, duration: 5, ease: "linear" }}
             className="inline-block"
           >

@@ -98,7 +98,7 @@ const Footer = () => {
             07809 107655
           </Link>
 
-          {/* Socials inside panel */}
+          {/* Socials */}
           <div className="flex justify-center gap-5 pt-3">
             {socialLinks.map(({ id, href, icon, name }) => (
               <motion.a
@@ -118,7 +118,7 @@ const Footer = () => {
         </motion.div>
 
         {/* Signature */}
-        <div className="text-xl flex justify-center items-center gap-2 pt-2 text-white/70">
+        <div className="text-xl flex justify-center items-center gap-2 text-white/70">
           Built with
           <motion.span
             animate={{ rotate: -360 }}

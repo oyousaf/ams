@@ -1,10 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Disable source maps in production for smaller builds and better security
   productionBrowserSourceMaps: false,
 
   images: {
-    // Allow optimized images from trusted remote sources
+    qualities: [75, 85],
+
     remotePatterns: [
       {
         protocol: "https",

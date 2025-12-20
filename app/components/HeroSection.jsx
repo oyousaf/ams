@@ -34,7 +34,7 @@ const HeroSection = () => {
       {/* Glass gradient overlay */}
       <div className="absolute inset-0 z-10 backdrop-blur-sm bg-gradient-to-br from-black/70 via-zinc-900/60 to-black/70" />
 
-      {/* SEO assist. Invisible to users. */}
+      {/* SEO assist */}
       <p className="sr-only">
         Used car dealership in Heckmondwike offering nationwide UK vehicle
         delivery.

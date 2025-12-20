@@ -131,7 +131,7 @@ const Footer = () => {
           <a
             href="https://legxcysol.dev"
             target="_blank"
-            className="hover:text-white transition"
+            className="hover:text-white transition duration-300"
           >
             Legxcy Solutions
           </a>

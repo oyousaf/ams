@@ -87,6 +87,14 @@ export const gallery = [
 
 export const reviews = [
   {
+    name: "John F",
+    feedback: `Just bought a car from Ace Motor Sales. They have outstanding customer service and a fantastic friendly no hassle sale policy . I highly recommend this company to anyone looking to change or buy a vehicle.`,
+  },
+  {
+    name: "Eva K",
+    feedback: `Bought an Audi A1 from this garage and would 1000% buy again. Unfortunately, I did not like the car as much as I would've hoped but that was no one’s fault but my own. The team at ACE were so professional and made the whole process very easy! Thank you :)`,
+  },
+  {
     name: "Ariana R",
     feedback:
       "Had my car delivered to me yesterday evening, very impressed with the car. It was just as described to me over the phone. A very friendly gentleman. I will definitely recommend this business to friends & family.",
@@ -120,16 +128,6 @@ export const reviews = [
     name: "S A",
     feedback:
       "Thrilled with my car I brought from these guys. Good prices and top service. Recommend to all.",
-  },
-  {
-    name: "Hamzah H",
-    feedback:
-      "Thank you to Ace Motor Sales for providing me with a beautiful motor. I am over the moon! First time I bought a car without physically seeing the car beforehand. However, Fes made it a very swift experience and made me feel very reassured all the way through the process. He did a live video call with me and arranged everything over the phone and got the car delivered to me on the day I requested. Very impressed with the vehicle and the service. I will definitely be back in the future and will be recommending this company to my friends and family 👌",
-  },
-  {
-    name: "Samuel R",
-    feedback:
-      "I went to see a car at AMS and everything was perfect. There wasn't a single problem with the car. The boss gave me a great price too. My family and I were very happy with the car, and the whole process was very simple. I highly recommend AMS because they have a lot of good cars at great prices. This was my first time buying a car in the UK, and I’m a very happy customer. Big shoutout to these guys! 👏🏿",
   },
   {
     name: "Omar 🍉",

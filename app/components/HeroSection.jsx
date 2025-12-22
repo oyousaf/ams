@@ -23,9 +23,11 @@ const HeroSection = () => {
         alt="Ace Motor Sales forecourt in Heckmondwike, West Yorkshire"
         fill
         priority
+        fetchPriority="high"
+        decoding="async"
         quality={85}
         sizes="100vw"
-        className="absolute inset-0 object-cover object-center z-0 scale-105 animate-heroZoom"
+        className="absolute inset-0 object-cover object-center z-0 scale-105 will-change-transform"
       />
 
       {/* Overlay */}

@@ -118,7 +118,6 @@ export default function RootLayout({ children }) {
           href="https://fonts.gstatic.com"
           crossOrigin="true"
         />
-        <link rel="preload" as="image" href="/hero.webp" />
       </head>
 
       <body className="min-h-screen text-zinc-100 bg-neutral-900">

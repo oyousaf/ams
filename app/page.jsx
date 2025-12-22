@@ -16,8 +16,8 @@ export default function Home() {
   return (
     <main aria-label="Homepage of Ace Motor Sales">
       <h1 className="sr-only">
-        Ace Motor Sales – Certified Used Cars with Nationwide Delivery across
-        the UK.
+        Trusted used car dealership in Heckmondwike, West Yorkshire,
+        specialising in quality pre-owned vehicles with nationwide UK delivery.
       </h1>
 
       <section

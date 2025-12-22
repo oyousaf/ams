@@ -6,10 +6,7 @@ import { FaArrowDown } from "react-icons/fa";
 
 const HeroSection = () => {
   const handleScrollToAbout = () => {
-    const aboutSection = document.getElementById("about");
-    if (aboutSection) {
-      aboutSection.scrollIntoView({ behavior: "smooth" });
-    }
+    document.getElementById("about")?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
@@ -17,13 +14,13 @@ const HeroSection = () => {
       className="relative flex flex-col justify-center items-center min-h-screen px-6 py-12 text-center overflow-hidden"
       aria-labelledby="hero-heading"
     >
-      {/* Fallback base */}
+      {/* Base */}
       <div className="absolute inset-0 bg-black/90 z-0" />
 
       {/* Hero image */}
       <Image
         src="/hero.webp"
-        alt="Ace Motor Sales forecourt in West Yorkshire"
+        alt="Ace Motor Sales forecourt in Heckmondwike, West Yorkshire"
         fill
         priority
         quality={85}
@@ -31,14 +28,8 @@ const HeroSection = () => {
         className="absolute inset-0 object-cover object-center z-0 scale-105 animate-heroZoom"
       />
 
-      {/* Glass gradient overlay */}
+      {/* Overlay */}
       <div className="absolute inset-0 z-10 backdrop-blur-sm bg-gradient-to-br from-black/70 via-zinc-900/60 to-black/70" />
-
-      {/* SEO assist */}
-      <p className="sr-only">
-        Used car dealership in Heckmondwike offering nationwide UK vehicle
-        delivery.
-      </p>
 
       {/* Content */}
       <motion.header
@@ -55,12 +46,12 @@ const HeroSection = () => {
         </h2>
 
         <p className="text-lg md:text-xl text-white/90 mb-8 max-w-2xl mx-auto bg-rose-950/20 backdrop-blur-sm rounded-lg px-4 py-3 shadow-md">
-          Quality pre-owned cars with nationwide UK delivery — every vehicle
-          carefully inspected for reliability and long-term performance.
+          Trusted used car dealership in Heckmondwike, West Yorkshire, offering
+          quality pre-owned vehicles with nationwide UK delivery.
         </p>
       </motion.header>
 
-      {/* Down arrow */}
+      {/* Scroll cue */}
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
@@ -71,7 +62,6 @@ const HeroSection = () => {
       >
         <FaArrowDown
           onClick={handleScrollToAbout}
-          title="Scroll to about section"
           aria-label="Scroll to about section"
           className="animate-bounce text-5xl text-rose-600 hover:text-rose-400 cursor-pointer"
         />

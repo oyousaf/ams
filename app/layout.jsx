@@ -14,31 +14,23 @@ export const viewport = {
 
 // ---------- Metadata ----------
 export const metadata = {
-  title: "Ace Motor Sales - Certified Used Cars with Nationwide Delivery",
+  title: "Used Cars in Heckmondwike | Nationwide UK Delivery",
   description:
-    "Explore a selection of certified, pre-owned vehicles, each thoroughly inspected to ensure top quality, reliability, and performance.",
+    "Trusted used car dealership in Heckmondwike offering quality pre-owned vehicles with nationwide UK delivery and thorough inspections.",
   applicationName: "Ace Motor Sales",
   metadataBase: new URL("https://acemotorsales.uk"),
-  alternates: { canonical: "https://acemotorsales.uk" },
-  icons: { icon: "/favicon.ico", apple: "/apple-touch-icon.png" },
-  keywords: [
-    "Ace Motor Sales",
-    "Heckmondwike car dealer",
-    "used cars Heckmondwike",
-    "West Yorkshire car dealer",
-    "certified used vehicles UK",
-    "affordable second-hand cars",
-    "quality used vehicles West Yorkshire",
-    "family cars for sale UK",
-    "trusted local car dealership",
-    "nationwide car delivery UK",
-    "pre-owned cars with delivery",
-    "Ace Motor Sales Heckmondwike",
-  ],
+  alternates: {
+    canonical: "https://acemotorsales.uk",
+  },
+  icons: {
+    icon: "/favicon.ico",
+    apple: "/apple-touch-icon.png",
+  },
+
   openGraph: {
-    title: "Ace Motor Sales - Certified Used Cars with Nationwide Delivery",
+    title: "Used Cars in Heckmondwike | Nationwide UK Delivery",
     description:
-      "Explore certified, pre-owned vehicles with top quality, reliability, and performance.",
+      "Quality pre-owned vehicles from a trusted Heckmondwike dealership, with nationwide UK delivery available.",
     url: "https://acemotorsales.uk",
     siteName: "Ace Motor Sales",
     images: [
@@ -46,24 +38,29 @@ export const metadata = {
         url: "https://acemotorsales.uk/hero.jpg",
         width: 1200,
         height: 630,
-        alt: "Ace Motor Sales Forecourt with Quality Used Cars",
+        alt: "Ace Motor Sales used car forecourt in Heckmondwike",
       },
     ],
     locale: "en_GB",
     type: "website",
   },
+
   twitter: {
     card: "summary_large_image",
-    title: "Ace Motor Sales - Certified Used Cars with Nationwide Delivery",
+    title: "Used Cars in Heckmondwike | Nationwide UK Delivery",
     description:
-      "Explore certified, pre-owned vehicles with top quality, reliability, and performance.",
+      "Quality pre-owned vehicles with nationwide UK delivery from a trusted local dealership.",
     images: ["https://acemotorsales.uk/hero.jpg"],
   },
-  robots: { index: true, follow: true, nocache: false },
+
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 // ---------- Structured Data ----------
-const structuredData = {
+const carDealerSchema = {
   "@context": "https://schema.org",
   "@type": "CarDealer",
   name: "Ace Motor Sales",
@@ -71,35 +68,36 @@ const structuredData = {
   url: "https://acemotorsales.uk",
   logo: "https://acemotorsales.uk/apple-touch-icon.png",
   image: "https://acemotorsales.uk/hero.jpg",
-  description: metadata.description,
+  description:
+    "Trusted used car dealership in Heckmondwike offering quality pre-owned vehicles with nationwide UK delivery.",
   address: {
     "@type": "PostalAddress",
     streetAddress: "4 Westgate",
     addressLocality: "Heckmondwike",
     addressRegion: "West Yorkshire",
     postalCode: "WF16 0EH",
-    addressCountry: "UK",
+    addressCountry: "GB",
   },
   telephone: "+447809107655",
-  sameAs: [
-    "https://www.facebook.com/acemotorsales1",
-    "https://www.instagram.com/acemotorsltd",
-  ],
   openingHours: "Mo-Su 09:00-20:00",
   geo: {
     "@type": "GeoCoordinates",
     latitude: 53.70825741357984,
     longitude: -1.6782300556791774,
   },
+  sameAs: [
+    "https://www.facebook.com/acemotorsales1",
+    "https://www.instagram.com/acemotorsltd",
+  ],
 };
 
-const orgSchema = {
+const organizationSchema = {
   "@context": "https://schema.org",
   "@type": "Organization",
   name: "Ace Motor Sales",
   url: "https://acemotorsales.uk",
   logo: "https://acemotorsales.uk/apple-touch-icon.png",
-  sameAs: structuredData.sameAs,
+  sameAs: carDealerSchema.sameAs,
 };
 
 const websiteSchema = {
@@ -114,7 +112,6 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en-GB" className="min-h-full scroll-smooth antialiased">
       <head>
-        {/* Preconnects and preloads */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
           rel="preconnect"
@@ -134,6 +131,11 @@ export default function RootLayout({ children }) {
           aria-label="Ace Motor Sales Main Content"
           className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
         >
+          <h1 className="sr-only">
+            Trusted used car dealership in Heckmondwike, specialising in quality
+            pre-owned vehicles with nationwide UK delivery.
+          </h1>
+
           {children}
         </main>
 
@@ -149,13 +151,16 @@ export default function RootLayout({ children }) {
           visibleToasts={5}
         />
 
-        {/* Structured Data */}
         <Script
           id="structured-data"
           type="application/ld+json"
           strategy="beforeInteractive"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify([structuredData, orgSchema, websiteSchema]),
+            __html: JSON.stringify([
+              carDealerSchema,
+              organizationSchema,
+              websiteSchema,
+            ]),
           }}
         />
 

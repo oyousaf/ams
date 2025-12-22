@@ -85,7 +85,7 @@ const Footer = () => {
           <p className="text-white/85">4 Westgate, Heckmondwike, WF16 0EH</p>
 
           <p className="text-white/70">
-            Keys in the ignition from 9am to 8pm. Cruise in anytime.
+            Keys in the ignition from 9am to 8pm. Cruise on in anytime.
           </p>
 
           <Link

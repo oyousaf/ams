@@ -69,7 +69,7 @@ const carDealerSchema = {
   logo: "https://acemotorsales.uk/apple-touch-icon.png",
   image: "https://acemotorsales.uk/hero.jpg",
   description:
-    "Trusted used car dealership in Heckmondwike offering quality pre-owned vehicles with nationwide UK delivery.",
+    "Independent used car dealer based in Heckmondwike, West Yorkshire, supplying inspected vehicles to customers across the UK.",
   address: {
     "@type": "PostalAddress",
     streetAddress: "4 Westgate",
@@ -130,11 +130,6 @@ export default function RootLayout({ children }) {
           aria-label="Ace Motor Sales Main Content"
           className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
         >
-          <h1 className="sr-only">
-            Trusted used car dealership in Heckmondwike, specialising in quality
-            pre-owned vehicles with nationwide UK delivery.
-          </h1>
-
           {children}
         </main>
 

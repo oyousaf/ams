@@ -14,7 +14,7 @@ export const viewport = {
 
 // ---------- Metadata ----------
 export const metadata = {
-  title: "Used Cars in Heckmondwike | Nationwide UK Delivery",
+  title: "Ace Motor Sales | Used Cars in Heckmondwike – UK Delivery",
   description:
     "Trusted used car dealership in Heckmondwike offering quality pre-owned vehicles with nationwide UK delivery and thorough inspections.",
   applicationName: "Ace Motor Sales",
@@ -28,9 +28,9 @@ export const metadata = {
   },
 
   openGraph: {
-    title: "Used Cars in Heckmondwike | Nationwide UK Delivery",
+    title: "Ace Motor Sales | Used Cars in Heckmondwike – UK Delivery",
     description:
-      "Quality pre-owned vehicles from a trusted Heckmondwike dealership, with nationwide UK delivery available.",
+      "Quality pre-owned vehicles from an independent Heckmondwike dealership, with UK-wide delivery available.",
     url: "https://acemotorsales.uk",
     siteName: "Ace Motor Sales",
     images: [
@@ -47,9 +47,9 @@ export const metadata = {
 
   twitter: {
     card: "summary_large_image",
-    title: "Used Cars in Heckmondwike | Nationwide UK Delivery",
+    title: "Ace Motor Sales | Used Cars in Heckmondwike – UK Delivery",
     description:
-      "Quality pre-owned vehicles with nationwide UK delivery from a trusted local dealership.",
+      "Quality pre-owned vehicles with UK-wide delivery from an independent Heckmondwike dealer.",
     images: ["https://acemotorsales.uk/hero.jpg"],
   },
 

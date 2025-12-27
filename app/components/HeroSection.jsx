@@ -44,12 +44,12 @@ const HeroSection = () => {
           id="hero-heading"
           className="text-4xl md:text-6xl font-extrabold leading-tight mb-6 tracking-tight bg-rose-950/30 backdrop-blur-md rounded-xl px-4 py-3 shadow-md"
         >
-          Trusted Used Cars in Heckmondwike with Nationwide UK Delivery
+          Drive Away with Confidence
         </h1>
 
         <p className="text-lg md:text-xl text-white/90 mb-8 max-w-2xl mx-auto bg-rose-950/20 backdrop-blur-sm rounded-lg px-4 py-3 shadow-md">
-          Quality pre-owned vehicles, fully inspected and prepared by an
-          independent West Yorkshire dealership.
+          Quality pre-owned vehicles, meticulously inspected and professionally
+          prepared — ready for the road.
         </p>
       </motion.div>
 

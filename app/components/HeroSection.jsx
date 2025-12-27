@@ -49,8 +49,8 @@ const HeroSection = () => {
         </h1>
 
         <p className="text-lg md:text-xl text-white/90 mb-8 max-w-2xl mx-auto bg-rose-950/20 backdrop-blur-sm rounded-lg px-4 py-3 shadow-md">
-          Quality pre-owned vehicles, meticulously inspected and professionally
-          prepared — ready for the road.
+          Quality pre-owned vehicles, fully inspected and prepared to meet the
+          highest standards — ready for the road.
         </p>
       </motion.div>
 

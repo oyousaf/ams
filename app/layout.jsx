@@ -12,11 +12,14 @@ export const viewport = {
   initialScale: 1,
 };
 
-// ---------- Metadata ----------
+// ---------- Global Metadata  ----------
 export const metadata = {
-  title: "Ace Motor Sales | Used Cars in Heckmondwike – UK Delivery",
+  title: {
+    default: "Ace Motor Sales",
+    template: "%s | Ace Motor Sales",
+  },
   description:
-    "Trusted used car dealership in Heckmondwike offering quality pre-owned vehicles with nationwide UK delivery and thorough inspections.",
+    "Trusted independent used car dealership in Heckmondwike, West Yorkshire, supplying quality pre-owned vehicles with nationwide UK delivery.",
   applicationName: "Ace Motor Sales",
   metadataBase: new URL("https://acemotorsales.uk"),
   alternates: {
@@ -26,33 +29,6 @@ export const metadata = {
     icon: "/favicon.ico",
     apple: "/apple-touch-icon.png",
   },
-
-  openGraph: {
-    title: "Ace Motor Sales | Used Cars in Heckmondwike – UK Delivery",
-    description:
-      "Quality pre-owned vehicles from an independent Heckmondwike dealership, with UK-wide delivery available.",
-    url: "https://acemotorsales.uk",
-    siteName: "Ace Motor Sales",
-    images: [
-      {
-        url: "https://acemotorsales.uk/hero.jpg",
-        width: 1200,
-        height: 630,
-        alt: "Ace Motor Sales used car forecourt in Heckmondwike",
-      },
-    ],
-    locale: "en_GB",
-    type: "website",
-  },
-
-  twitter: {
-    card: "summary_large_image",
-    title: "Ace Motor Sales | Used Cars in Heckmondwike – UK Delivery",
-    description:
-      "Quality pre-owned vehicles with UK-wide delivery from an independent Heckmondwike dealer.",
-    images: ["https://acemotorsales.uk/hero.jpg"],
-  },
-
   robots: {
     index: true,
     follow: true,
@@ -110,7 +86,7 @@ const websiteSchema = {
 // ---------- Layout ----------
 export default function RootLayout({ children }) {
   return (
-    <html lang="en-GB" className="min-h-full scroll-smooth antialiased">
+    <html lang="en-GB" className="scroll-smooth antialiased">
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
@@ -120,18 +96,12 @@ export default function RootLayout({ children }) {
         />
       </head>
 
-      <body className="min-h-screen text-zinc-100 bg-neutral-900">
+      <body className="min-h-screen bg-neutral-900 text-zinc-100">
         <header>
           <Navbar />
         </header>
 
-        <main
-          id="main-content"
-          aria-label="Ace Motor Sales Main Content"
-          className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
-        >
-          {children}
-        </main>
+        {children}
 
         <footer>
           <Footer />
@@ -148,7 +118,7 @@ export default function RootLayout({ children }) {
         <Script
           id="structured-data"
           type="application/ld+json"
-          strategy="beforeInteractive"
+          strategy="afterInteractive"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify([
               carDealerSchema,

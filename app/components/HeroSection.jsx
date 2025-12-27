@@ -10,11 +10,11 @@ const HeroSection = () => {
   };
 
   return (
-    <section
+    <header
       className="relative flex flex-col justify-center items-center min-h-screen px-6 py-12 text-center overflow-hidden"
       aria-labelledby="hero-heading"
     >
-      {/* Base */}
+      {/* Dark base */}
       <div className="absolute inset-0 bg-black/90 z-0" />
 
       {/* Hero image */}
@@ -27,48 +27,47 @@ const HeroSection = () => {
         decoding="async"
         quality={85}
         sizes="100vw"
-        className="absolute inset-0 object-cover object-center z-0 scale-105 will-change-transform"
+        className="absolute inset-0 object-cover object-center z-0 scale-105"
       />
 
       {/* Overlay */}
-      <div className="absolute inset-0 z-10 backdrop-blur-sm bg-gradient-to-br from-black/70 via-zinc-900/60 to-black/70" />
+      <div className="absolute inset-0 z-10 bg-gradient-to-br from-black/70 via-zinc-900/60 to-black/70 backdrop-blur-sm" />
 
       {/* Content */}
-      <motion.header
+      <motion.div
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7, ease: "easeOut" }}
-        className="relative z-20 text-white max-w-4xl mx-auto"
+        className="relative z-20 max-w-4xl mx-auto text-white"
       >
         <h1
           id="hero-heading"
-          className="text-4xl md:text-6xl font-extrabold leading-tight mb-6 tracking-tight bg-rose-950/30 backdrop-blur-md rounded-xl px-4 py-2 shadow-md"
+          className="text-4xl md:text-6xl font-extrabold leading-tight mb-6 tracking-tight bg-rose-950/30 backdrop-blur-md rounded-xl px-4 py-3 shadow-md"
         >
-          Drive Away with Confidence
+          Trusted Used Cars in Heckmondwike with Nationwide UK Delivery
         </h1>
 
         <p className="text-lg md:text-xl text-white/90 mb-8 max-w-2xl mx-auto bg-rose-950/20 backdrop-blur-sm rounded-lg px-4 py-3 shadow-md">
-          Trusted used car dealership in Heckmondwike, West Yorkshire, offering
-          quality pre-owned vehicles with nationwide UK delivery.
+          Quality pre-owned vehicles, fully inspected and prepared by an
+          independent West Yorkshire dealership.
         </p>
-      </motion.header>
+      </motion.div>
 
       {/* Scroll cue */}
-      <motion.div
+      <motion.button
+        type="button"
+        onClick={handleScrollToAbout}
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1.2, delay: 0.6, ease: "easeOut" }}
+        transition={{ duration: 1.2, delay: 0.6 }}
         whileHover={{ scale: 1.15 }}
         whileTap={{ scale: 0.95 }}
-        className="z-20 mt-10"
+        aria-label="Scroll to about section"
+        className="relative z-20 mt-10 text-rose-600 hover:text-rose-400"
       >
-        <FaArrowDown
-          onClick={handleScrollToAbout}
-          aria-label="Scroll to about section"
-          className="animate-bounce text-5xl text-rose-600 hover:text-rose-400 cursor-pointer"
-        />
-      </motion.div>
-    </section>
+        <FaArrowDown className="text-5xl animate-bounce" />
+      </motion.button>
+    </header>
   );
 };
 

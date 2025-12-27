@@ -13,6 +13,7 @@ const HeroSection = () => {
     <header
       className="relative flex flex-col justify-center items-center min-h-screen px-6 py-12 text-center overflow-hidden"
       aria-labelledby="hero-heading"
+      id="hero"
     >
       {/* Dark base */}
       <div className="absolute inset-0 bg-black/90 z-0" />

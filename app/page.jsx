@@ -10,7 +10,7 @@ import SnowWrapper from "./components/SnowWrapper";
 export const metadata = {
   title: "Used Cars in Heckmondwike with Nationwide UK Delivery",
   description:
-    "Trusted used car dealership in Heckmondwike, West Yorkshire. Quality pre-owned vehicles, fully inspected, with nationwide UK delivery available.",
+    "Trusted used car dealership in Heckmondwike, West Yorkshire. Quality pre-owned vehicles, fully inspected, with nationwide UK delivery.",
   openGraph: {
     title: "Ace Motor Sales | Used Cars in Heckmondwike – UK Delivery",
     description:

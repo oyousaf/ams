@@ -48,7 +48,7 @@ const HeroSection = () => {
           Drive Away with Confidence
         </h1>
 
-        <p className="text-lg md:text-xl text-white/90 mb-8 max-w-2xl mx-auto bg-rose-950/20 backdrop-blur-sm rounded-lg px-2 py-3 shadow-md">
+        <p className="text-lg md:text-xl text-white/90 mb-8 max-w-3xl mx-auto bg-rose-950/20 backdrop-blur-sm rounded-lg px-3 py-2 shadow-md">
           Quality pre-owned vehicles, fully inspected and professionally
           prepared — ready for the road.
         </p>

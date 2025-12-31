@@ -14,7 +14,7 @@ export const metadata = {
   openGraph: {
     title: "Ace Motor Sales | Used Cars in Heckmondwike – UK Delivery",
     description:
-      "Quality pre-owned vehicles from an independent Heckmondwike dealership, with UK-wide delivery available.",
+      "Quality pre-owned vehicles from an independent Heckmondwike dealership, with UK-wide delivery.",
     url: "https://acemotorsales.uk",
     siteName: "Ace Motor Sales",
     images: [

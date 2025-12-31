@@ -11,12 +11,12 @@ const HeroSection = () => {
 
   return (
     <header
-      className="relative flex flex-col justify-center items-center min-h-screen px-6 py-12 text-center overflow-hidden"
-      aria-labelledby="hero-heading"
       id="hero"
+      aria-labelledby="hero-heading"
+      className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6 py-12 text-center"
     >
       {/* Dark base */}
-      <div className="absolute inset-0 bg-black/90 z-0" />
+      <div className="absolute inset-0 z-0 bg-black/90" />
 
       {/* Hero image */}
       <Image
@@ -28,7 +28,7 @@ const HeroSection = () => {
         decoding="async"
         quality={85}
         sizes="100vw"
-        className="absolute inset-0 object-cover object-center z-0 scale-105"
+        className="absolute inset-0 z-0 scale-105 object-cover object-center"
       />
 
       {/* Overlay */}
@@ -39,16 +39,16 @@ const HeroSection = () => {
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7, ease: "easeOut" }}
-        className="relative z-20 max-w-4xl mx-auto text-white"
+        className="relative z-20 mx-auto max-w-4xl text-white"
       >
         <h1
           id="hero-heading"
-          className="text-4xl md:text-6xl font-extrabold leading-tight mb-6 tracking-tight bg-rose-950/30 backdrop-blur-md rounded-xl px-4 py-3 shadow-md"
+          className="mb-6 rounded-xl bg-rose-950/50 px-4 py-3 text-4xl font-extrabold leading-tight tracking-tight shadow-md backdrop-blur-md md:text-6xl"
         >
           Drive Away with Confidence
         </h1>
 
-        <p className="text-lg md:text-xl text-white/90 mb-8 max-w-3xl mx-auto bg-rose-950/20 backdrop-blur-sm rounded-lg px-3 py-2 shadow-md">
+        <p className="mx-auto mb-8 max-w-2xl rounded-lg bg-rose-950/30 px-3 py-2 text-lg text-white/90 shadow-md backdrop-blur md:max-w-3xl md:text-xl">
           Quality pre-owned vehicles, fully inspected and professionally
           prepared — ready for the road.
         </p>
@@ -57,16 +57,16 @@ const HeroSection = () => {
       {/* Scroll cue */}
       <motion.button
         type="button"
+        aria-label="Scroll to about section"
         onClick={handleScrollToAbout}
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1.2, delay: 0.6 }}
         whileHover={{ scale: 1.15 }}
         whileTap={{ scale: 0.95 }}
-        aria-label="Scroll to about section"
-        className="relative z-20 mt-10 text-rose-600 hover:text-rose-400"
+        className="relative z-20 mt-10 text-rose-500/80 hover:text-rose-400"
       >
-        <FaArrowDown className="text-5xl animate-bounce" />
+        <FaArrowDown className="animate-bounce text-5xl" />
       </motion.button>
     </header>
   );

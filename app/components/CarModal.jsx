@@ -29,62 +29,25 @@ const overlayVariants = {
 };
 
 const modalVariants = {
-  hidden: { scale: 0.95, opacity: 0, y: 50 },
+  hidden: { scale: 0.96, opacity: 0, y: 40 },
   visible: {
     scale: 1,
     opacity: 1,
     y: 0,
-    transition: { type: "spring", stiffness: 420, damping: 30 },
+    transition: { type: "spring", stiffness: 420, damping: 32 },
   },
-  exit: {
-    scale: 0.92,
-    opacity: 0,
-    y: 80,
-    transition: { duration: 0.22, ease: [0.22, 1, 0.36, 1] },
-  },
-};
-
-const sectionVariants = {
-  hidden: { opacity: 0, y: 8 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.22 } },
-};
-
-const badgesContainer = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.06, when: "beforeChildren" } },
-};
-
-const badgeItem = {
-  hidden: { opacity: 0, y: 6, scale: 0.96 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: { type: "spring", stiffness: 400, damping: 24 },
-  },
-};
-
-const specsContainer = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.045, delayChildren: 0.05 } },
-};
-
-const specItem = {
-  hidden: { opacity: 0, y: 10 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { type: "spring", stiffness: 500, damping: 28 },
-  },
+  exit: { scale: 0.94, opacity: 0, y: 60, transition: { duration: 0.22 } },
 };
 
 const CarModal = ({ car, logo, onClose }) => {
   const fallbackImage = "/fallback.webp";
   const sliderRef = useRef(null);
   const modalRef = useRef(null);
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [isVisible, setIsVisible] = useState(true);
+
+  const [activeSlide, setActiveSlide] = useState(0);
   const [copied, setCopied] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   const formattedMileage =
     car.mileage >= 1000
@@ -103,6 +66,7 @@ const CarModal = ({ car, logo, onClose }) => {
     autoplaySpeed: 5000,
     arrows: false,
     swipe: true,
+    beforeChange: (_, next) => setActiveSlide(next),
   };
 
   const handleClose = () => setIsVisible(false);
@@ -113,71 +77,40 @@ const CarModal = ({ car, logo, onClose }) => {
     if (e.key === "ArrowLeft") sliderRef.current?.slickPrev();
   }, []);
 
-  const handleOutsideClick = useCallback((e) => {
-    if (modalRef.current && !modalRef.current.contains(e.target)) {
-      handleClose();
-    }
-  }, []);
-
   useEffect(() => {
     document.body.style.overflow = "hidden";
     window.addEventListener("keydown", handleKeyDown);
-    window.addEventListener("mousedown", handleOutsideClick);
     return () => {
       document.body.style.overflow = "auto";
       window.removeEventListener("keydown", handleKeyDown);
-      window.removeEventListener("mousedown", handleOutsideClick);
     };
-  }, [handleKeyDown, handleOutsideClick]);
+  }, [handleKeyDown]);
 
-  // --- Share / Copy link handler ---
   const handleShare = async () => {
-    const url = typeof window !== "undefined" ? window.location.href : "";
-    const shareData = {
-      title: car.title,
-      text: `Check out this ${car.title} for £${formattedPrice}`,
-      url,
-    };
+    const url = window.location.href;
     try {
       if (navigator.share) {
-        await navigator.share(shareData);
+        await navigator.share({
+          title: car.title,
+          text: `Check out this ${car.title} for £${formattedPrice}`,
+          url,
+        });
         return;
       }
-    } catch {
-      // fall through to clipboard if share cancelled/failed
-    }
-    try {
-      await navigator.clipboard.writeText(url);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1500);
-    } catch {
-      // no clipboard access; silently ignore
-    }
+    } catch {}
+    await navigator.clipboard.writeText(url);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
   };
 
-  // --- Drag motion + parallax ---
   const dragY = useMotionValue(0);
   const imageParallaxY = useTransform(dragY, [-200, 0, 200], [-8, 0, 8]);
-
-  // Drag-to-dismiss threshold helper (declared before use)
-  const shouldDismiss = (offsetY, velocityY) =>
-    Math.abs(offsetY) > 100 || Math.abs(velocityY) > 800;
-
-  // Pause slider while dragging; resume after
-  const onDragStart = () => {
-    sliderRef.current?.slickPause();
-  };
-  const onDragEnd = (_, info) => {
-    if (shouldDismiss(info.offset.y, info.velocity.y)) handleClose();
-    else sliderRef.current?.slickPlay();
-  };
 
   return (
     <AnimatePresence onExitComplete={onClose}>
       {isVisible && (
         <motion.div
-          className="fixed inset-0 z-[1000] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4"
-          role="presentation"
+          className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
           variants={overlayVariants}
           initial="hidden"
           animate="visible"
@@ -185,10 +118,10 @@ const CarModal = ({ car, logo, onClose }) => {
         >
           <motion.div
             ref={modalRef}
-            className="relative bg-gradient-to-br from-rose-900 via-rose-800 to-rose-950 text-white w-full max-w-screen-md max-h-full md:max-h-[95vh] rounded-xl tile-glow p-6 shadow-xl overflow-hidden"
             role="dialog"
             aria-modal="true"
             aria-label={`${car.title} details`}
+            className="relative w-full max-w-screen-md max-h-[92vh] rounded-xl bg-gradient-to-br from-rose-900 via-rose-800 to-rose-950 text-white shadow-xl overflow-hidden"
             variants={modalVariants}
             initial="hidden"
             animate="visible"
@@ -196,192 +129,113 @@ const CarModal = ({ car, logo, onClose }) => {
             drag="y"
             style={{ y: dragY }}
             dragConstraints={{ top: 0, bottom: 0 }}
-            dragElastic={0.12}
-            onDragStart={onDragStart}
-            onDragEnd={onDragEnd}
+            dragElastic={0.1}
           >
-            {/* Close Button */}
-            <motion.button
-              className="absolute top-4 right-4 z-50 p-2.5 md:p-3 rounded-full bg-white/5 hover:bg-white/10 backdrop-blur-sm border border-white/10 text-white"
+            {/* Close */}
+            <button
               onClick={handleClose}
-              aria-label="Close Modal"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              transition={{ type: "spring", stiffness: 500, damping: 30 }}
+              aria-label="Close modal"
+              className="absolute top-4 right-4 z-50 rounded-full bg-white/10 p-3"
             >
-              <FaTimes className="text-xl md:text-2xl text-white/80" />
-            </motion.button>
+              <FaTimes />
+            </button>
 
             {/* Header */}
-            <motion.div
-              className="sticky top-0 z-40 rounded-t-xl pb-4 pt-3 mb-4 text-center"
-              variants={sectionVariants}
-            >
-              <div className="flex justify-center items-center flex-col gap-2">
-                {logo && <div className="w-12 h-12">{logo}</div>}
-                <h4 className="text-xl md:text-2xl font-bold uppercase">
-                  {car.title}
-                </h4>
-              </div>
-            </motion.div>
+            <div className="sticky top-0 z-40 bg-gradient-to-b from-rose-950/90 to-transparent backdrop-blur-sm px-6 pt-4 pb-4 text-center">
+              {logo && <div className="mx-auto mb-2 h-12 w-12">{logo}</div>}
+              <h4 className="text-xl md:text-2xl font-bold uppercase tracking-wide">
+                {car.title}
+              </h4>
+            </div>
 
-            {/* Image Slider with parallax wrapper */}
-            <motion.div
-              className="rounded-md overflow-hidden mb-6 will-change-transform"
-              variants={sectionVariants}
-              style={{ y: imageParallaxY }}
-            >
-              {!isLoaded && (
-                <div className="flex justify-center items-center h-[300px] md:h-[400px] bg-black/20">
-                  <LoadingSpinner />
-                </div>
-              )}
-              <Slider {...sliderSettings} ref={sliderRef}>
-                {(car.imageUrl?.length ? car.imageUrl : [fallbackImage]).map(
-                  (url, i) => (
-                    <div key={`${url}-${i}`}>
-                      <Image
-                        src={url}
-                        alt={`${car.title} ${i + 1}`}
-                        width={800}
-                        height={500}
-                        className={`object-cover w-full h-[300px] md:h-[500px] rounded-md transition-opacity duration-300 ${
-                          isLoaded ? "opacity-100" : "opacity-0"
-                        }`}
-                        loading={i === 0 ? "eager" : "lazy"}
-                        onLoad={() => setIsLoaded(true)}
-                      />
-                    </div>
-                  )
+            {/* Scrollable content */}
+            <div className="overflow-y-auto px-6 pb-6 max-h-[calc(92vh-120px)]">
+              {/* Slider */}
+              <div className="mb-6">
+                {!isLoaded && (
+                  <div className="flex h-[280px] items-center justify-center bg-black/20">
+                    <LoadingSpinner />
+                  </div>
                 )}
-              </Slider>
-            </motion.div>
+                <motion.div style={{ y: imageParallaxY }}>
+                  <Slider ref={sliderRef} {...sliderSettings}>
+                    {(car.imageUrl?.length
+                      ? car.imageUrl
+                      : [fallbackImage]
+                    ).map((url, i) => {
+                      const isActive = i === activeSlide;
+                      return (
+                        <div
+                          key={`${url}-${i}`}
+                          className="relative h-[280px] md:h-[420px]"
+                          inert={!isActive}
+                          aria-hidden={!isActive}
+                          tabIndex={isActive ? 0 : -1}
+                        >
+                          <Image
+                            src={url}
+                            alt={`${car.title} ${i + 1}`}
+                            fill
+                            sizes="(max-width: 768px) 100vw, 800px"
+                            className={`object-cover rounded-md transition-opacity ${
+                              isLoaded ? "opacity-100" : "opacity-0"
+                            }`}
+                            loading={i === 0 ? "eager" : "lazy"}
+                            onLoad={() => setIsLoaded(true)}
+                          />
+                        </div>
+                      );
+                    })}
+                  </Slider>
+                </motion.div>
+              </div>
 
-            {/* Badges, Price & Share */}
-            <motion.div
-              className="flex flex-wrap gap-3 mb-6 justify-center items-center"
-              variants={badgesContainer}
-              initial="hidden"
-              animate="visible"
-              layout
-            >
-              {car.isFeatured && (
-                <motion.span
-                  variants={badgeItem}
-                  className="px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide bg-yellow-400 text-black shadow-sm ring-1 ring-black/10"
-                >
-                  Featured
-                </motion.span>
-              )}
+              <Divider />
 
-              {car.isSold && (
-                <motion.span
-                  variants={badgeItem}
-                  className="px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide bg-zinc-800 text-white shadow-sm ring-1 ring-white/10"
-                >
-                  Sold
-                </motion.span>
-              )}
+              <p className="mb-6 text-center leading-relaxed">
+                {car.description}
+              </p>
 
-              {/* Price pill */}
-              {!car.isSold ? (
-                <motion.a
-                  variants={badgeItem}
-                  href="tel:07809107655"
-                  aria-label={`Call to enquire about this car, price £${formattedPrice}`}
-                  className="inline-flex items-center px-6 py-2 rounded-full font-bold text-white text-2xl shadow-lg ring-1 ring-white/10 bg-gradient-to-b from-rose-500 to-rose-600 hover:from-rose-500/90 hover:to-rose-600/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-300/60 backdrop-blur-sm"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  transition={{ type: "spring", stiffness: 420, damping: 26 }}
-                >
-                  £{formattedPrice}
-                </motion.a>
-              ) : (
-                <motion.span
-                  variants={badgeItem}
-                  className="inline-flex items-center px-6 py-2 rounded-full font-bold text-2xl text-zinc-300 bg-zinc-800/70 ring-1 ring-white/10 line-through"
-                >
-                  £{formattedPrice}
-                </motion.span>
-              )}
+              <Divider />
 
-              {/* Share / Copy pill */}
-              <motion.button
-                variants={badgeItem}
-                type="button"
+              {/* Specs */}
+              <div className="grid grid-cols-3 gap-6 text-center text-lg mb-6">
+                <div>
+                  <PiEngineFill className="mx-auto mb-1" />
+                  {car.engineType}
+                </div>
+                <div>
+                  <FaGasPump className="mx-auto mb-1" />
+                  {car.engineSize}L
+                </div>
+                <div>
+                  <GiGearStickPattern className="mx-auto mb-1" />
+                  {car.transmission}
+                </div>
+                <div>
+                  <FaCarSide className="mx-auto mb-1" />
+                  {car.carType}
+                </div>
+                <div>
+                  <FaRegCalendarAlt className="mx-auto mb-1" />
+                  {car.year}
+                </div>
+                <div>
+                  <BiSolidTachometer className="mx-auto mb-1" />
+                  {formattedMileage} miles
+                </div>
+              </div>
+
+              <Divider />
+
+              <button
                 onClick={handleShare}
-                aria-label="Share this car"
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-full font-semibold text-white text-base shadow ring-1 ring-white/10 bg-white/5 hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-300/60 backdrop-blur-sm"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                transition={{ type: "spring", stiffness: 420, damping: 26 }}
+                className="mx-auto mt-4 flex items-center gap-2 rounded-full bg-white/10 px-6 py-2"
               >
-                <FaShareAlt className="opacity-90" />
+                <FaShareAlt />
                 {copied ? "Link copied" : "Share"}
-              </motion.button>
-            </motion.div>
-
-            <Divider />
-
-            {/* Description */}
-            <motion.p
-              className="text-center text-zinc-100 mb-6 text-base md:text-lg leading-relaxed"
-              variants={sectionVariants}
-            >
-              {car.description}
-            </motion.p>
-
-            <Divider />
-
-            {/* Specs */}
-            <motion.div
-              className="grid grid-cols-3 md:flex md:flex-wrap md:justify-center gap-6 text-center font-semibold text-lg md:text-xl mb-6"
-              variants={specsContainer}
-              initial="hidden"
-              animate="visible"
-            >
-              <motion.div variants={specItem}>
-                <PiEngineFill
-                  size={28}
-                  className="mx-auto mb-1 text-rose-200"
-                />
-                <p>{car.engineType}</p>
-              </motion.div>
-
-              <motion.div variants={specItem}>
-                <FaGasPump size={28} className="mx-auto mb-1 text-rose-200" />
-                <p>{car.engineSize}L</p>
-              </motion.div>
-
-              <motion.div variants={specItem}>
-                <GiGearStickPattern
-                  size={28}
-                  className="mx-auto mb-1 text-rose-200"
-                />
-                <p>{car.transmission}</p>
-              </motion.div>
-
-              <motion.div variants={specItem}>
-                <FaCarSide size={28} className="mx-auto mb-1 text-rose-200" />
-                <p>{car.carType}</p>
-              </motion.div>
-
-              <motion.div variants={specItem}>
-                <FaRegCalendarAlt
-                  size={28}
-                  className="mx-auto mb-1 text-rose-200"
-                />
-                <p>{car.year}</p>
-              </motion.div>
-
-              <motion.div variants={specItem}>
-                <BiSolidTachometer
-                  size={28}
-                  className="mx-auto mb-1 text-rose-200"
-                />
-                <p>{formattedMileage} miles</p>
-              </motion.div>
-            </motion.div>
+              </button>
+            </div>
           </motion.div>
         </motion.div>
       )}

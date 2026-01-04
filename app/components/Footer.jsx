@@ -5,9 +5,6 @@ import { socialLinks } from "../constants";
 import EnquiryForm from "./EnquiryForm";
 import { useInView } from "react-intersection-observer";
 
-const PHONE_DISPLAY = "07809 107655";
-const PHONE_DIAL = "+447809107655";
-
 const Footer = () => {
   const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.2 });
 
@@ -16,7 +13,7 @@ const Footer = () => {
       <div className="space-y-20">
         {/* Heading */}
         <motion.h2
-          className="text-4xl md:text-5xl font-semibold text-center tracking-tight"
+          className="text-4xl md:text-5xl font-bold text-center tracking-tight"
           initial={{ opacity: 0, y: 12 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -80,33 +77,32 @@ const Footer = () => {
             text-center space-y-4
           "
         >
-          <h3 className="text-xl font-medium">
+          <h3 className="text-2xl font-semibold">
             © {new Date().getFullYear()} Ace Motor Sales
           </h3>
 
           <p className="text-white/85">4 Westgate, Heckmondwike, WF16 0EH</p>
 
           <p className="text-white/70">
-            Open daily, 9am–8pm. Walk-ins welcome.
+            Keys in the ignition from 9am to 8pm. Cruise on in anytime.
           </p>
 
           {/* Phone */}
           <a
-            href={`tel:${PHONE_DIAL}`}
-            aria-label={`Call Ace Motor Sales on ${PHONE_DISPLAY}`}
+            href="tel:+447809107655"
+            aria-label="Call Ace Motor Sales on 07809 107655"
             className="
-              inline-block text-3xl font-semibold
-              text-rose-300 hover:text-rose-200
-              transition-colors
+              inline-block text-3xl font-bold
+              text-rose-300 hover:text-rose-200 transition
               focus-visible:outline-none
               focus-visible:ring-2 focus-visible:ring-rose-300/50
             "
           >
-            {PHONE_DISPLAY}
+            07809 107655
           </a>
 
           {/* Socials */}
-          <div className="flex justify-center gap-5 pt-4">
+          <div className="flex justify-center gap-5 pt-3">
             {socialLinks.map(({ id, href, icon, name }) => (
               <motion.a
                 key={id}
@@ -125,11 +121,11 @@ const Footer = () => {
         </motion.div>
 
         {/* Signature */}
-        <div className="text-xl flex justify-center items-center gap-2 text-white/60">
+        <div className="text-xl flex justify-center items-center gap-2 text-white/70">
           Built with
           <motion.span
             animate={{ rotate: -360 }}
-            transition={{ repeat: Infinity, duration: 6, ease: "linear" }}
+            transition={{ repeat: Infinity, duration: 5, ease: "linear" }}
             className="inline-block"
           >
             💚
@@ -138,7 +134,7 @@ const Footer = () => {
           <a
             href="https://legxcysol.dev"
             target="_blank"
-            className="hover:text-white transition"
+            className="hover:text-white transition duration-300"
           >
             Legxcy Solutions
           </a>

@@ -1,7 +1,6 @@
 "use client";
 
 import { motion } from "framer-motion";
-import Link from "next/link";
 import { socialLinks } from "../constants";
 import EnquiryForm from "./EnquiryForm";
 import { useInView } from "react-intersection-observer";
@@ -88,15 +87,19 @@ const Footer = () => {
             Keys in the ignition from 9am to 8pm. Cruise on in anytime.
           </p>
 
-          <Link
-            href="tel:07809107655"
+          {/* Phone */}
+          <a
+            href="tel:+447809107655"
+            aria-label="Call Ace Motor Sales on 07809 107655"
             className="
               inline-block text-3xl font-bold
               text-rose-300 hover:text-rose-200 transition
+              focus-visible:outline-none
+              focus-visible:ring-2 focus-visible:ring-rose-300/50
             "
           >
             07809 107655
-          </Link>
+          </a>
 
           {/* Socials */}
           <div className="flex justify-center gap-5 pt-3">

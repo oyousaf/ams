@@ -15,26 +15,26 @@ const yearsEstablished = currentYear - establishedYear;
 export const aboutTiles = [
   {
     icon: FaCar,
-    title: "Certified Quality",
+    title: "Assured Quality",
     description:
-      "Each car is thoroughly inspected and certified to ensure lasting performance and total peace of mind.",
+      "Every vehicle is thoroughly inspected to ensure long-term reliability, dependable performance, and complete peace of mind.",
   },
   {
     icon: FaHandshake,
     title: "Superb Service",
     description:
-      "From first call to final delivery, we provide reliable UK-wide service with honesty, care, and convenience.",
+      "From initial enquiry to final delivery, we provide a transparent, trustworthy used-car buying service for customers across the UK.",
   },
   {
     icon: FaShieldAlt,
     title: "Flexibility",
     description:
-      "Reserve your next car for £99, explore flexible financing, sell your current vehicle with zero hassle, or opt for part exchange — whatever suits you best.",
+      "Secure your next car for £99, choose flexible finance, sell your current vehicle with ease, or opt for part exchange.",
   },
   {
     icon: FaHistory,
     title: `Established ${yearsEstablished} Years`,
-    description: `Trusted since ${establishedYear}, we’ve built a legacy on transparency, care, and standout service.`,
+    description: `Trusted since ${establishedYear}, we’ve built our reputation on transparency, integrity, and consistently high standards of service.`,
   },
 ];
 

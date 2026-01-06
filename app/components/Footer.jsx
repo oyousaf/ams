@@ -121,23 +121,29 @@ const Footer = () => {
         </motion.div>
 
         {/* Signature */}
-        <div className="text-xl flex justify-center items-center gap-2 text-white/70">
-          Built with
+        <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 text-base md:text-lg leading-tight text-white/70 text-center">
+          <span>Built with</span>
+
           <motion.span
+            aria-hidden
+            className="inline-block leading-none"
             animate={{ rotate: -360 }}
-            transition={{ repeat: Infinity, duration: 5, ease: "linear" }}
-            className="inline-block"
+            transition={{ repeat: Infinity, duration: 6, ease: "linear" }}
           >
             💚
           </motion.span>
-          by
-          <a
-            href="https://legxcysol.dev"
-            target="_blank"
-            className="hover:text-white transition duration-300"
-          >
-            Legxcy Solutions
-          </a>
+
+          <span>
+            by{" "}
+            <a
+              href="https://legxcysol.dev"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium text-white/80 hover:text-white transition"
+            >
+              Legxcy Solutions
+            </a>
+          </span>
         </div>
       </div>
     </footer>

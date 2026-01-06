@@ -121,7 +121,7 @@ const Footer = () => {
         </motion.div>
 
         {/* Signature */}
-        <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 text-base md:text-lg leading-tight text-white/70 text-center">
+        <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 text-lg md:text-xl leading-tight text-white/70 text-center">
           <span>Built with</span>
 
           <motion.span

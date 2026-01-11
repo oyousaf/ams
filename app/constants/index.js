@@ -87,6 +87,11 @@ export const gallery = [
 
 export const reviews = [
   {
+    name: "Chrismag",
+    feedback:
+      "Absolutely brilliant service from the team at Ace Motor Sales. I would definitely go back in a heartbeat.",
+  },
+  {
     name: "John F",
     feedback: `Just bought a car from Ace Motor Sales. They have outstanding customer service and a fantastic, friendly, no-hassle sale policy. I highly recommend this company to anyone looking to change or buy a vehicle.`,
   },
@@ -123,11 +128,6 @@ export const reviews = [
     name: "Hamza N",
     feedback:
       "I part-exchanged my previous car for a stunning German whip from Faisal. The process was smooth and hassle-free. I’d definitely recommend anyone looking to buy or part-exchange their car to visit here — excellent customer service! I’m already looking forward to coming back in the future!",
-  },
-  {
-    name: "S A",
-    feedback:
-      "Thrilled with my car I brought from these guys. Good prices and top service. Recommend to all.",
   },
   {
     name: "Omar 🍉",

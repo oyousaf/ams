@@ -1,73 +1,116 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { RiMenu3Line, RiCloseLine } from "react-icons/ri";
 import Image from "next/image";
-import { navLinks, socialLinks } from "../constants/index";
+import { navLinks, socialLinks } from "../constants";
 import logo from "@/public/logo.png";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence, useDragControls } from "framer-motion";
+import { usePathname } from "next/navigation";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const panelRef = useRef(null);
+  const dragControls = useDragControls();
+  const pathname = usePathname();
 
-  const toggleMenu = () => setMenuOpen((prev) => !prev);
+  const toggleMenu = () => setMenuOpen((p) => !p);
+  const closeMenu = () => setMenuOpen(false);
 
   const handleScroll = (sectionId) => {
     const section = document.getElementById(sectionId);
     if (section) {
       section.scrollIntoView({ behavior: "smooth" });
-      setMenuOpen(false);
+      closeMenu();
     }
   };
 
+  /* Scroll lock */
   useEffect(() => {
-    const body = document.body;
-    menuOpen
-      ? body.classList.add("overflow-hidden")
-      : body.classList.remove("overflow-hidden");
-
+    if (!menuOpen) return;
+    document.body.style.overflow = "hidden";
     return () => {
-      body.classList.remove("overflow-hidden");
+      document.body.style.overflow = "";
     };
   }, [menuOpen]);
 
+  /* Route change auto-close */
+  useEffect(() => {
+    closeMenu();
+  }, [pathname]);
+
+  /* Escape close */
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onKey = (e) => e.key === "Escape" && closeMenu();
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [menuOpen]);
+
+  /* Focus trap */
+  useEffect(() => {
+    if (!menuOpen || !panelRef.current) return;
+
+    const focusables = panelRef.current.querySelectorAll(
+      'button, a, [tabindex]:not([tabindex="-1"])'
+    );
+    if (!focusables.length) return;
+
+    const first = focusables[0];
+    const last = focusables[focusables.length - 1];
+    first.focus();
+
+    const trap = (e) => {
+      if (e.key !== "Tab") return;
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener("keydown", trap);
+    return () => document.removeEventListener("keydown", trap);
+  }, [menuOpen]);
+
   return (
-    <nav className="bg-black text-white fixed top-0 left-0 right-0 p-4 z-50 shadow-md">
-      <div className="w-full max-w-screen-xl mx-auto px-2 sm:px-4 md:px-8 flex items-center justify-between">
+    <nav className="bg-black text-white fixed top-0 inset-x-0 p-4 z-50 shadow-md">
+      <div className="max-w-screen-xl mx-auto px-2 sm:px-4 md:px-8 flex items-center justify-between">
         {/* Logo */}
         <motion.div
-          initial={{ scale: 1 }}
-          whileHover={{ scale: 1.1 }}
-          transition={{ type: "spring", stiffness: 300 }}
+          whileHover={{ scale: 1.05 }}
+          transition={{ type: "spring", stiffness: 500, damping: 30 }}
           className="cursor-pointer"
           onClick={() => handleScroll("hero")}
         >
           <Image
             src={logo}
             alt="logo"
-            priority={true}
+            priority
             className="w-[120px] sm:w-[150px] md:w-[180px]"
           />
         </motion.div>
 
-        {/* Desktop & Tablet Menu */}
+        {/* Desktop nav */}
         <ul className="hidden md:flex gap-6 lg:gap-10 items-center">
           {navLinks.map(({ id, href, name }, index) => (
             <motion.li
               key={id}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{
-                delay: index * 0.12,
-                duration: 0.4,
-                ease: "easeOut",
-              }}
               whileHover={{ y: -2 }}
+              transition={{
+                opacity: { duration: 0.25, ease: "easeOut" },
+                y: { type: "spring", stiffness: 600, damping: 28 },
+                delay: index * 0.08,
+              }}
             >
               <button
                 onClick={() => handleScroll(href)}
-                className="relative text-lg md:text-xl font-bold uppercase tracking-wide text-white/90 hover:text-white transition-colors
-                  after:content-[''] after:absolute after:left-0 after:-bottom-1 after:w-0 after:h-[2px] after:bg-rose-600 after:transition-all after:duration-300 hover:after:w-full"
+                className="relative text-lg md:text-xl font-bold uppercase tracking-wide text-white/90 hover:text-white transition
+                  after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-0 after:bg-rose-600 after:transition-all hover:after:w-full"
               >
                 {name}
               </button>
@@ -75,8 +118,8 @@ const Navbar = () => {
           ))}
         </ul>
 
-        {/* Social Media Icons (Desktop & Tablet) */}
-        <div className="hidden md:flex gap-3 md:gap-5 lg:gap-6 items-center">
+        {/* Desktop socials */}
+        <div className="hidden md:flex gap-5 items-center">
           {socialLinks.map(({ id, href, icon, name }) => (
             <motion.a
               key={id}
@@ -84,79 +127,175 @@ const Navbar = () => {
               target="_blank"
               rel="noopener noreferrer"
               aria-label={name}
-              className="hover:text-rose-600 transition-colors"
               whileHover={{ scale: 1.2 }}
-              transition={{ type: "spring", stiffness: 300 }}
+              transition={{ type: "spring", stiffness: 500, damping: 30 }}
+              className="hover:text-rose-600"
             >
               {icon}
             </motion.a>
           ))}
         </div>
 
-        {/* Mobile Menu Button */}
+        {/* Mobile toggle */}
         <button
           onClick={toggleMenu}
-          className="text-white md:hidden z-10 focus:outline-none"
+          className="md:hidden z-[60]"
           aria-expanded={menuOpen}
           aria-label="Toggle navigation menu"
         >
           {menuOpen ? (
-            <RiCloseLine className="text-5xl menu-icon-pulse" />
+            <RiCloseLine className="text-5xl text-rose-600" />
           ) : (
-            <RiMenu3Line className="text-5xl menu-icon-pulse" />
+            <RiMenu3Line className="text-5xl text-rose-600" />
           )}
         </button>
       </div>
 
-      {/* Mobile Full-Screen Menu */}
-      <motion.div
-        className="fixed inset-0 mobile-menu flex flex-col md:hidden"
-        initial={{ x: "100%" }}
-        animate={{ x: menuOpen ? 0 : "100%" }}
-        transition={{
-          type: "spring",
-          stiffness: 200,
-          damping: 30,
-        }}
-      >
-        <div className="flex flex-col items-center justify-center flex-grow">
-          <ul className="space-y-8 text-center flex flex-col items-center">
-            {navLinks.map(({ id, href, name }) => (
-              <motion.li
-                key={id}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.2 * id, type: "spring", stiffness: 200 }}
-              >
-                <button
-                  onClick={() => handleScroll(href)}
-                  className="text-4xl font-bold hover:text-rose-600 transition-colors duration-300 ease-in-out uppercase cursor-pointer"
-                >
-                  {name}
-                </button>
-              </motion.li>
-            ))}
-          </ul>
-        </div>
+      {/* ===== MOBILE MENU ===== */}
+      <AnimatePresence>
+        {menuOpen && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              className="fixed inset-0 bg-black/50 backdrop-blur-sm md:hidden z-40"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={closeMenu}
+            />
 
-        {/* Social Media Icons (Mobile) */}
-        <div className="flex space-x-6 mb-20 justify-center">
-          {socialLinks.map(({ id, href, icon, name }) => (
-            <motion.a
-              key={id}
-              href={href}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={name}
-              className="hover:text-rose-600 transition-colors duration-300 ease-in-out"
-              whileHover={{ scale: 1.2 }}
-              transition={{ type: "spring", stiffness: 200 }}
+            {/* Panel */}
+            <motion.div
+              ref={panelRef}
+              className="fixed inset-0 md:hidden z-50 flex flex-col bg-zinc-900/90"
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              drag="x"
+              dragControls={dragControls}
+              dragListener={false}
+              dragConstraints={{ left: 0, right: 0 }}
+              onDragEnd={(_, info) => {
+                if (info.offset.x > 120 || info.velocity.x > 600) closeMenu();
+              }}
+              transition={{ type: "spring", stiffness: 220, damping: 30 }}
             >
-              {icon}
-            </motion.a>
-          ))}
-        </div>
-      </motion.div>
+              <div
+                className="flex flex-col items-center justify-center flex-grow"
+                onPointerDown={(e) => dragControls.start(e)}
+              >
+                <motion.ul
+                  className="space-y-8 text-center"
+                  initial="closed"
+                  animate="open"
+                  exit="closed"
+                  variants={{
+                    open: {
+                      transition: {
+                        staggerChildren: 0.08,
+                        delayChildren: 0.15,
+                      },
+                    },
+                    closed: {
+                      transition: {
+                        staggerChildren: 0.05,
+                        staggerDirection: -1,
+                      },
+                    },
+                  }}
+                >
+                  {navLinks.map(({ id, href, name }) => (
+                    <motion.li
+                      key={id}
+                      variants={{
+                        open: {
+                          opacity: 1,
+                          y: 0,
+                          scale: 1,
+                          transition: {
+                            type: "spring",
+                            stiffness: 600,
+                            damping: 28,
+                          },
+                        },
+                        closed: {
+                          opacity: 0,
+                          y: 24,
+                          scale: 0.96,
+                          transition: { duration: 0.15 },
+                        },
+                      }}
+                      whileHover={{ y: -2 }}
+                    >
+                      <button
+                        onClick={() => handleScroll(href)}
+                        className="text-4xl font-bold uppercase text-white/90 hover:text-rose-600 transition"
+                      >
+                        {name}
+                      </button>
+                    </motion.li>
+                  ))}
+                </motion.ul>
+              </div>
+
+              {/* Mobile socials */}
+              <motion.div
+                className="flex gap-6 mb-20 justify-center"
+                initial="closed"
+                animate="open"
+                exit="closed"
+                variants={{
+                  open: {
+                    transition: {
+                      staggerChildren: 0.04,
+                      delayChildren: menuOpen ? 0.25 : 0,
+                    },
+                  },
+                  closed: {
+                    transition: {
+                      staggerChildren: 0.03,
+                      staggerDirection: -1,
+                    },
+                  },
+                }}
+              >
+                {socialLinks.map(({ id, href, icon, name }) => (
+                  <motion.a
+                    key={id}
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={name}
+                    className="text-white hover:text-rose-600"
+                    variants={{
+                      open: {
+                        opacity: 1,
+                        y: 0,
+                        scale: 1,
+                        transition: {
+                          type: "spring",
+                          stiffness: 500,
+                          damping: 26,
+                        },
+                      },
+                      closed: {
+                        opacity: 0,
+                        y: 8,
+                        scale: 0.96,
+                        transition: { duration: 0.12 },
+                      },
+                    }}
+                    whileHover={{ scale: 1.12 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    {icon}
+                  </motion.a>
+                ))}
+              </motion.div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </nav>
   );
 };

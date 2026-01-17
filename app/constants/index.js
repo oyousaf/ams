@@ -87,6 +87,11 @@ export const gallery = [
 
 export const reviews = [
   {
+    name: "Moshfeq A",
+    feedback:
+      "Professional service, excellent communication, and a quality car at a fair price. I’d definitely recommend them if you’re in the market for a new car.",
+  },
+  {
     name: "Chrismag",
     feedback:
       "Absolutely brilliant service from the team at Ace Motor Sales. I would definitely go back in a heartbeat.",
@@ -123,11 +128,6 @@ export const reviews = [
     name: "Kieran M",
     feedback:
       "Hands down the best used car dealer I've ever had the pleasure of dealing with. From start to finish the service provided was nothing short of amazing, any questions were answered promptly and nothing was too much of a hassle for Faisal. He really does go above and beyond for his customers, I would have no problem recommending buying a car for him, top class service!",
-  },
-  {
-    name: "Hamza N",
-    feedback:
-      "I part-exchanged my previous car for a stunning German whip from Faisal. The process was smooth and hassle-free. I’d definitely recommend anyone looking to buy or part-exchange their car to visit here — excellent customer service! I’m already looking forward to coming back in the future!",
   },
   {
     name: "Omar 🍉",

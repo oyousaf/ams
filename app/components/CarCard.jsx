@@ -31,14 +31,9 @@ const CarCard = React.memo(({ car, logo, onOpen }) => {
         transition: { type: "spring", stiffness: 420, damping: 26 },
       }}
       transition={{ duration: 0.35, ease: "easeOut" }}
-      className="
-        cursor-pointer rounded-xl p-4 flex flex-col text-white
-        bg-linear-to-br from-rose-900 via-rose-800 to-rose-950
-        shadow-md transition-shadow duration-300
-        hover:shadow-[0_0_20px_rgba(244,63,94,0.35)]
-        will-change-transform
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-400
-      "
+      className="cursor-pointer rounded-xl p-4 flex flex-col text-white bg-linear-to-br from-rose-900 via-rose-800 to-rose-950
+        shadow-md transition-shadow duration-300 hover:shadow-[0_0_20px_rgba(244,63,94,0.35)]
+        will-change-transform focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-400"
     >
       {/* Image */}
       <div className="relative">
@@ -79,7 +74,7 @@ const CarCard = React.memo(({ car, logo, onOpen }) => {
 
       {logo && <div className="my-4 flex justify-center">{logo}</div>}
 
-      {/* Title — rosy like About tiles */}
+      {/* Title */}
       <h3
         id={`car-title-${car.$id}`}
         className="mb-2 text-center text-2xl md:text-3xl font-bold uppercase text-rose-200"

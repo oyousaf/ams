@@ -45,12 +45,12 @@ const HeroSection = () => {
           id="hero-heading"
           className="mb-6 rounded-xl bg-rose-950/50 px-4 py-3 text-4xl font-extrabold leading-tight tracking-tight shadow-md backdrop-blur-md md:text-6xl"
         >
-          Drive Away with Confidence
+          Quality Without Compromise
         </h1>
 
         <p className="mx-auto mb-8 max-w-2xl rounded-lg bg-rose-950/30 px-3 py-2 text-lg text-white/90 shadow-md backdrop-blur md:max-w-3xl md:text-xl">
-          Quality pre-owned vehicles, fully inspected and professionally
-          prepared — ready for the road.
+          Carefully selected used vehicles, rigorously inspected and
+          professionally prepared for the road ahead.
         </p>
       </motion.div>
 

@@ -26,20 +26,32 @@ const CarCard = React.memo(({ car, logo, onOpen }) => {
       onKeyDown={(e) => e.key === "Enter" && onOpen()}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      whileHover={{ scale: 1.02 }}
-      transition={{ duration: 0.3, ease: "easeOut" }}
-      className="cursor-pointer rounded-xl p-4 flex flex-col bg-linear-to-br from-rose-900 via-rose-800 to-rose-950
-        text-white shadow-md transition-shadow duration-300 hover:shadow-[0_0_20px_rgba(244,63,94,0.35)]
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-400"
+      whileHover={{
+        y: -6,
+        transition: { type: "spring", stiffness: 420, damping: 26 },
+      }}
+      transition={{ duration: 0.35, ease: "easeOut" }}
+      className="
+        cursor-pointer rounded-xl p-4 flex flex-col text-white
+        bg-linear-to-br from-rose-900 via-rose-800 to-rose-950
+        shadow-md transition-shadow duration-300
+        hover:shadow-[0_0_20px_rgba(244,63,94,0.35)]
+        will-change-transform
+        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-400
+      "
     >
       {/* Image */}
       <div className="relative">
         {car.isFeatured && (
-          <div className="absolute top-2 left-2 z-10">
-            <span className="bg-yellow-400 text-rose-950 text-xs font-bold px-2 py-1 rounded shadow uppercase">
-              Featured
-            </span>
-          </div>
+          <span
+            className="
+              absolute top-2 left-2 z-10
+              rounded-full px-3 py-1 text-xs font-semibold uppercase
+              bg-rose-400/20 text-rose-200 backdrop-blur
+            "
+          >
+            Featured
+          </span>
         )}
 
         <Image
@@ -47,7 +59,7 @@ const CarCard = React.memo(({ car, logo, onOpen }) => {
           alt={car.title}
           width={500}
           height={192}
-          className={`w-full rounded-md object-cover transition-opacity duration-300 ${
+          className={`w-full rounded-md object-cover transition-opacity ${
             car.isSold ? "opacity-60" : "opacity-100"
           }`}
           placeholder="blur"
@@ -55,7 +67,14 @@ const CarCard = React.memo(({ car, logo, onOpen }) => {
         />
 
         {car.isSold && (
-          <div className="absolute inset-0 flex items-center justify-center bg-rose-950/60 text-rose-200 text-4xl font-extrabold tracking-widest rounded-md pointer-events-none">
+          <div
+            className="
+              absolute inset-0 flex items-center justify-center
+              bg-rose-950/60 text-rose-200
+              text-4xl font-extrabold tracking-widest
+              rounded-md pointer-events-none
+            "
+          >
             SOLD
           </div>
         )}
@@ -63,18 +82,20 @@ const CarCard = React.memo(({ car, logo, onOpen }) => {
 
       {logo && <div className="my-4 flex justify-center">{logo}</div>}
 
+      {/* Title — rosy like About tiles */}
       <h3
         id={`car-title-${car.$id}`}
-        className="mb-2 text-center text-2xl md:text-3xl font-bold uppercase"
+        className="mb-2 text-center text-2xl md:text-3xl font-bold uppercase text-rose-200"
       >
         {car.title}
       </h3>
 
       <Divider />
 
+      {/* Description */}
       <p
         id={`car-desc-${car.$id}`}
-        className="mb-4 text-center text-base md:text-lg text-zinc-100 line-clamp-3"
+        className="mb-4 text-center text-base md:text-lg text-zinc-200 line-clamp-3"
       >
         {car.description}
       </p>
@@ -88,7 +109,7 @@ const CarCard = React.memo(({ car, logo, onOpen }) => {
           onClick={(e) => e.stopPropagation()}
           aria-label={`Call about ${car.title} priced at £${formattedPrice}`}
           className="inline-flex items-center gap-2 mb-4 px-4 py-2 rounded-full text-2xl md:text-3xl font-bold
-            bg-rose-500/20 text-white transition-colors duration-300 hover:bg-rose-500/30 hover:text-rose-300
+            bg-rose-500/20 text-rose-100 transition-colors hover:bg-rose-500/30 hover:text-rose-50
             focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-300/50"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
@@ -104,16 +125,12 @@ const CarCard = React.memo(({ car, logo, onOpen }) => {
             e.stopPropagation();
             onOpen();
           }}
-          className="
-            mx-auto grid place-items-center rounded-full p-2
-            cursor-pointer
-            focus-visible:outline-none
-            focus-visible:ring-2 focus-visible:ring-rose-300/50
-          "
+          className="mx-auto grid place-items-center rounded-full p-2 text-rose-300
+            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-300/50"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
         >
-          <FaEye className="text-white text-2xl transition-colors duration-300 hover:text-rose-300" />
+          <FaEye className="text-2xl transition-colors hover:text-rose-200 cursor-pointer" />
         </motion.button>
       </div>
     </motion.article>

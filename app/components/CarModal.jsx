@@ -22,9 +22,6 @@ import { GiGearStickPattern } from "react-icons/gi";
 import { BiSolidTachometer } from "react-icons/bi";
 import Divider from "./Divider";
 
-/* ---------------------------------------------
-   Motion
---------------------------------------------- */
 const overlayVariants = {
   hidden: { opacity: 0 },
   visible: { opacity: 1 },
@@ -45,16 +42,12 @@ const modalVariants = {
 const FALLBACK_IMAGE = "/fallback.webp";
 const AUTOPLAY_MS = 5000;
 
-/* ---------------------------------------------
-   Component
---------------------------------------------- */
 export default function CarModal({ car, logo, onClose }) {
   const images = useMemo(
     () => (car.imageUrl?.length ? car.imageUrl : [FALLBACK_IMAGE]),
     [car.imageUrl],
   );
 
-  /* Embla */
   const autoplay = useRef(
     Autoplay({
       delay: AUTOPLAY_MS,
@@ -70,41 +63,40 @@ export default function CarModal({ car, logo, onClose }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [progress, setProgress] = useState(0);
 
-  /* Autoplay progress (time-based, stable) */
+  /* --- Progress + pill sync (corrected) --- */
   useEffect(() => {
     if (!emblaApi) return;
 
     let raf;
     let start = performance.now();
 
-    const syncIndex = () => {
+    const sync = () => {
       setActiveIndex(emblaApi.selectedScrollSnap());
       start = performance.now();
       setProgress(0);
     };
 
     const tick = (now) => {
-      const elapsed = now - start;
-      setProgress(Math.min(0.999, elapsed / AUTOPLAY_MS));
+      const pct = (now - start) / AUTOPLAY_MS;
+      setProgress(pct >= 1 ? 1 : pct);
       raf = requestAnimationFrame(tick);
     };
 
-    // Initial sync (fixes pill sticking on first slide)
-    syncIndex();
-
-    emblaApi.on("select", syncIndex);
-    emblaApi.on("pointerDown", syncIndex);
+    sync();
+    emblaApi.on("select", sync);
+    emblaApi.on("pointerDown", sync);
+    emblaApi.on("reInit", sync);
 
     raf = requestAnimationFrame(tick);
 
     return () => {
       cancelAnimationFrame(raf);
-      emblaApi.off("select", syncIndex);
-      emblaApi.off("pointerDown", syncIndex);
+      emblaApi.off("select", sync);
+      emblaApi.off("pointerDown", sync);
+      emblaApi.off("reInit", sync);
     };
   }, [emblaApi]);
 
-  /* Keyboard */
   const close = useCallback(() => onClose?.(), [onClose]);
 
   useEffect(() => {
@@ -121,11 +113,9 @@ export default function CarModal({ car, logo, onClose }) {
     };
   }, [emblaApi, close]);
 
-  /* Parallax */
   const dragY = useMotionValue(0);
   const imageParallaxY = useTransform(dragY, [-200, 0, 200], [-8, 0, 8]);
 
-  /* Share */
   const [copied, setCopied] = useState(false);
   const formattedMileage =
     car.mileage >= 1000
@@ -160,7 +150,8 @@ export default function CarModal({ car, logo, onClose }) {
           role="dialog"
           aria-modal="true"
           aria-label={`${car.title} details`}
-          className="relative w-full max-w-3xl max-h-[92vh] rounded-xl bg-linear-to-br from-rose-900 via-rose-800 to-rose-950 text-white shadow-xl overflow-hidden"
+          className="relative w-full max-w-3xl max-h-[92vh] rounded-xl bg-linear-to-br from-rose-900 via-rose-800 to-rose-950
+           text-white shadow-xl overflow-hidden"
           variants={modalVariants}
           initial="hidden"
           animate="visible"
@@ -169,7 +160,6 @@ export default function CarModal({ car, logo, onClose }) {
           style={{ y: dragY }}
           dragConstraints={{ top: 0, bottom: 0 }}
         >
-          {/* Close */}
           <button
             onClick={close}
             aria-label="Close modal"
@@ -178,24 +168,24 @@ export default function CarModal({ car, logo, onClose }) {
             <FaTimes />
           </button>
 
-          {/* Header */}
-          <div className="sticky top-0 z-40 bg-linear-to-b from-rose-950/90 to-transparent backdrop-blur-sm px-6 pt-4 pb-4 text-center">
+          <div
+            className="sticky top-0 z-40 bg-linear-to-b from-rose-950/90 to-transparent backdrop-blur px-6 pt-4 pb-4 
+          text-center"
+          >
             {logo && <div className="mx-auto mb-2 h-12 w-12">{logo}</div>}
-            <h4 className="text-xl md:text-2xl font-bold uppercase tracking-wide">
+            <h4 className="text-xl md:text-2xl font-bold uppercase tracking-wide text-rose-200">
               {car.title}
             </h4>
           </div>
 
-          {/* Content */}
           <div className="overflow-y-auto px-6 pb-6 max-h-[calc(92vh-120px)]">
-            {/* Carousel */}
             <div className="mb-6">
               <div ref={emblaRef} className="overflow-hidden">
                 <div className="flex">
                   {images.map((src, i) => (
                     <div
                       key={i}
-                      className="relative flex-[0_0_100%] h-70 md:h-105"
+                      className="relative flex-[0_0_100%] h-72 md:h-105"
                     >
                       <motion.div style={{ y: imageParallaxY }}>
                         <Image
@@ -212,7 +202,6 @@ export default function CarModal({ car, logo, onClose }) {
                 </div>
               </div>
 
-              {/* Pill rail */}
               <div className="mt-4 flex justify-center">
                 <div className="flex gap-2 rounded-full bg-white/10 px-3 py-2 backdrop-blur">
                   {images.map((_, i) => {
@@ -220,15 +209,16 @@ export default function CarModal({ car, logo, onClose }) {
                     return (
                       <button
                         key={i}
-                        onClick={() => emblaApi?.scrollTo(i)}
+                        onClick={() => {
+                          emblaApi?.scrollTo(i);
+                          autoplay.current?.reset();
+                        }}
                         className="relative h-2.5 w-6 focus:outline-none"
                       >
-                        {/* Base */}
                         <span
                           className="absolute inset-0 rounded-full bg-rose-300/30 transition-all"
                           style={{ width: active ? 28 : 10 }}
                         />
-                        {/* Progress */}
                         {active && (
                           <span className="absolute inset-0 overflow-hidden rounded-full">
                             <span
@@ -249,34 +239,33 @@ export default function CarModal({ car, logo, onClose }) {
 
             <Divider />
 
-            <p className="mb-6 text-center">{car.description}</p>
+            <p className="mb-6 text-center text-zinc-200">{car.description}</p>
 
             <Divider />
 
-            {/* Specs */}
-            <div className="grid grid-cols-3 gap-6 text-center text-lg mb-6">
+            <div className="grid grid-cols-3 gap-6 text-center text-lg mb-6 text-zinc-200">
               <div>
-                <PiEngineFill className="mx-auto mb-1" />
+                <PiEngineFill className="mx-auto mb-1 text-rose-300" />
                 {car.engineType}
               </div>
               <div>
-                <FaGasPump className="mx-auto mb-1" />
+                <FaGasPump className="mx-auto mb-1 text-rose-300" />
                 {car.engineSize}L
               </div>
               <div>
-                <GiGearStickPattern className="mx-auto mb-1" />
+                <GiGearStickPattern className="mx-auto mb-1 text-rose-300" />
                 {car.transmission}
               </div>
               <div>
-                <FaCarSide className="mx-auto mb-1" />
+                <FaCarSide className="mx-auto mb-1 text-rose-300" />
                 {car.carType}
               </div>
               <div>
-                <FaRegCalendarAlt className="mx-auto mb-1" />
+                <FaRegCalendarAlt className="mx-auto mb-1 text-rose-300" />
                 {car.year}
               </div>
               <div>
-                <BiSolidTachometer className="mx-auto mb-1" />
+                <BiSolidTachometer className="mx-auto mb-1 text-rose-300" />
                 {formattedMileage} miles
               </div>
             </div>
@@ -285,7 +274,8 @@ export default function CarModal({ car, logo, onClose }) {
 
             <button
               onClick={share}
-              className="mx-auto mt-4 flex items-center gap-2 rounded-full bg-white/10 px-6 py-2"
+              className="mx-auto mt-4 flex items-center gap-2 rounded-full bg-rose-400/15 px-6 py-2 text-rose-100 
+              transition-colors hover:bg-rose-400/25"
             >
               <FaShareAlt />
               {copied ? "Link copied" : "Share"}

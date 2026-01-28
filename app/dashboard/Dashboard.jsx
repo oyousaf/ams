@@ -206,7 +206,7 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="fixed inset-0 h-screen bg-rose-950 text-white flex flex-col z-100">
+    <div className="fixed inset-0 h-screen bg-rose-950 text-white flex flex-col z-50">
       <header className="h-20 shrink-0 px-4 shadow-md">
         <div className="max-w-7xl mx-auto h-full flex items-center justify-between">
           <h1 className="text-2xl font-bold">Dashboard</h1>
@@ -216,7 +216,7 @@ export default function Dashboard() {
         </div>
       </header>
 
-      <nav className="flex justify-center gap-3 p-2">
+      <nav className="flex justify-center gap-3 p-2 shrink-0">
         {tabs.map((t) => (
           <button
             key={t.key}
@@ -232,41 +232,53 @@ export default function Dashboard() {
         ))}
       </nav>
 
-      <div className="flex-1 overflow-visible">
+      <div className="flex-1 flex flex-col overflow-visible min-h-0">
         {activeTab === "carList" ? (
-          <div className="h-full flex flex-col overflow-y-auto p-4 max-w-7xl mx-auto w-full">
-            <div className="mb-4 rounded-xl bg-white/5 p-3 backdrop-blur">
-              <div className="mx-auto flex w-full max-w-4xl flex-col md:flex-row items-stretch md:items-center gap-3">
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search cars…"
-                  className="h-11 w-full md:flex-1 px-4 rounded-lg bg-transparent text-white placeholder:text-rose-300 focus:outline-none focus:ring-2 focus:ring-rose-400"
-                />
-
-                <div className="h-11 w-full md:w-64">
-                  <SortDropdownDashboard
-                    options={sortOptions}
-                    selected={sortOption}
-                    onSelect={setSortOption}
-                    isOpen={dropdownOpen}
-                    onToggle={setDropdownOpen}
+          <>
+            {/* Filters */}
+            <div className="p-4 shrink-0">
+              <div className="mx-auto max-w-7xl rounded-xl bg-white/5 p-3 backdrop-blur">
+                <div className="mx-auto flex w-full max-w-4xl flex-col md:flex-row items-stretch md:items-center gap-3">
+                  {/* Search */}
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search cars…"
+                    className="
+                    h-11 w-full md:flex-1 px-4 rounded-lg
+                    bg-transparent text-white
+                    placeholder:text-rose-300
+                    focus:outline-none focus:ring-2 focus:ring-rose-400
+                  "
                   />
+
+                  {/* Sort */}
+                  <div className="relative w-full md:w-64">
+                    <SortDropdownDashboard
+                      options={sortOptions}
+                      selected={sortOption}
+                      onSelect={setSortOption}
+                      isOpen={dropdownOpen}
+                      onToggle={setDropdownOpen}
+                    />
+                  </div>
                 </div>
               </div>
             </div>
 
-            {loading ? (
-              <LoadingSpinner />
-            ) : (
-              <CarList
-                cars={filteredCars}
-                setCars={setCars}
-                fetchCars={fetchCars}
-              />
-            )}
-          </div>
+            <div className="flex-1 min-h-0 flex px-4 pb-4">
+              {loading ? (
+                <LoadingSpinner />
+              ) : (
+                <CarList
+                  cars={filteredCars}
+                  setCars={setCars}
+                  fetchCars={fetchCars}
+                />
+              )}
+            </div>
+          </>
         ) : (
           <AnimatePresence mode="wait">
             <motion.div

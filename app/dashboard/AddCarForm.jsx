@@ -1,29 +1,29 @@
 "use client";
-import React, { useState, useEffect, useMemo } from "react";
+
+import { useState, useEffect, useMemo } from "react";
 import { motion } from "framer-motion";
+import Image from "next/image";
 import { databases, storage, ID } from "../lib/appwrite";
 import { toast } from "sonner";
 import { AiOutlineLoading } from "react-icons/ai";
 import Toggle from "./Toggle";
-import Image from "next/image";
 
+/* ---------------------------------------------
+   Motion
+--------------------------------------------- */
 const shakeVariant = {
   idle: { x: 0 },
-  shake: {
-    x: [-8, 8, -6, 6, 0],
-    transition: { duration: 0.4 },
-  },
+  shake: { x: [-6, 6, -4, 4, 0], transition: { duration: 0.35 } },
 };
 
-const fadeInUp = {
-  hidden: { opacity: 0, y: 20 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.4, ease: "easeOut" },
-  },
+const fadeIn = {
+  hidden: { opacity: 0, y: 16 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.35 } },
 };
 
+/* ---------------------------------------------
+   Component
+--------------------------------------------- */
 export default function AddCarForm({ setCars, fetchCars, setActiveTab }) {
   const initial = useMemo(
     () => ({
@@ -34,19 +34,19 @@ export default function AddCarForm({ setCars, fetchCars, setActiveTab }) {
       engineSize: "",
       transmission: "Automatic",
       mileage: "",
-      images: [],
       year: "",
       carType: "Convertible",
+      images: [],
       isFeatured: false,
       isSold: false,
     }),
-    []
+    [],
   );
 
   const [car, setCar] = useState(initial);
   const [previews, setPreviews] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [shouldShake, setShouldShake] = useState(false);
+  const [shake, setShake] = useState(false);
 
   const carTypes = useMemo(
     () =>
@@ -64,67 +64,78 @@ export default function AddCarForm({ setCars, fetchCars, setActiveTab }) {
         "Truck",
         "Van",
       ].sort(),
-    []
+    [],
   );
 
+  /* ---------------------------------------------
+     Cleanup previews
+  --------------------------------------------- */
   useEffect(() => {
-    return () => previews.forEach((u) => URL.revokeObjectURL(u));
+    return () => previews.forEach(URL.revokeObjectURL);
   }, [previews]);
 
-  const onChange = (e) => {
-    const { name, value } = e.target;
-    setCar((p) => ({ ...p, [name]: value }));
-  };
+  /* ---------------------------------------------
+     Handlers
+  --------------------------------------------- */
+  const update = (e) =>
+    setCar((p) => ({ ...p, [e.target.name]: e.target.value }));
 
   const onImages = (e) => {
     const files = Array.from(e.target.files);
-    previews.forEach((u) => URL.revokeObjectURL(u));
+    previews.forEach(URL.revokeObjectURL);
     setCar((p) => ({ ...p, images: files }));
     setPreviews(files.map((f) => URL.createObjectURL(f)));
   };
 
-  const valid = () => {
+  const isValid = () => {
     const { title, description, price, engineSize, mileage, year, images } =
       car;
     return (
       title.trim() &&
       description.trim() &&
-      +price >= 0 &&
-      +engineSize >= 0 &&
-      +mileage >= 0 &&
+      price >= 0 &&
+      engineSize >= 0 &&
+      mileage >= 0 &&
       /^\d{4}$/.test(year) &&
       images.length > 0
     );
   };
 
   const reset = () => {
-    previews.forEach((u) => URL.revokeObjectURL(u));
+    previews.forEach(URL.revokeObjectURL);
     setCar(initial);
     setPreviews([]);
   };
 
+  /* ---------------------------------------------
+     Submit
+  --------------------------------------------- */
   const onSubmit = async (e) => {
     e.preventDefault();
-    if (!valid()) {
-      setShouldShake(true);
-      toast.error("Please fill all fields");
+    if (!isValid()) {
+      setShake(true);
+      toast.error("Please complete all required fields");
       return;
     }
+
     setLoading(true);
     try {
-      const ids = [];
+      const fileIds = [];
       const urls = [];
-      for (const f of car.images) {
-        const file = await storage.createFile(
+
+      for (const file of car.images) {
+        const uploaded = await storage.createFile(
           process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID,
           ID.unique(),
-          f
+          file,
         );
-        ids.push(file.$id);
+
+        fileIds.push(uploaded.$id);
         urls.push(
-          `${process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT}/storage/buckets/${process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID}/files/${file.$id}/view?project=${process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID}&mode=admin`
+          `${process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT}/storage/buckets/${process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID}/files/${uploaded.$id}/view?project=${process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID}&mode=admin`,
         );
       }
+
       const payload = {
         ...car,
         price: +car.price,
@@ -132,221 +143,206 @@ export default function AddCarForm({ setCars, fetchCars, setActiveTab }) {
         mileage: +car.mileage,
         year: +car.year,
         imageUrl: urls,
-        imageFileIds: ids,
+        imageFileIds: fileIds,
         createdAt: new Date().toISOString(),
-        isFeatured: car.isFeatured,
-        isSold: car.isSold,
       };
+
       delete payload.images;
 
       const doc = await databases.createDocument(
         process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID,
         process.env.NEXT_PUBLIC_APPWRITE_COLLECTION_ID,
         ID.unique(),
-        payload
+        payload,
       );
 
-      toast.success("Car added successfully!");
+      toast.success("Car added");
       setCars((p) => [...p, doc]);
       fetchCars();
       setActiveTab("carList");
       reset();
     } catch {
-      toast.error("Error uploading");
+      toast.error("Upload failed");
     } finally {
       setLoading(false);
     }
   };
 
+  /* ---------------------------------------------
+     Render
+  --------------------------------------------- */
   return (
     <motion.div
-      className="h-full flex flex-col p-4 relative"
+      className="relative h-full flex flex-col"
+      variants={fadeIn}
       initial="hidden"
       animate="visible"
-      variants={fadeInUp}
     >
-      <div className="max-w-3xl mx-auto w-full mb-24">
-        <form
-          onSubmit={onSubmit}
-          className="flex-1 flex flex-col overflow-hidden"
+      <form onSubmit={onSubmit} className="flex-1 overflow-y-auto p-4 pb-32">
+        <motion.div
+          variants={shakeVariant}
+          animate={shake ? "shake" : "idle"}
+          onAnimationComplete={() => setShake(false)}
+          className="max-w-3xl mx-auto space-y-5"
         >
-          <motion.div
-            variants={shakeVariant}
-            animate={shouldShake ? "shake" : "idle"}
-            onAnimationComplete={() => setShouldShake(false)}
-            className="space-y-4 overflow-y-auto"
-            layout
-          >
-            {["title", "description", "price"].map((name) =>
-              name === "description" ? (
-                <motion.textarea
-                  key={name}
-                  name={name}
-                  value={car[name]}
-                  onChange={onChange}
-                  placeholder="Description"
-                  className="w-full px-3 py-2 rounded bg-rose-800"
-                  required
-                  layout
-                />
-              ) : (
-                <motion.input
-                  key={name}
-                  name={name}
-                  type={name === "price" ? "number" : "text"}
-                  value={car[name]}
-                  onChange={onChange}
-                  placeholder={name.charAt(0).toUpperCase() + name.slice(1)}
-                  className="w-full px-3 py-2 rounded bg-rose-800"
-                  required
-                  layout
-                />
-              )
-            )}
+          {/* Core fields */}
+          <input
+            name="title"
+            value={car.title}
+            onChange={update}
+            placeholder="Title"
+            className="w-full h-11 px-4 rounded-lg bg-rose-800"
+          />
 
-            <div className="grid grid-cols-2 gap-2">
-              <motion.select
-                name="engineType"
-                value={car.engineType}
-                onChange={onChange}
-                className="px-3 py-2 rounded bg-rose-800"
-                layout
-              >
-                {["Electric", "Diesel", "Hybrid", "Petrol"].map((t) => (
-                  <option key={t} value={t}>
-                    {t}
-                  </option>
-                ))}
-              </motion.select>
-              <motion.select
-                name="transmission"
-                value={car.transmission}
-                onChange={onChange}
-                className="px-3 py-2 rounded bg-rose-800"
-                layout
-              >
-                {["Automatic", "Manual"].map((t) => (
-                  <option key={t} value={t}>
-                    {t}
-                  </option>
-                ))}
-              </motion.select>
-              <motion.input
-                name="engineSize"
-                type="number"
-                placeholder="Engine Size"
-                value={car.engineSize}
-                onChange={onChange}
-                className="px-3 py-2 rounded bg-rose-800"
-                required
-                layout
-              />
-              <motion.input
-                name="mileage"
-                type="number"
-                placeholder="Mileage"
-                value={car.mileage}
-                onChange={onChange}
-                className="px-3 py-2 rounded bg-rose-800"
-                required
-                layout
-              />
-              <motion.input
-                name="year"
-                type="number"
-                placeholder="Year"
-                value={car.year}
-                onChange={onChange}
-                className="px-3 py-2 rounded bg-rose-800"
-                required
-                layout
-              />
-              <motion.select
-                name="carType"
-                value={car.carType}
-                onChange={onChange}
-                className="px-3 py-2 rounded bg-rose-800"
-                layout
-              >
-                {carTypes.map((t) => (
-                  <option key={t} value={t}>
-                    {t}
-                  </option>
-                ))}
-              </motion.select>
-            </div>
+          <textarea
+            name="description"
+            value={car.description}
+            onChange={update}
+            placeholder="Description"
+            rows={4}
+            className="w-full px-4 py-3 rounded-lg bg-rose-800 resize-none"
+          />
 
-            <div className="flex items-center gap-4 text-xl justify-center mt-4">
-              <Toggle
-                checked={car.isFeatured}
-                onChange={(val) =>
-                  setCar((prev) => ({ ...prev, isFeatured: val }))
-                }
-                color="bg-yellow-400"
-              />
-              <span className="font-semibold text-yellow-300">Featured</span>
-            </div>
+          <input
+            name="price"
+            type="number"
+            value={car.price}
+            onChange={update}
+            placeholder="Price"
+            className="w-full h-11 px-4 rounded-lg bg-rose-800"
+          />
 
-            <motion.input
-              type="file"
-              multiple
-              accept="image/*"
-              onChange={onImages}
-              className="w-full pt-2"
-              layout
+          {/* Specs */}
+          <div className="grid grid-cols-2 gap-3">
+            <select
+              name="engineType"
+              value={car.engineType}
+              onChange={update}
+              className="h-11 px-3 rounded-lg bg-rose-800"
+            >
+              {["Electric", "Hybrid", "Petrol", "Diesel"].map((v) => (
+                <option key={v}>{v}</option>
+              ))}
+            </select>
+
+            <select
+              name="transmission"
+              value={car.transmission}
+              onChange={update}
+              className="h-11 px-3 rounded-lg bg-rose-800"
+            >
+              {["Automatic", "Manual"].map((v) => (
+                <option key={v}>{v}</option>
+              ))}
+            </select>
+
+            <input
+              name="engineSize"
+              type="number"
+              value={car.engineSize}
+              onChange={update}
+              placeholder="Engine size"
+              className="h-11 px-3 rounded-lg bg-rose-800"
             />
 
-            {previews.length > 0 && (
-              <motion.div
-                className="flex overflow-x-auto space-x-2 py-2"
-                layout
-              >
-                {previews.map((url, i) => (
-                  <motion.div
-                    key={i}
-                    className="relative w-20 h-16 rounded overflow-hidden"
-                    layout
-                  >
-                    <Image
-                      src={url}
-                      alt={`Preview ${i}`}
-                      fill
-                      className="rounded object-cover"
-                      unoptimized
-                    />
-                  </motion.div>
-                ))}
-              </motion.div>
-            )}
-          </motion.div>
-        </form>
-      </div>
+            <input
+              name="mileage"
+              type="number"
+              value={car.mileage}
+              onChange={update}
+              placeholder="Mileage"
+              className="h-11 px-3 rounded-lg bg-rose-800"
+            />
 
-      <motion.div
-        className="fixed bottom-0 left-0 right-0 bg-rose-950 px-4 py-3 z-50 shadow-inner"
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
-      >
+            <input
+              name="year"
+              type="number"
+              value={car.year}
+              onChange={update}
+              placeholder="Year"
+              className="h-11 px-3 rounded-lg bg-rose-800"
+            />
+
+            <select
+              name="carType"
+              value={car.carType}
+              onChange={update}
+              className="h-11 px-3 rounded-lg bg-rose-800"
+            >
+              {carTypes.map((t) => (
+                <option key={t}>{t}</option>
+              ))}
+            </select>
+          </div>
+
+          {/* Featured */}
+          <div className="flex items-center justify-center gap-4 pt-2">
+            <Toggle
+              checked={car.isFeatured}
+              onChange={(v) => setCar((p) => ({ ...p, isFeatured: v }))}
+              color="bg-yellow-400"
+            />
+            <span className="text-yellow-300 font-semibold">Featured</span>
+          </div>
+
+          {/* Images */}
+          <input
+            id="car-images"
+            type="file"
+            multiple
+            accept="image/*"
+            onChange={onImages}
+            className="sr-only"
+          />
+
+          <label
+            htmlFor="car-images"
+            className="flex h-11 cursor-pointer items-center justify-center rounded-lg border border-white/20
+            bg-rose-800/60 text-white hover:bg-rose-700/70 transition"
+          >
+            Choose images
+          </label>
+
+          {previews.length > 0 && (
+            <div className="flex gap-2 overflow-x-auto pt-2">
+              {previews.map((src, i) => (
+                <div
+                  key={i}
+                  className="relative w-24 h-16 rounded-lg overflow-hidden"
+                >
+                  <Image
+                    src={src}
+                    alt=""
+                    fill
+                    className="object-cover"
+                    unoptimized
+                  />
+                </div>
+              ))}
+            </div>
+          )}
+        </motion.div>
+      </form>
+
+      {/* Sticky submit */}
+      <div className="fixed bottom-0 left-0 right-0 bg-rose-950 border-t border-white/10 px-4 py-3">
         <div className="max-w-3xl mx-auto">
-          <motion.button
+          <button
             onClick={onSubmit}
             disabled={loading}
-            whileTap={{ scale: 0.95 }}
-            whileHover={{ scale: 1.02 }}
-            className="w-full py-3 rounded bg-rose-700 text-white flex justify-center items-center gap-2 transition-transform"
+            className="w-full h-12 rounded-xl bg-rose-700 font-semibold flex items-center justify-center gap-2"
           >
             {loading ? (
               <>
-                <AiOutlineLoading className="animate-spin text-xl" />
-                <span>Uploading...</span>
+                <AiOutlineLoading className="animate-spin" />
+                Uploading…
               </>
             ) : (
               "Add Car"
             )}
-          </motion.button>
+          </button>
         </div>
-      </motion.div>
+      </div>
     </motion.div>
   );
 }

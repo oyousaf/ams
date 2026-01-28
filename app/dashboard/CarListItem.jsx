@@ -7,51 +7,56 @@ import { databases } from "../lib/appwrite";
 import ConfirmModal from "./ConfirmModal";
 import Toggle from "./Toggle";
 import Image from "next/image";
+import { FiEdit2, FiTrash2, FiSave, FiX } from "react-icons/fi";
 
 const FALLBACK_IMAGE = "/fallback.webp";
 
-const formatNumber = (num) =>
-  typeof num === "number" ? num.toLocaleString("en-GB") : num;
+const ENGINE_TYPES = ["Electric", "Diesel", "Hybrid", "Petrol"];
+const TRANSMISSIONS = ["Automatic", "Manual"];
+const CAR_TYPES = [
+  "Convertible",
+  "Coupe",
+  "Crossover",
+  "Estate",
+  "Hatchback",
+  "Minivan",
+  "Pickup",
+  "Saloon",
+  "Sports",
+  "SUV",
+  "Truck",
+  "Van",
+];
+
+const NUMERIC_FIELDS = ["price", "mileage", "engineSize", "year"];
+
+const formatNumber = (n) =>
+  typeof n === "number" ? n.toLocaleString("en-GB") : n;
+
+const hasMeaningfulChanges = (a, b) =>
+  Object.keys(b).some((k) => a[k] !== b[k]);
 
 const CarListItem = ({ car, setCars }, ref) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [editedCar, setEditedCar] = useState({ ...car });
+  const [editedCar, setEditedCar] = useState(car);
   const [saving, setSaving] = useState(false);
-  const [hasError, setHasError] = useState(false);
+  const [imgError, setImgError] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
 
   const imageUrl = useMemo(() => {
     const url = Array.isArray(car.imageUrl) ? car.imageUrl[0] : car.imageUrl;
-    return hasError || !url ? FALLBACK_IMAGE : url;
-  }, [car.imageUrl, hasError]);
-
-  const carFields = useMemo(
-    () => [
-      { label: "Price", key: "price", unit: "£" },
-      { label: "Mileage", key: "mileage" },
-      { label: "Engine Type", key: "engineType" },
-      { label: "Engine Size", key: "engineSize", unit: "L" },
-      { label: "Transmission", key: "transmission" },
-      { label: "Year", key: "year" },
-      { label: "Type", key: "carType" },
-    ],
-    []
-  );
+    return !url || imgError ? FALLBACK_IMAGE : url;
+  }, [car.imageUrl, imgError]);
 
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setEditedCar((prev) => ({
-      ...prev,
-      [name]:
-        type === "checkbox"
-          ? checked
-          : ["price", "mileage", "engineSize", "year"].includes(name)
-          ? Number(value)
-          : value,
+    const { name, value } = e.target;
+    setEditedCar((p) => ({
+      ...p,
+      [name]: NUMERIC_FIELDS.includes(name) ? Number(value) : value,
     }));
   };
 
-  const handleSave = async () => {
+  const save = async () => {
     if (saving) return;
     setSaving(true);
     try {
@@ -59,65 +64,45 @@ const CarListItem = ({ car, setCars }, ref) => {
         process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID,
         process.env.NEXT_PUBLIC_APPWRITE_COLLECTION_ID,
         car.$id,
-        {
-          title: editedCar.title,
-          description: editedCar.description,
-          price: editedCar.price,
-          mileage: editedCar.mileage,
-          engineSize: editedCar.engineSize,
-          year: editedCar.year,
-          transmission: editedCar.transmission,
-          engineType: editedCar.engineType,
-          carType: editedCar.carType,
-          isFeatured: editedCar.isFeatured ?? false,
-          isSold: editedCar.isSold ?? false,
-        }
+        editedCar,
       );
 
-      if (updated?.$id) {
-        const hasChanges = JSON.stringify(editedCar) !== JSON.stringify(car);
-        if (hasChanges) {
-          setCars((prev) =>
-            prev.map((c) => (c.$id === car.$id ? { ...c, ...editedCar } : c))
-          );
-        }
-        toast.success("Car updated successfully!", { id: `toast-${car.$id}` });
-        setIsEditing(false);
-      } else {
-        throw new Error("No valid response from Appwrite.");
+      if (updated?.$id && hasMeaningfulChanges(car, editedCar)) {
+        setCars((prev) =>
+          prev.map((c) => (c.$id === car.$id ? { ...c, ...editedCar } : c)),
+        );
       }
-    } catch (err) {
-      console.error("Update failed:", err);
-      toast.error("Failed to update car.", { id: `toast-${car.$id}` });
+
+      toast.success("Car updated");
+      setIsEditing(false);
+    } catch {
+      toast.error("Update failed");
     } finally {
       setSaving(false);
     }
   };
 
-  const handleDelete = async () => {
+  const remove = async () => {
     try {
       const { storage } = await import("../lib/appwrite");
-      for (const fileId of car.imageFileIds || []) {
+      for (const id of car.imageFileIds || []) {
         await storage.deleteFile(
           process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID,
-          fileId
+          id,
         );
       }
 
       await databases.deleteDocument(
         process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID,
         process.env.NEXT_PUBLIC_APPWRITE_COLLECTION_ID,
-        car.$id
+        car.$id,
       );
 
-      setCars((prev) => prev.filter((c) => c.$id !== car.$id));
-      toast.success("Car deleted successfully!", {
-        id: `toast-delete-${car.$id}`,
-      });
+      setCars((p) => p.filter((c) => c.$id !== car.$id));
+      toast.success("Car deleted");
       setConfirmOpen(false);
-    } catch (err) {
-      console.error(err);
-      toast.error("Failed to delete car.", { id: `toast-delete-${car.$id}` });
+    } catch {
+      toast.error("Delete failed");
     }
   };
 
@@ -126,223 +111,189 @@ const CarListItem = ({ car, setCars }, ref) => {
       ref={ref}
       layout
       layoutId={car.$id}
-      initial={{ opacity: 0, y: 15 }}
+      initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -15 }}
-      transition={{ duration: 0.3 }}
-      className="border border-rose-200 rounded-md p-4 mb-3 flex flex-col sm:flex-row items-start bg-rose-900 text-gray-200 relative"
-      role="region"
-      aria-label={`Listing for ${car.title}`}
+      exit={{ opacity: 0, y: -12 }}
+      transition={{ duration: 0.25 }}
+      className="
+        relative
+        z-0
+        rounded-xl
+        border border-white/10
+        bg-rose-900/70
+        p-4
+      "
     >
-      <figure
-        className="w-full sm:w-1/3 mr-0 sm:mr-4 mb-4 sm:mb-0 relative"
-        role="img"
-        aria-label={`Image of ${car.title}`}
-      >
-        {car.isFeatured && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.3 }}
-            className="absolute top-2 left-2 bg-yellow-400 text-rose-950 text-xs font-bold px-2 py-1 rounded shadow z-10 uppercase"
-          >
-            Featured
-          </motion.div>
-        )}
-        <Image
-          src={imageUrl}
-          alt={car.title || "Car image"}
-          width={500}
-          height={300}
-          onError={() => setHasError(true)}
-          className={`rounded-md object-cover w-full h-auto transition-opacity duration-300 ${
-            car.isSold ? "opacity-60" : "opacity-100"
-          }`}
-          unoptimized={imageUrl.startsWith("blob:")}
-        />
-        {car.isSold && (
-          <div
-            className="absolute inset-0 flex items-center justify-center bg-rose-950/50 text-rose-300 text-4xl font-extrabold tracking-widest rounded-md"
-            aria-hidden="true"
-          >
-            SOLD
-          </div>
-        )}
-      </figure>
-
-      <div className="w-full sm:w-2/3 space-y-2 relative">
-        <div className="flex justify-end gap-3 sm:absolute sm:top-0 sm:right-0 z-10 mb-2 sm:mb-0 text-xl">
-          {isEditing ? (
-            <>
-              <button
-                onClick={handleSave}
-                disabled={saving}
-                aria-label="Save changes"
-              >
-                💾
-              </button>
-              <button
-                onClick={() => {
-                  setEditedCar({ ...car });
-                  setIsEditing(false);
-                }}
-                aria-label="Cancel edit"
-              >
-                ❌
-              </button>
-            </>
-          ) : (
-            <button onClick={() => setIsEditing(true)} aria-label="Edit car">
-              ✏️
-            </button>
+      <div className="flex flex-col sm:flex-row gap-4">
+        {/* Image */}
+        <div className="relative sm:w-1/3">
+          {car.isFeatured && (
+            <span className="absolute top-2 left-2 z-10 rounded-full bg-yellow-400 px-2 py-1 text-xs font-bold text-rose-950">
+              Featured
+            </span>
           )}
-          <button onClick={() => setConfirmOpen(true)} aria-label="Delete car">
-            🗑️
-          </button>
+
+          <Image
+            src={imageUrl}
+            alt={car.title}
+            width={500}
+            height={300}
+            onError={() => setImgError(true)}
+            className={`rounded-lg object-cover w-full ${
+              car.isSold ? "opacity-60" : ""
+            }`}
+            unoptimized={imageUrl.startsWith("blob:")}
+          />
+
+          {car.isSold && (
+            <div className="absolute inset-0 grid place-items-center rounded-lg bg-black/50 text-3xl font-extrabold text-rose-300">
+              SOLD
+            </div>
+          )}
         </div>
 
-        {isEditing ? (
-          <label className="block mt-10 sm:mt-12">
-            <span className="sr-only">Car title</span>
+        {/* Content */}
+        <div
+          className={`relative flex-1 space-y-3 ${isEditing ? "pt-10" : ""}`}
+        >
+          {/* Actions */}
+          <div className="absolute top-0 right-0 flex gap-2 rounded-md bg-rose-950/70 backdrop-blur px-2 py-1 text-lg">
+            {isEditing ? (
+              <>
+                <button onClick={save} disabled={saving} aria-label="Save">
+                  <FiSave />
+                </button>
+                <button
+                  onClick={() => {
+                    setEditedCar(car);
+                    setIsEditing(false);
+                  }}
+                  aria-label="Cancel"
+                >
+                  <FiX />
+                </button>
+              </>
+            ) : (
+              <button onClick={() => setIsEditing(true)} aria-label="Edit">
+                <FiEdit2 />
+              </button>
+            )}
+            <button onClick={() => setConfirmOpen(true)} aria-label="Delete">
+              <FiTrash2 />
+            </button>
+          </div>
+
+          {/* Title */}
+          {isEditing ? (
             <input
               name="title"
               value={editedCar.title}
               onChange={handleChange}
-              className="w-full px-2 py-1 bg-rose-200 text-rose-900 rounded font-semibold text-lg"
+              className="w-full rounded bg-rose-200 px-2 py-1 font-bold text-rose-900"
             />
-          </label>
-        ) : (
-          <h3 className="text-white text-2xl font-bold">{car.title}</h3>
-        )}
+          ) : (
+            <h3 className="text-2xl font-bold text-white">{car.title}</h3>
+          )}
 
-        {isEditing ? (
-          <label className="block">
-            <span className="sr-only">Car description</span>
+          {/* Description */}
+          {isEditing ? (
             <textarea
               name="description"
               value={editedCar.description}
               onChange={handleChange}
               rows={3}
-              className="w-full px-2 py-1 bg-rose-200 text-rose-900 rounded"
+              className="w-full rounded bg-rose-200 px-2 py-1 text-rose-900"
             />
-          </label>
-        ) : (
-          <p className="text-gray-300 mb-2">{car.description}</p>
-        )}
+          ) : (
+            <p className="text-rose-200">{car.description}</p>
+          )}
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-white">
-          {carFields.map(({ label, key, unit = "" }) => (
-            <p key={key}>
-              {label}:{" "}
-              {isEditing ? (
-                ["price", "mileage", "engineSize", "year"].includes(key) ? (
-                  <input
-                    name={key}
-                    value={editedCar[key]}
-                    type="number"
-                    step={key === "engineSize" ? "0.1" : "1"}
-                    onChange={handleChange}
-                    aria-label={label}
-                    className="px-2 py-1 rounded bg-rose-200 text-rose-900"
-                  />
+          {/* Meta */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
+            {[
+              ["Price", "price", "£"],
+              ["Mileage", "mileage"],
+              ["Engine Type", "engineType"],
+              ["Engine Size", "engineSize", "L"],
+              ["Transmission", "transmission"],
+              ["Year", "year"],
+              ["Type", "carType"],
+            ].map(([label, key, unit = ""]) => (
+              <div key={key}>
+                {label}:{" "}
+                {isEditing ? (
+                  NUMERIC_FIELDS.includes(key) ? (
+                    <input
+                      name={key}
+                      type="number"
+                      value={editedCar[key]}
+                      onChange={handleChange}
+                      className="rounded bg-rose-200 px-2 py-1 text-rose-900"
+                    />
+                  ) : (
+                    <select
+                      name={key}
+                      value={editedCar[key]}
+                      onChange={handleChange}
+                      className="rounded bg-rose-200 px-2 py-1 text-rose-900"
+                    >
+                      {(key === "engineType"
+                        ? ENGINE_TYPES
+                        : key === "transmission"
+                          ? TRANSMISSIONS
+                          : CAR_TYPES
+                      ).map((o) => (
+                        <option key={o}>{o}</option>
+                      ))}
+                    </select>
+                  )
                 ) : (
-                  <select
-                    name={key}
-                    value={editedCar[key]}
-                    onChange={handleChange}
-                    aria-label={label}
-                    className="px-2 py-1 rounded bg-rose-200 text-rose-900"
-                  >
-                    {key === "engineType" &&
-                      ["Electric", "Diesel", "Hybrid", "Petrol"].map((opt) => (
-                        <option key={opt} value={opt}>
-                          {opt}
-                        </option>
-                      ))}
-                    {key === "transmission" &&
-                      ["Automatic", "Manual"].map((opt) => (
-                        <option key={opt} value={opt}>
-                          {opt}
-                        </option>
-                      ))}
-                    {key === "carType" &&
-                      [
-                        "Convertible",
-                        "Coupe",
-                        "Crossover",
-                        "Estate",
-                        "Hatchback",
-                        "Minivan",
-                        "Pickup",
-                        "Saloon",
-                        "Sports",
-                        "SUV",
-                        "Truck",
-                        "Van",
-                      ].map((opt) => (
-                        <option key={opt} value={opt}>
-                          {opt}
-                        </option>
-                      ))}
-                  </select>
-                )
-              ) : (
-                <span className="font-semibold text-rose-300">
-                  {["price", "mileage"].includes(key)
-                    ? `${unit}${formatNumber(car[key])}`
-                    : key === "engineSize"
-                    ? `${car[key]}L`
-                    : `${unit}${car[key]}`}
-                </span>
-              )}
-            </p>
-          ))}
-        </div>
-
-        {isEditing && (
-          <div className="mt-4 flex flex-col sm:flex-row gap-4 text-xl text-white">
-            <div
-              className="flex items-center gap-2"
-              role="switch"
-              aria-checked={!!editedCar.isFeatured}
-            >
-              <Toggle
-                checked={!!editedCar.isFeatured}
-                onChange={(val) =>
-                  setEditedCar((prev) => ({ ...prev, isFeatured: val }))
-                }
-                color="bg-yellow-400"
-              />
-              <span className="text-yellow-300 font-semibold select-none">
-                Featured
-              </span>
-            </div>
-            <div
-              className="flex items-center gap-2"
-              role="switch"
-              aria-checked={!!editedCar.isSold}
-            >
-              <Toggle
-                checked={!!editedCar.isSold}
-                onChange={(val) =>
-                  setEditedCar((prev) => ({ ...prev, isSold: val }))
-                }
-                color="bg-red-500"
-              />
-              <span className="text-red-400 font-semibold select-none">
-                Sold
-              </span>
-            </div>
+                  <span className="font-semibold text-rose-300">
+                    {unit}
+                    {formatNumber(car[key])}
+                  </span>
+                )}
+              </div>
+            ))}
           </div>
-        )}
+
+          {/* Toggles */}
+          {isEditing && (
+            <div className="mt-4 flex flex-wrap gap-6">
+              <div className="flex items-center gap-2">
+                <Toggle
+                  checked={!!editedCar.isFeatured}
+                  onChange={(v) =>
+                    setEditedCar((p) => ({ ...p, isFeatured: v }))
+                  }
+                  color="bg-yellow-400"
+                />
+                <span className="font-semibold text-yellow-300 select-none">
+                  Featured
+                </span>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <Toggle
+                  checked={!!editedCar.isSold}
+                  onChange={(v) => setEditedCar((p) => ({ ...p, isSold: v }))}
+                  color="bg-red-500"
+                />
+                <span className="font-semibold text-red-400 select-none">
+                  Sold
+                </span>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
 
       <ConfirmModal
         isOpen={confirmOpen}
         onClose={() => setConfirmOpen(false)}
-        onConfirm={handleDelete}
+        onConfirm={remove}
         title={`Delete ${car.title}?`}
-        message="This will permanently remove the car from your listings."
+        message="This will permanently remove the car."
       />
     </motion.li>
   );

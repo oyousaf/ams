@@ -17,7 +17,7 @@ export default function SortDropdownDashboard({
     if (!isOpen) return;
 
     const onClick = (e) => {
-      if (!rootRef.current?.contains(e.target)) {
+      if (rootRef.current && !rootRef.current.contains(e.target)) {
         onToggle(false);
       }
     };
@@ -28,6 +28,7 @@ export default function SortDropdownDashboard({
 
     document.addEventListener("mousedown", onClick);
     document.addEventListener("keydown", onEsc);
+
     return () => {
       document.removeEventListener("mousedown", onClick);
       document.removeEventListener("keydown", onEsc);
@@ -35,7 +36,16 @@ export default function SortDropdownDashboard({
   }, [isOpen, onToggle]);
 
   return (
-    <div ref={rootRef} className="relative h-full">
+    /* 🔒 Own stacking context, higher than everything by default */
+    <div
+      ref={rootRef}
+      className="
+        relative
+        z-[100]
+        isolate
+        w-full
+      "
+    >
       {/* Trigger */}
       <button
         type="button"
@@ -63,8 +73,9 @@ export default function SortDropdownDashboard({
             exit={{ opacity: 0, y: -6, scale: 0.96 }}
             transition={{ duration: 0.15, ease: "easeOut" }}
             className="
-              absolute left-0 right-0 top-[calc(100%+8px)]
-              z-50
+              absolute left-0 top-[calc(100%+8px)]
+              w-full
+              z-[110]
               rounded-xl
               bg-rose-900/95 backdrop-blur
               border border-rose-700/50
@@ -82,8 +93,7 @@ export default function SortDropdownDashboard({
                   onToggle(false);
                 }}
                 className={`
-                  cursor-pointer rounded-lg px-3 py-2 text-center
-                  transition
+                  cursor-pointer rounded-lg px-3 py-2 text-center transition
                   ${
                     selected === key
                       ? "bg-rose-700/60 text-white font-semibold"

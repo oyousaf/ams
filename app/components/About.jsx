@@ -4,6 +4,25 @@ import { aboutTiles, gallery } from "../constants";
 import ImageTile from "./ImageTile";
 import { motion } from "framer-motion";
 
+/* ---------------------------------------------
+   Motion
+--------------------------------------------- */
+const container = {
+  visible: { transition: { staggerChildren: 0.08 } },
+};
+
+const item = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.45, ease: "easeOut" },
+  },
+};
+
+/* ---------------------------------------------
+   Component
+--------------------------------------------- */
 const About = () => {
   return (
     <section
@@ -11,6 +30,7 @@ const About = () => {
       aria-labelledby="about-heading"
       className="py-24 px-4 lg:px-8"
     >
+      {/* Section heading — white */}
       <h2
         id="about-heading"
         className="mb-14 text-center text-4xl font-bold tracking-tight text-white md:text-5xl"
@@ -24,32 +44,31 @@ const About = () => {
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.25 }}
-        variants={{
-          hidden: {},
-          visible: {
-            transition: { staggerChildren: 0.1 },
-          },
-        }}
+        variants={container}
       >
         {aboutTiles.map((tile, index) => (
           <motion.div
             key={index}
-            variants={{
-              hidden: { opacity: 0, y: 24 },
-              visible: { opacity: 1, y: 0 },
+            variants={item}
+            whileHover={{
+              y: -6,
+              transition: { type: "spring", stiffness: 420, damping: 26 },
             }}
-            transition={{ duration: 0.5, ease: "easeOut" }}
-            whileHover={{ y: -6 }}
-            className="
-              tile-glow flex flex-col items-center rounded-2xl p-6 transition
-              surface-primary
-            "
+            className="tile-glow group flex flex-col items-center rounded-2xl p-6 surface-primary will-change-transform"
           >
-            <tile.icon className="mb-4 text-4xl text-white drop-shadow-sm" />
-            <h3 className="mb-2 text-xl font-semibold text-white">
+            {/* Icon */}
+            <tile.icon className="mb-4 text-4xl text-rose-400" />
+
+            {/* Tile title */}
+            <h3
+              className="mb-2 text-xl font-semibold text-rose-200 group-hover:text-rose-100 transition-colors
+              "
+            >
               {tile.title}
             </h3>
-            <p className="text-base leading-relaxed text-zinc-100">
+
+            {/* Description */}
+            <p className="text-base leading-relaxed text-zinc-300">
               {tile.description}
             </p>
           </motion.div>
@@ -63,13 +82,7 @@ const About = () => {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.25 }}
-          variants={{
-            hidden: { opacity: 0 },
-            visible: {
-              opacity: 1,
-              transition: { staggerChildren: 0.1 },
-            },
-          }}
+          variants={container}
         >
           {gallery.map((src, index) => {
             const isWide = index === 1 || index === 4;
@@ -78,11 +91,7 @@ const About = () => {
             return (
               <motion.div
                 key={index}
-                variants={{
-                  hidden: { opacity: 0, y: 20 },
-                  visible: { opacity: 1, y: 0 },
-                }}
-                transition={{ duration: 0.45, ease: "easeOut" }}
+                variants={item}
                 className={`overflow-hidden rounded-xl shadow-md ${
                   isWide ? "md:col-span-2" : ""
                 }`}

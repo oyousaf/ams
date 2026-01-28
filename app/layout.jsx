@@ -13,7 +13,7 @@ export const viewport = {
   maximumScale: 1,
 };
 
-// ---------- Global Metadata  ----------
+// ---------- Global Metadata ----------
 export const metadata = {
   title: {
     default: "Ace Motor Sales",
@@ -22,14 +22,29 @@ export const metadata = {
   description:
     "Trusted independent used car dealership in Heckmondwike, West Yorkshire, supplying quality pre-owned vehicles with nationwide UK delivery.",
   applicationName: "Ace Motor Sales",
+
+  keywords: [
+    "used cars Heckmondwike",
+    "used cars West Yorkshire",
+    "independent car dealer",
+    "used cars UK delivery",
+    "Ace Motor Sales",
+  ],
+
   metadataBase: new URL("https://acemotorsales.uk"),
+
   alternates: {
     canonical: "https://acemotorsales.uk",
+    languages: {
+      "en-GB": "https://acemotorsales.uk",
+    },
   },
+
   icons: {
     icon: "/favicon.ico",
     apple: "/apple-touch-icon.png",
   },
+
   robots: {
     index: true,
     follow: true,
@@ -88,16 +103,15 @@ const websiteSchema = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en-GB" className="scroll-smooth antialiased">
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="true"
-        />
-      </head>
-
       <body className="min-h-screen bg-neutral-900 text-zinc-100">
+        {/* Skip to content (accessibility) */}
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 z-100 rounded bg-black px-4 py-2 text-white shadow-lg"
+        >
+          Skip to main content
+        </a>
+
         <header role="banner">
           <Navbar />
         </header>

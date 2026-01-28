@@ -27,20 +27,17 @@ const ConfirmModal = ({ isOpen, onClose, onConfirm, title, message }) => {
             role="dialog"
             aria-modal="true"
             className="relative w-full max-w-md rounded-2xl bg-rose-900/95 border border-rose-700/50
-              shadow-2xl p-6 text-center text-white
-            "
+              shadow-2xl p-6 text-center text-white"
             initial={{ opacity: 0, scale: 0.96, y: 12 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.96, y: 12 }}
-            transition={{ duration: 0.2, ease: 'easeOut' }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
           >
             {/* Close */}
             <button
               onClick={onClose}
               aria-label="Close modal"
-              className="absolute top-4 right-4 text-rose-300 hover:text-white
-                transition
-              "
+              className="absolute top-4 right-4 text-rose-300 hover:text-white transition"
             >
               <FaTimes size={16} />
             </button>
@@ -67,8 +64,7 @@ const ConfirmModal = ({ isOpen, onClose, onConfirm, title, message }) => {
 
               <button
                 onClick={onClose}
-                className="px-5 py-2 rounded-full bg-white/80 text-rose-900 font-semibold hover:bg-white
-                  transition"
+                className="px-5 py-2 rounded-full bg-white/80 text-rose-900 font-semibold hover:bg-white transition"
               >
                 Cancel
               </button>
@@ -77,7 +73,7 @@ const ConfirmModal = ({ isOpen, onClose, onConfirm, title, message }) => {
         </motion.div>
       )}
     </AnimatePresence>,
-    document.body
+    document.body,
   );
 };
 

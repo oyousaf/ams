@@ -4,10 +4,10 @@ import React, { memo } from "react";
 import { AnimatePresence } from "framer-motion";
 import CarListItem from "./CarListItem";
 
-function CarList({ cars, setCars, fetchCars }) {
+function CarList({ cars, setCars, fetchCars, setModalOpen }) {
   return (
     <div
-      className="relative z-0 flex-1 min-h-0 overflow-y-auto pr-2 max-w-7xl mx-auto space-y-4 [&::-webkit-scrollbar]:hidden
+      className="w-full mx-auto space-y-4 p-4 pr-2 overflow-y-auto max-h-[70vh] [&::-webkit-scrollbar]:hidden
         [-ms-overflow-style:none] [scrollbar-width:none]"
     >
       <ul className="space-y-4">
@@ -18,6 +18,7 @@ function CarList({ cars, setCars, fetchCars }) {
               car={car}
               setCars={setCars}
               fetchCars={fetchCars}
+              setModalOpen={setModalOpen}
             />
           ))}
         </AnimatePresence>

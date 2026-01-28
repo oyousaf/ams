@@ -1,11 +1,5 @@
 /* ---------------------------------------------
-   Vendor imports
---------------------------------------------- */
-@import "slick-carousel/slick/slick.css";
-@import "slick-carousel/slick/slick-theme.css";
-
-/* ---------------------------------------------
-   Tailwind v4 single entry import
+   Tailwind v4 single entry
 --------------------------------------------- */
 @import "tailwindcss";
 
@@ -24,7 +18,21 @@ html {
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: "GeistMono", monospace;
+
+  font-family:
+    var(--font-sans),
+    -apple-system,
+    BlinkMacSystemFont,
+    "SF Pro Text",
+    system-ui,
+    "Segoe UI",
+    Roboto,
+    "Helvetica Neue",
+    Arial,
+    sans-serif;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /* ---------------------------------------------
@@ -51,11 +59,11 @@ img {
   width: 12px;
 }
 ::-webkit-scrollbar-thumb {
-  background-color: #9f1239;
+  background-color: #9f1239; /* rose-800 */
   border-radius: 8px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background-color: #be123c;
+  background-color: #be123c; /* rose-700 */
 }
 ::-webkit-scrollbar-track {
   background-color: #000;
@@ -133,20 +141,17 @@ img {
       rgba(159, 18, 57, 0.8),
       rgba(76, 5, 25, 0.85)
     );
-
     border: 1px solid rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(6px);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
   }
 
-  /* Tile hover */
   .tile-glow:hover {
     box-shadow: 0 10px 30px rgba(244, 63, 94, 0.45);
     transform: translateY(-4px);
     transition: all 0.2s ease-out;
   }
 
-  /* Navigation links */
   .nav-link {
     color: rgb(209 213 219);
     transition: color 0.3s ease;
@@ -156,7 +161,6 @@ img {
     color: rgb(244 63 94);
   }
 
-  /* Mobile menu surface */
   .mobile-menu {
     background-image: linear-gradient(
       135deg,
@@ -164,7 +168,6 @@ img {
       rgba(39, 39, 42, 0.8),
       rgba(24, 24, 27, 0.9)
     );
-
     backdrop-filter: blur(10px);
     border-top: 1px solid rgba(136, 19, 55, 0.3);
   }

@@ -44,11 +44,8 @@ const CarCard = React.memo(({ car, logo, onOpen }) => {
       <div className="relative">
         {car.isFeatured && (
           <span
-            className="
-              absolute top-2 left-2 z-10
-              rounded-full px-3 py-1 text-xs font-semibold uppercase
-              bg-rose-400/20 text-rose-200 backdrop-blur
-            "
+            className="absolute top-2 left-2 z-10 rounded-full px-3 py-1 text-xs font-semibold uppercase
+              bg-amber-400 text-rose-900 backdrop-blur shadow-md"
           >
             Featured
           </span>

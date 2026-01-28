@@ -46,7 +46,7 @@ const SortDropdown = ({ options, selected, onSelect, isOpen, onToggle }) => {
       <button
         ref={buttonRef}
         id="sort-button"
-        className="w-64 bg-gradient-to-br from-rose-900 via-rose-800 to-rose-950 text-white text-lg font-semibold rounded-lg p-3 shadow-md text-center"
+        className="w-64 bg-linear-to-br from-rose-900 via-rose-800 to-rose-950 text-white text-lg font-semibold rounded-lg p-3 shadow-md text-center"
         onClick={() => onToggle((prev) => !prev)}
         aria-haspopup="listbox"
         aria-expanded={isOpen}

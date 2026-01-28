@@ -76,8 +76,8 @@ const Navbar = () => {
   }, [menuOpen]);
 
   return (
-    <nav className="bg-black text-white fixed top-0 inset-x-0 p-4 z-50 shadow-md">
-      <div className="max-w-7xl mx-auto px-2 sm:px-4 md:px-8 flex items-center justify-between">
+    <nav className="fixed top-0 inset-x-0 z-50 bg-black text-white shadow-md">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-2 py-4 sm:px-4 md:px-8">
         {/* Logo */}
         <motion.div
           whileHover={{ scale: 1.05 }}
@@ -87,14 +87,14 @@ const Navbar = () => {
         >
           <Image
             src={logo}
-            alt="logo"
+            alt="Ace Motor Sales"
             priority
-            className="w-30 sm:w-37.5 md:w-45"
+            className="w-32 sm:w-40 md:w-44"
           />
         </motion.div>
 
-        {/* Desktop nav */}
-        <ul className="hidden md:flex gap-6 lg:gap-10 items-center">
+        {/* Desktop navigation */}
+        <ul className="hidden items-center gap-6 md:flex lg:gap-10">
           {navLinks.map(({ id, href, name }, index) => (
             <motion.li
               key={id}
@@ -109,8 +109,9 @@ const Navbar = () => {
             >
               <button
                 onClick={() => handleScroll(href)}
-                className="relative text-lg md:text-xl font-bold uppercase tracking-wide text-white/90 hover:text-white transition
-                  after:absolute after:left-0 after:-bottom-1 after:h-0.5 after:w-0 after:bg-rose-600 after:transition-all hover:after:w-full"
+                className="relative cursor-pointer text-lg md:text-xl font-bold uppercase tracking-wide
+                  text-white/90 hover:text-white transition after:absolute after:left-0 after:-bottom-1
+                  after:h-0.5 after:w-0 after:bg-rose-600 after:transition-all hover:after:w-full"
               >
                 {name}
               </button>
@@ -119,7 +120,7 @@ const Navbar = () => {
         </ul>
 
         {/* Desktop socials */}
-        <div className="hidden md:flex gap-5 items-center">
+        <div className="hidden items-center gap-5 md:flex">
           {socialLinks.map(({ id, href, icon, name }) => (
             <motion.a
               key={id}
@@ -129,7 +130,7 @@ const Navbar = () => {
               aria-label={name}
               whileHover={{ y: -3 }}
               transition={{ type: "spring", stiffness: 500, damping: 30 }}
-              className="hover:text-rose-600"
+              className="cursor-pointer hover:text-rose-600"
             >
               {icon}
             </motion.a>
@@ -139,7 +140,7 @@ const Navbar = () => {
         {/* Mobile toggle */}
         <button
           onClick={toggleMenu}
-          className="md:hidden z-60"
+          className="z-60 md:hidden"
           aria-expanded={menuOpen}
           aria-label="Toggle navigation menu"
         >
@@ -151,13 +152,13 @@ const Navbar = () => {
         </button>
       </div>
 
-      {/* ===== MOBILE MENU ===== */}
+      {/* ===== Mobile menu ===== */}
       <AnimatePresence>
         {menuOpen && (
           <>
             {/* Backdrop */}
             <motion.div
-              className="fixed inset-0 bg-black/50 backdrop-blur-sm md:hidden z-40"
+              className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm md:hidden"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -167,7 +168,7 @@ const Navbar = () => {
             {/* Panel */}
             <motion.div
               ref={panelRef}
-              className="fixed inset-0 md:hidden z-50 flex flex-col bg-zinc-900/90"
+              className="fixed inset-0 z-50 flex flex-col bg-zinc-900/90 md:hidden"
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
@@ -181,7 +182,7 @@ const Navbar = () => {
               transition={{ type: "spring", stiffness: 220, damping: 30 }}
             >
               <div
-                className="flex flex-col items-center justify-center grow"
+                className="flex grow flex-col items-center justify-center"
                 onPointerDown={(e) => dragControls.start(e)}
               >
                 <motion.ul
@@ -229,7 +230,7 @@ const Navbar = () => {
                     >
                       <button
                         onClick={() => handleScroll(href)}
-                        className="text-4xl font-bold uppercase text-white/90 hover:text-rose-600 transition"
+                        className="cursor-pointer text-4xl font-bold uppercase text-white/90 transition hover:text-rose-600"
                       >
                         {name}
                       </button>
@@ -240,7 +241,7 @@ const Navbar = () => {
 
               {/* Mobile socials */}
               <motion.div
-                className="flex gap-6 mb-20 justify-center"
+                className="mb-20 flex justify-center gap-6"
                 initial="closed"
                 animate="open"
                 exit="closed"
@@ -248,7 +249,7 @@ const Navbar = () => {
                   open: {
                     transition: {
                       staggerChildren: 0.04,
-                      delayChildren: menuOpen ? 0.25 : 0,
+                      delayChildren: 0.25,
                     },
                   },
                   closed: {
@@ -266,7 +267,7 @@ const Navbar = () => {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={name}
-                    className="text-white hover:text-rose-600"
+                    className="cursor-pointer text-white hover:text-rose-600"
                     variants={{
                       open: {
                         opacity: 1,

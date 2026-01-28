@@ -52,7 +52,7 @@ const Navbar = () => {
     if (!menuOpen || !panelRef.current) return;
 
     const focusables = panelRef.current.querySelectorAll(
-      'button, a, [tabindex]:not([tabindex="-1"])'
+      'button, a, [tabindex]:not([tabindex="-1"])',
     );
     if (!focusables.length) return;
 
@@ -77,7 +77,7 @@ const Navbar = () => {
 
   return (
     <nav className="bg-black text-white fixed top-0 inset-x-0 p-4 z-50 shadow-md">
-      <div className="max-w-screen-xl mx-auto px-2 sm:px-4 md:px-8 flex items-center justify-between">
+      <div className="max-w-7xl mx-auto px-2 sm:px-4 md:px-8 flex items-center justify-between">
         {/* Logo */}
         <motion.div
           whileHover={{ scale: 1.05 }}
@@ -89,7 +89,7 @@ const Navbar = () => {
             src={logo}
             alt="logo"
             priority
-            className="w-[120px] sm:w-[150px] md:w-[180px]"
+            className="w-30 sm:w-37.5 md:w-45"
           />
         </motion.div>
 
@@ -110,7 +110,7 @@ const Navbar = () => {
               <button
                 onClick={() => handleScroll(href)}
                 className="relative text-lg md:text-xl font-bold uppercase tracking-wide text-white/90 hover:text-white transition
-                  after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-0 after:bg-rose-600 after:transition-all hover:after:w-full"
+                  after:absolute after:left-0 after:-bottom-1 after:h-0.5 after:w-0 after:bg-rose-600 after:transition-all hover:after:w-full"
               >
                 {name}
               </button>
@@ -127,7 +127,7 @@ const Navbar = () => {
               target="_blank"
               rel="noopener noreferrer"
               aria-label={name}
-              whileHover={{ scale: 1.2 }}
+              whileHover={{ y: -3 }}
               transition={{ type: "spring", stiffness: 500, damping: 30 }}
               className="hover:text-rose-600"
             >
@@ -139,7 +139,7 @@ const Navbar = () => {
         {/* Mobile toggle */}
         <button
           onClick={toggleMenu}
-          className="md:hidden z-[60]"
+          className="md:hidden z-60"
           aria-expanded={menuOpen}
           aria-label="Toggle navigation menu"
         >
@@ -181,7 +181,7 @@ const Navbar = () => {
               transition={{ type: "spring", stiffness: 220, damping: 30 }}
             >
               <div
-                className="flex flex-col items-center justify-center flex-grow"
+                className="flex flex-col items-center justify-center grow"
                 onPointerDown={(e) => dragControls.start(e)}
               >
                 <motion.ul

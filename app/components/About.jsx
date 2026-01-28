@@ -6,40 +6,47 @@ import { motion } from "framer-motion";
 
 const About = () => {
   return (
-    <section aria-labelledby="about-heading" className="py-24 px-4 lg:px-8">
+    <section
+      id="about"
+      aria-labelledby="about-heading"
+      className="py-24 px-4 lg:px-8"
+    >
       <h2
         id="about-heading"
-        className="text-4xl md:text-5xl font-bold text-center mb-12 text-white tracking-tight"
+        className="mb-14 text-center text-4xl font-bold tracking-tight text-white md:text-5xl"
       >
-        About Us
+        What Sets Us Apart
       </h2>
 
       {/* Feature Tiles */}
       <motion.div
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto text-center"
+        className="mx-auto grid max-w-7xl grid-cols-1 gap-8 text-center sm:grid-cols-2 lg:grid-cols-4"
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, amount: 0.2 }}
+        viewport={{ once: true, amount: 0.25 }}
         variants={{
           hidden: {},
           visible: {
-            transition: { staggerChildren: 0.12 },
+            transition: { staggerChildren: 0.1 },
           },
         }}
       >
         {aboutTiles.map((tile, index) => (
           <motion.div
             key={index}
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ type: "spring", stiffness: 200, damping: 20 }}
-            whileHover={{ scale: 1.05, rotateZ: 1 }}
-            className="tile-glow flex flex-col items-center bg-gradient-to-br from-rose-800 via-rose-700 to-rose-900 p-6 rounded-2xl shadow-inner border-2 border-transparent hover:border-rose-500/80 duration-200"
+            variants={{
+              hidden: { opacity: 0, y: 24 },
+              visible: { opacity: 1, y: 0 },
+            }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
+            whileHover={{ y: -6 }}
+            className="tile-glow flex flex-col items-center rounded-2xl border border-white/10 bg-gradient-to-br from-rose-900/80 to-rose-800/80 p-6 shadow-lg backdrop-blur-sm transition"
           >
-            <tile.icon className="text-white text-5xl mb-4 drop-shadow-md" />
-            <h3 className="text-2xl font-bold text-white mb-2">{tile.title}</h3>
-            <p className="md:text-lg text-zinc-100 leading-relaxed">
+            <tile.icon className="mb-4 text-4xl text-white drop-shadow-sm" />
+            <h3 className="mb-2 text-xl font-semibold text-white">
+              {tile.title}
+            </h3>
+            <p className="text-base leading-relaxed text-zinc-100">
               {tile.description}
             </p>
           </motion.div>
@@ -47,17 +54,17 @@ const About = () => {
       </motion.div>
 
       {/* Gallery */}
-      <div className="mt-20 max-w-7xl mx-auto">
+      <div className="mx-auto mt-20 max-w-7xl">
         <motion.div
-          className="grid grid-cols-1 md:grid-cols-4 gap-4"
+          className="grid grid-cols-1 gap-4 md:grid-cols-4"
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, amount: 0.2 }}
+          viewport={{ once: true, amount: 0.25 }}
           variants={{
             hidden: { opacity: 0 },
             visible: {
               opacity: 1,
-              transition: { staggerChildren: 0.12 },
+              transition: { staggerChildren: 0.1 },
             },
           }}
         >
@@ -68,18 +75,18 @@ const About = () => {
             return (
               <motion.div
                 key={index}
-                className={`flex justify-center ${
-                  isWide ? "md:col-span-2" : ""
-                } overflow-hidden rounded-xl shadow-lg`}
                 variants={{
-                  hidden: { opacity: 0, y: 40 },
+                  hidden: { opacity: 0, y: 20 },
                   visible: { opacity: 1, y: 0 },
                 }}
-                transition={{ type: "spring", stiffness: 180, damping: 18 }}
+                transition={{ duration: 0.45, ease: "easeOut" }}
+                className={`overflow-hidden rounded-xl shadow-md ${
+                  isWide ? "md:col-span-2" : ""
+                }`}
               >
                 <ImageTile
                   src={src}
-                  alt={`Gallery image ${index + 1}`}
+                  alt={`Ace Motor Sales gallery image ${index + 1}`}
                   priority={isFirst}
                   isWide={isWide}
                   isFirst={isFirst}

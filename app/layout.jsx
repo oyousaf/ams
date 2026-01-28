@@ -10,6 +10,7 @@ import Script from "next/script";
 export const viewport = {
   width: "device-width",
   initialScale: 1,
+  maximumScale: 1,
 };
 
 // ---------- Global Metadata  ----------
@@ -97,13 +98,13 @@ export default function RootLayout({ children }) {
       </head>
 
       <body className="min-h-screen bg-neutral-900 text-zinc-100">
-        <header>
+        <header role="banner">
           <Navbar />
         </header>
 
         {children}
 
-        <footer>
+        <footer role="contentinfo">
           <Footer />
         </footer>
 

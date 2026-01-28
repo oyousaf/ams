@@ -42,7 +42,7 @@ export default function Home() {
     <main
       id="main-content"
       aria-label="Ace Motor Sales Homepage"
-      className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+      className="min-h-screen"
     >
       <HeroSection />
 

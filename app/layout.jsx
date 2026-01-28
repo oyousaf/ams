@@ -26,9 +26,12 @@ export const metadata = {
   keywords: [
     "used cars Heckmondwike",
     "used cars West Yorkshire",
-    "independent car dealer",
+    "independent car dealer Heckmondwike",
     "used cars UK delivery",
+    "quality used cars Yorkshire",
+    "pre owned cars West Yorkshire",
     "Ace Motor Sales",
+    "used car dealership UK",
   ],
 
   metadataBase: new URL("https://acemotorsales.uk"),

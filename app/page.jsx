@@ -11,6 +11,22 @@ export const metadata = {
   title: "Used Cars in Heckmondwike with Nationwide UK Delivery",
   description:
     "Trusted used car dealership in Heckmondwike, West Yorkshire. Quality pre-owned vehicles, fully inspected, with nationwide UK delivery.",
+
+  keywords: [
+    "used cars Heckmondwike",
+    "used cars West Yorkshire",
+    "independent car dealer Heckmondwike",
+    "used cars UK delivery",
+    "quality used cars Yorkshire",
+    "pre owned cars West Yorkshire",
+    "Ace Motor Sales",
+    "used car dealership UK",
+  ],
+
+  alternates: {
+    canonical: "https://acemotorsales.uk",
+  },
+
   openGraph: {
     title: "Ace Motor Sales | Used Cars in Heckmondwike – UK Delivery",
     description:
@@ -28,6 +44,7 @@ export const metadata = {
     locale: "en_GB",
     type: "website",
   },
+
   twitter: {
     card: "summary_large_image",
     title: "Ace Motor Sales | Used Cars in Heckmondwike",

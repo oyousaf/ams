@@ -1,6 +1,6 @@
 "use client";
 
-import { reviews } from "../constants/index";
+import { reviews } from "../constants";
 import { FaQuoteLeft } from "react-icons/fa";
 import { motion } from "framer-motion";
 
@@ -12,33 +12,35 @@ const Reviews = () => {
     >
       <h2
         id="reviews-heading"
-        className="text-4xl md:text-5xl font-bold text-center mb-16 text-white tracking-tight"
+        className="mb-16 text-center text-4xl font-bold tracking-tight text-white md:text-5xl"
       >
-        Customer Reviews
+        What Our Customers Say
       </h2>
 
-      <div className="space-y-12 max-w-5xl mx-auto">
+      <div className="mx-auto max-w-5xl space-y-12">
         {reviews.map(({ name, feedback }, index) => (
           <motion.blockquote
             key={index}
-            className="relative p-8 sm:p-10 rounded-2xl tile-glow bg-gradient-to-br from-rose-900 via-rose-800 to-rose-950 text-white shadow-md"
-            initial={{ opacity: 0, y: 40 }}
+            initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, amount: 0.3 }}
             transition={{
-              delay: index * 0.1,
-              duration: 0.4,
-              type: "spring",
-              stiffness: 240,
-              damping: 20,
+              duration: 0.45,
+              ease: "easeOut",
+              delay: index * 0.08,
             }}
-            whileHover={{ scale: 1.03 }}
+            className="
+              relative rounded-2xl p-8 sm:p-10
+              surface-primary
+            "
           >
-            <FaQuoteLeft className="absolute top-6 left-6 text-4xl text-rose-400/40" />
-            <p className="text-lg md:text-xl italic leading-relaxed text-center">
+            <FaQuoteLeft className="absolute left-6 top-6 text-3xl text-rose-400/30" />
+
+            <p className="mx-auto max-w-3xl text-center text-lg italic leading-relaxed text-white md:text-xl">
               “{feedback}”
             </p>
-            <footer className="mt-6 text-center text-xl md:text-2xl font-semibold text-rose-300">
+
+            <footer className="mt-6 text-center text-lg font-semibold text-rose-300 md:text-xl">
               — {name}
             </footer>
           </motion.blockquote>

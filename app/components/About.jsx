@@ -40,7 +40,10 @@ const About = () => {
             }}
             transition={{ duration: 0.5, ease: "easeOut" }}
             whileHover={{ y: -6 }}
-            className="tile-glow flex flex-col items-center rounded-2xl border border-white/10 bg-gradient-to-br from-rose-900/80 to-rose-800/80 p-6 shadow-lg backdrop-blur-sm transition"
+            className="
+              tile-glow flex flex-col items-center rounded-2xl p-6 transition
+              surface-primary
+            "
           >
             <tile.icon className="mb-4 text-4xl text-white drop-shadow-sm" />
             <h3 className="mb-2 text-xl font-semibold text-white">

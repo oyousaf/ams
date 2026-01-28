@@ -154,3 +154,9 @@ img {
 ::-webkit-scrollbar-track {
   background-color: #000;
 }
+
+/* Premium surface used for consistency */
+.surface-primary {
+  @apply bg-gradient-to-br from-rose-900/85 via-rose-800/80 to-rose-950/85 border border-white/10
+         backdrop-blur-sm shadow-lg;
+}

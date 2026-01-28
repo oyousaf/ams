@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { databases } from "../lib/appwrite";
 import { carMakes, carLogos } from "../constants";
@@ -34,16 +34,19 @@ const LatestCars = () => {
   useEffect(() => {
     const fetchCars = async () => {
       try {
-        const res = await databases.listDocuments(
-          process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID,
-          process.env.NEXT_PUBLIC_APPWRITE_COLLECTION_ID
-        );
+        const databaseId = process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID;
+        const collectionId = process.env.NEXT_PUBLIC_APPWRITE_COLLECTION_ID;
+
+        if (!databaseId || !collectionId) {
+          throw new Error("Missing Appwrite environment variables");
+        }
+
+        const res = await databases.listDocuments(databaseId, collectionId);
 
         const processed = res.documents.map((car) => {
-          const title = car.title.toLowerCase().replace(/\s+/g, "");
-
+          const title = car.title?.toLowerCase().replace(/\s+/g, "");
           const make = carMakes.find((m) =>
-            title.includes(m.toLowerCase().replace(/\s+/g, ""))
+            title?.includes(m.toLowerCase().replace(/\s+/g, "")),
           );
 
           return {
@@ -55,8 +58,8 @@ const LatestCars = () => {
 
         setCars(processed);
       } catch (err) {
-        setError("Error fetching cars. Please try again.");
         console.error(err);
+        setError("Unable to load vehicles. Please try again shortly.");
       } finally {
         setLoading(false);
       }
@@ -66,47 +69,64 @@ const LatestCars = () => {
   }, []);
 
   const sortedCars = useMemo(() => {
-    let filtered = [...cars];
+    let result = [...cars];
 
     switch (sortOption) {
       case "automatic":
       case "manual":
-        filtered = filtered.filter(
-          (car) =>
-            car.transmission && car.transmission.toLowerCase() === sortOption
+        result = result.filter(
+          (car) => car.transmission?.toLowerCase() === sortOption,
         );
-        filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        result.sort(
+          (a, b) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+        );
         break;
+
       case "priceLow":
-        filtered.sort((a, b) => a.price - b.price);
+        result.sort((a, b) => (a.price ?? 0) - (b.price ?? 0));
         break;
+
       case "priceHigh":
-        filtered.sort((a, b) => b.price - a.price);
+        result.sort((a, b) => (b.price ?? 0) - (a.price ?? 0));
         break;
+
       case "mileage":
-        filtered.sort((a, b) => a.mileage - b.mileage);
+        result.sort((a, b) => (a.mileage ?? 0) - (b.mileage ?? 0));
         break;
+
       case "engineLow":
-        filtered.sort((a, b) => a.engineSize - b.engineSize);
+        result.sort((a, b) => (a.engineSize ?? 0) - (b.engineSize ?? 0));
         break;
+
       case "engineHigh":
-        filtered.sort((a, b) => b.engineSize - a.engineSize);
+        result.sort((a, b) => (b.engineSize ?? 0) - (a.engineSize ?? 0));
         break;
+
       case "oldest":
-        filtered.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+        result.sort(
+          (a, b) =>
+            new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+        );
         break;
+
       case "titleAsc":
-        filtered.sort((a, b) => a.title.localeCompare(b.title));
+        result.sort((a, b) => a.title.localeCompare(b.title));
         break;
+
       case "titleDesc":
-        filtered.sort((a, b) => b.title.localeCompare(a.title));
+        result.sort((a, b) => b.title.localeCompare(a.title));
         break;
+
       default:
-        filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        result.sort(
+          (a, b) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+        );
     }
 
-    // Always prioritise featured
-    return filtered.sort((a, b) => {
+    // Always prioritise featured vehicles
+    return result.sort((a, b) => {
       if (a.isFeatured && !b.isFeatured) return -1;
       if (!a.isFeatured && b.isFeatured) return 1;
       return 0;
@@ -117,12 +137,12 @@ const LatestCars = () => {
     <section aria-labelledby="cars-heading" className="py-24 px-6 md:px-12">
       <h2
         id="cars-heading"
-        className="text-4xl md:text-5xl font-bold text-center mb-12 text-white tracking-tight"
+        className="mb-12 text-center text-4xl font-bold tracking-tight text-white md:text-5xl"
       >
-        Latest Cars
+        Available Vehicles
       </h2>
 
-      <div className="flex justify-center mb-12">
+      <div className="mb-12 flex justify-center">
         <SortDropdown
           options={sortOptions}
           selected={sortOption}
@@ -138,8 +158,8 @@ const LatestCars = () => {
       {loading ? (
         <div
           role="status"
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto"
           aria-live="polite"
+          className="mx-auto grid max-w-7xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
         >
           {Array.from({ length: 6 }).map((_, i) => (
             <SkeletonCarCard key={i} />
@@ -148,33 +168,33 @@ const LatestCars = () => {
       ) : error ? (
         <p
           role="alert"
-          className="text-center text-red-500 bg-black/40 rounded-xl px-6 py-4 max-w-md mx-auto"
           aria-live="assertive"
+          className="mx-auto max-w-md rounded-xl bg-black/40 px-6 py-4 text-center text-red-400"
         >
           {error}
         </p>
       ) : sortedCars.length === 0 ? (
         <p
-          className="text-center text-lg text-zinc-200 bg-black/40 backdrop-blur-md rounded-xl px-6 py-8 max-w-md mx-auto"
           role="status"
           aria-live="polite"
+          className="mx-auto max-w-md rounded-xl bg-black/40 px-6 py-8 text-center text-lg text-zinc-200 backdrop-blur"
         >
           No cars available at the moment. Please check back soon.
         </p>
       ) : (
         <motion.ul
           layout
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto"
+          className="mx-auto grid max-w-7xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
         >
-          <AnimatePresence mode="popLayout">
+          <AnimatePresence>
             {sortedCars.map((car) => (
               <motion.li
                 key={car.$id}
                 layout
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.2 }}
-                transition={{ duration: 0.5, ease: "easeOut" }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.35, ease: "easeOut" }}
               >
                 <CarCard
                   car={car}
@@ -187,7 +207,6 @@ const LatestCars = () => {
         </motion.ul>
       )}
 
-      {/* Car Modal */}
       <AnimatePresence>
         {selectedCar && (
           <CarModal

@@ -30,8 +30,7 @@ const Footer = () => {
           transition={{ duration: 0.6 }}
           className="
             max-w-7xl mx-auto rounded-2xl p-6 md:p-10
-            bg-gradient-to-br from-rose-900 via-rose-800 to-rose-950
-            shadow-2xl border border-white/10
+            surface-primary shadow-2xl
           "
         >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
@@ -72,8 +71,7 @@ const Footer = () => {
           transition={{ duration: 0.5 }}
           className="
             max-w-4xl mx-auto rounded-xl px-6 py-8
-            bg-gradient-to-br from-rose-900/80 via-rose-800/80 to-rose-950/80
-            backdrop-blur-md shadow-xl border border-white/10
+            surface-primary
             text-center space-y-4
           "
         >
@@ -87,7 +85,6 @@ const Footer = () => {
             Keys in the ignition from 9am to 8pm. Cruise on in anytime.
           </p>
 
-          {/* Phone */}
           <a
             href="tel:+447809107655"
             aria-label="Call Ace Motor Sales on 07809 107655"
@@ -101,7 +98,6 @@ const Footer = () => {
             07809 107655
           </a>
 
-          {/* Socials */}
           <div className="flex justify-center gap-5 pt-3">
             {socialLinks.map(({ id, href, icon, name }) => (
               <motion.a
@@ -110,7 +106,7 @@ const Footer = () => {
                 target="_blank"
                 rel="nofollow noopener noreferrer"
                 aria-label={name}
-                whileHover={{ scale: 1.15 }}
+                whileHover={{ y: -3 }}
                 transition={{ type: "spring", stiffness: 260 }}
                 className="text-2xl text-white/80 hover:text-rose-300"
               >
@@ -128,7 +124,7 @@ const Footer = () => {
             aria-hidden
             className="inline-block leading-none"
             animate={{ rotate: -360 }}
-            transition={{ repeat: Infinity, duration: 6, ease: "linear" }}
+            transition={{ repeat: Infinity, duration: 7, ease: "linear" }}
           >
             💚
           </motion.span>

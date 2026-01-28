@@ -1,21 +1,10 @@
 "use client";
 
-import React, {
-  useEffect,
-  useCallback,
-  useRef,
-  useState,
-  useMemo,
-} from "react";
+import { useEffect, useMemo, useRef, useState, useCallback } from "react";
 import Image from "next/image";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
-import {
-  motion,
-  AnimatePresence,
-  useMotionValue,
-  useTransform,
-} from "framer-motion";
+import { motion, AnimatePresence, useMotionValue, useTransform } from "framer-motion";
 import {
   FaTimes,
   FaGasPump,
@@ -27,15 +16,14 @@ import { PiEngineFill } from "react-icons/pi";
 import { GiGearStickPattern } from "react-icons/gi";
 import { BiSolidTachometer } from "react-icons/bi";
 import Divider from "./Divider";
-import LoadingSpinner from "../dashboard/LoadingSpinner";
 
-/* -------------------------------------------------
-   MOTION
--------------------------------------------------- */
+/* ---------------------------------------------
+   Motion
+--------------------------------------------- */
 const overlayVariants = {
   hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { duration: 0.25 } },
-  exit: { opacity: 0, transition: { duration: 0.2 } },
+  visible: { opacity: 1 },
+  exit: { opacity: 0 },
 };
 
 const modalVariants = {
@@ -46,80 +34,66 @@ const modalVariants = {
     y: 0,
     transition: { type: "spring", stiffness: 420, damping: 32 },
   },
-  exit: { scale: 0.94, opacity: 0, y: 60, transition: { duration: 0.22 } },
+  exit: { scale: 0.94, opacity: 0, y: 60 },
 };
 
 const FALLBACK_IMAGE = "/fallback.webp";
 const AUTOPLAY_MS = 5000;
 
-/* -------------------------------------------------
-   COMPONENT
--------------------------------------------------- */
+/* ---------------------------------------------
+   Component
+--------------------------------------------- */
 export default function CarModal({ car, logo, onClose }) {
-  const modalRef = useRef(null);
-
   const images = useMemo(
     () => (car.imageUrl?.length ? car.imageUrl : [FALLBACK_IMAGE]),
     [car.imageUrl],
   );
 
-  /* -----------------------------
-     Embla setup
-  ------------------------------ */
+  /* Embla */
   const autoplay = useRef(
-    Autoplay({
-      delay: AUTOPLAY_MS,
-      stopOnInteraction: false,
-      stopOnMouseEnter: true,
-    }),
+    Autoplay({ delay: AUTOPLAY_MS, stopOnInteraction: false, stopOnMouseEnter: true }),
   );
 
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: images.length > 1 }, [
-    autoplay.current,
-  ]);
+  const [emblaRef, emblaApi] = useEmblaCarousel(
+    { loop: images.length > 1 },
+    [autoplay.current],
+  );
 
   const [activeIndex, setActiveIndex] = useState(0);
   const [progress, setProgress] = useState(0);
-  const rafRef = useRef(null);
-  const startRef = useRef(0);
 
-  /* -----------------------------
-     Progress sync (perfect)
-  ------------------------------ */
-  const startProgress = useCallback(() => {
-    cancelAnimationFrame(rafRef.current);
-    setProgress(0);
-    startRef.current = performance.now();
-
-    const tick = (now) => {
-      const t = Math.min(1, (now - startRef.current) / AUTOPLAY_MS);
-      setProgress(t);
-      if (t < 1) rafRef.current = requestAnimationFrame(tick);
-    };
-
-    rafRef.current = requestAnimationFrame(tick);
-  }, []);
-
+  /* Autoplay progress (time-based, stable) */
   useEffect(() => {
     if (!emblaApi) return;
 
-    const onSelect = () => {
-      setActiveIndex(emblaApi.selectedScrollSnap());
-      startProgress();
+    let raf;
+    let start = performance.now();
+
+    const tick = (now) => {
+      const elapsed = now - start;
+      setProgress(Math.min(0.999, elapsed / AUTOPLAY_MS));
+      raf = requestAnimationFrame(tick);
     };
 
-    emblaApi.on("select", onSelect);
-    startProgress();
+    const reset = () => {
+      setActiveIndex(emblaApi.selectedScrollSnap());
+      start = performance.now();
+      setProgress(0);
+    };
+
+    emblaApi.on("select", reset);
+    emblaApi.on("pointerDown", reset);
+
+    raf = requestAnimationFrame(tick);
 
     return () => {
-      emblaApi.off("select", onSelect);
-      cancelAnimationFrame(rafRef.current);
+      cancelAnimationFrame(raf);
+      emblaApi.off("select", reset);
+      emblaApi.off("pointerDown", reset);
     };
-  }, [emblaApi, startProgress]);
+  }, [emblaApi]);
 
-  /* -----------------------------
-     Keyboard
-  ------------------------------ */
+  /* Keyboard */
   const close = useCallback(() => onClose?.(), [onClose]);
 
   useEffect(() => {
@@ -136,58 +110,42 @@ export default function CarModal({ car, logo, onClose }) {
     };
   }, [emblaApi, close]);
 
-  /* -----------------------------
-     Derived
-  ------------------------------ */
+  /* Parallax */
+  const dragY = useMotionValue(0);
+  const imageParallaxY = useTransform(dragY, [-200, 0, 200], [-8, 0, 8]);
+
+  /* Share */
+  const [copied, setCopied] = useState(false);
   const formattedMileage =
     car.mileage >= 1000
       ? `${(car.mileage / 1000).toFixed(0)}K`
       : car.mileage.toLocaleString("en-GB");
-
   const formattedPrice = car.price.toLocaleString("en-GB");
 
-  /* -----------------------------
-     Parallax
-  ------------------------------ */
-  const dragY = useMotionValue(0);
-  const imageParallaxY = useTransform(dragY, [-200, 0, 200], [-8, 0, 8]);
-
-  /* -----------------------------
-     Share
-  ------------------------------ */
-  const [copied, setCopied] = useState(false);
-
-  const handleShare = async () => {
-    const url = window.location.href;
+  const share = async () => {
     try {
-      if (navigator.share) {
-        await navigator.share({
-          title: car.title,
-          text: `Check out this ${car.title} for £${formattedPrice}`,
-          url,
-        });
-        return;
-      }
-    } catch {}
-    await navigator.clipboard.writeText(url);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1500);
+      await navigator.share?.({
+        title: car.title,
+        text: `Check out this ${car.title} for £${formattedPrice}`,
+        url: location.href,
+      });
+    } catch {
+      await navigator.clipboard.writeText(location.href);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    }
   };
 
-  /* -------------------------------------------------
-     RENDER
-  -------------------------------------------------- */
   return (
     <AnimatePresence>
       <motion.div
-        className="fixed inset-0 z-1000 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
+        className="fixed inset-0 z-100 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
         variants={overlayVariants}
         initial="hidden"
         animate="visible"
         exit="exit"
       >
         <motion.div
-          ref={modalRef}
           role="dialog"
           aria-modal="true"
           aria-label={`${car.title} details`}
@@ -199,7 +157,6 @@ export default function CarModal({ car, logo, onClose }) {
           drag="y"
           style={{ y: dragY }}
           dragConstraints={{ top: 0, bottom: 0 }}
-          dragElastic={0.08}
         >
           {/* Close */}
           <button
@@ -221,26 +178,22 @@ export default function CarModal({ car, logo, onClose }) {
           {/* Content */}
           <div className="overflow-y-auto px-6 pb-6 max-h-[calc(92vh-120px)]">
             {/* Carousel */}
-            <div
-              className="mb-6"
-              onMouseEnter={() => autoplay.current.stop()}
-              onMouseLeave={() => autoplay.current.play()}
-            >
-              <div className="overflow-hidden" ref={emblaRef}>
+            <div className="mb-6">
+              <div ref={emblaRef} className="overflow-hidden">
                 <div className="flex">
-                  {images.map((url, i) => (
+                  {images.map((src, i) => (
                     <div
                       key={i}
                       className="relative flex-[0_0_100%] h-70 md:h-105"
                     >
                       <motion.div style={{ y: imageParallaxY }}>
                         <Image
-                          src={url}
+                          src={src}
                           alt={`${car.title} ${i + 1}`}
                           fill
+                          priority={i === 0}
                           sizes="(max-width: 768px) 100vw, 800px"
                           className="object-cover rounded-md"
-                          priority={i === 0}
                         />
                       </motion.div>
                     </div>
@@ -248,85 +201,61 @@ export default function CarModal({ car, logo, onClose }) {
                 </div>
               </div>
 
-              {/* Pills */}
-              <div className="mt-4 flex justify-center gap-2">
-                {images.map((_, i) => {
-                  const active = i === activeIndex;
-                  return (
-                    <button
-                      key={i}
-                      onClick={() => emblaApi?.scrollTo(i)}
-                      className="relative h-3 w-10 focus:outline-none"
-                    >
-                      <span
-                        className="absolute left-1/2 top-1/2 h-0.75 -translate-x-1/2 -translate-y-1/2 rounded-full"
-                        style={{
-                          width: active ? 40 : 16,
-                          background: "rgba(251,113,133,0.35)",
-                          transition: "width 300ms ease",
-                        }}
-                      />
-                      {active && (
+              {/* Pill rail */}
+              <div className="mt-4 flex justify-center">
+                <div className="flex gap-2 rounded-full bg-white/10 px-3 py-2 backdrop-blur">
+                  {images.map((_, i) => {
+                    const active = i === activeIndex;
+                    return (
+                      <button
+                        key={i}
+                        onClick={() => emblaApi?.scrollTo(i)}
+                        className="relative h-2.5 w-6 focus:outline-none"
+                      >
+                        {/* Base */}
                         <span
-                          className="absolute left-1/2 top-1/2 h-0.75 -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-full"
-                          style={{ width: 40 }}
-                        >
-                          <span
-                            className="block h-full bg-rose-400"
-                            style={{
-                              transformOrigin: "left",
-                              transform: `scaleX(${progress})`,
-                              transition: "transform 60ms linear",
-                            }}
-                          />
-                        </span>
-                      )}
-                    </button>
-                  );
-                })}
+                          className="absolute inset-0 rounded-full bg-rose-300/30 transition-all"
+                          style={{ width: active ? 28 : 10 }}
+                        />
+                        {/* Progress */}
+                        {active && (
+                          <span className="absolute inset-0 overflow-hidden rounded-full">
+                            <span
+                              className="block h-full bg-rose-400"
+                              style={{
+                                transform: `scaleX(${progress})`,
+                                transformOrigin: "left",
+                              }}
+                            />
+                          </span>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
             </div>
 
             <Divider />
 
-            <p className="mb-6 text-center leading-relaxed">
-              {car.description}
-            </p>
+            <p className="mb-6 text-center">{car.description}</p>
 
             <Divider />
 
             {/* Specs */}
             <div className="grid grid-cols-3 gap-6 text-center text-lg mb-6">
-              <div>
-                <PiEngineFill className="mx-auto mb-1" />
-                {car.engineType}
-              </div>
-              <div>
-                <FaGasPump className="mx-auto mb-1" />
-                {car.engineSize}L
-              </div>
-              <div>
-                <GiGearStickPattern className="mx-auto mb-1" />
-                {car.transmission}
-              </div>
-              <div>
-                <FaCarSide className="mx-auto mb-1" />
-                {car.carType}
-              </div>
-              <div>
-                <FaRegCalendarAlt className="mx-auto mb-1" />
-                {car.year}
-              </div>
-              <div>
-                <BiSolidTachometer className="mx-auto mb-1" />
-                {formattedMileage} miles
-              </div>
+              <div><PiEngineFill className="mx-auto mb-1" />{car.engineType}</div>
+              <div><FaGasPump className="mx-auto mb-1" />{car.engineSize}L</div>
+              <div><GiGearStickPattern className="mx-auto mb-1" />{car.transmission}</div>
+              <div><FaCarSide className="mx-auto mb-1" />{car.carType}</div>
+              <div><FaRegCalendarAlt className="mx-auto mb-1" />{car.year}</div>
+              <div><BiSolidTachometer className="mx-auto mb-1" />{formattedMileage} miles</div>
             </div>
 
             <Divider />
 
             <button
-              onClick={handleShare}
+              onClick={share}
               className="mx-auto mt-4 flex items-center gap-2 rounded-full bg-white/10 px-6 py-2"
             >
               <FaShareAlt />

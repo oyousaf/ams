@@ -5,6 +5,14 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/next";
 import { Toaster } from "sonner";
 import Script from "next/script";
+import { Manrope } from "next/font/google";
+
+// ---------- Font ----------
+const manrope = Manrope({
+  subsets: ["latin"],
+  variable: "--font-sans",
+  display: "swap",
+});
 
 // ---------- Viewport ----------
 export const viewport = {
@@ -107,7 +115,10 @@ const websiteSchema = {
 // ---------- Layout ----------
 export default function RootLayout({ children }) {
   return (
-    <html lang="en-GB" className="scroll-smooth antialiased">
+    <html
+      lang="en-GB"
+      className={`${manrope.variable} scroll-smooth antialiased`}
+    >
       <body className="min-h-screen bg-neutral-900 text-zinc-100">
         {/* Skip to content (accessibility) */}
         <a

@@ -17,7 +17,7 @@ const ImageTile = ({
       transition={{ duration: 0.5, ease: "easeInOut" }}
       whileHover={{ scale: 1.05 }}
       viewport={{ once: true, amount: 0.2 }}
-      className="relative w-full h-[300px] md:h-[400px] overflow-hidden rounded-lg"
+      className="relative w-full h-75 md:h-100 overflow-hidden rounded-lg"
     >
       <div className="absolute inset-0 bg-rose-800 opacity-50 transition-opacity duration-500 ease-in-out hover:opacity-0 rounded-lg z-10" />
 
@@ -31,7 +31,7 @@ const ImageTile = ({
         loading={priority ? "eager" : "lazy"}
         sizes={
           isFirst
-            ? "(max-width: 768px) 100vw, (min-width: 769px) 25vw" // ✅ first tile
+            ? "(max-width: 768px) 100vw, (min-width: 769px) 25vw"
             : isWide
             ? "(max-width: 768px) 100vw, (max-width: 1024px) 100vw, (min-width: 1025px) 50vw"
             : "(max-width: 768px) 100vw, (max-width: 1024px) 50vw, (min-width: 1025px) 25vw"

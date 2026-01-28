@@ -32,7 +32,7 @@ const HeroSection = () => {
       />
 
       {/* Overlay */}
-      <div className="absolute inset-0 z-10 bg-gradient-to-br from-black/70 via-zinc-900/60 to-black/70 backdrop-blur-sm" />
+      <div className="absolute inset-0 z-10 bg-linear-to-br from-black/70 via-zinc-900/60 to-black/70 backdrop-blur-sm" />
 
       {/* Content */}
       <motion.div

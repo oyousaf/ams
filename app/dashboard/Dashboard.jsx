@@ -62,6 +62,9 @@ export default function Dashboard() {
   const [sortOption, setSortOption] = useState("newest");
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
+  /* 🔑 Global modal state */
+  const [modalOpen, setModalOpen] = useState(false);
+
   /* Mount / hydration */
   useEffect(() => {
     document.body.classList.add("overflow-hidden");
@@ -105,12 +108,13 @@ export default function Dashboard() {
     if (isAuthenticated) fetchCars();
   }, [isAuthenticated, fetchCars]);
 
-  /* Search + sort */
+  /* Search debounce */
   useEffect(() => {
     const t = setTimeout(() => setDebounced(searchQuery), DEBOUNCE_MS);
     return () => clearTimeout(t);
   }, [searchQuery]);
 
+  /* Search + sort */
   useEffect(() => {
     const q = debounced.toLowerCase().trim();
 
@@ -194,7 +198,9 @@ export default function Dashboard() {
             onChange={(e) => setPasskey(e.target.value)}
             placeholder="Passkey…"
             maxLength={5}
-            className={`px-4 py-2 rounded text-center bg-rose-800 text-white placeholder:text-rose-300 focus:outline-none focus:ring-2 focus:ring-rose-400 ${error ? "border border-red-500 shake" : ""}`}
+            className={`px-4 py-2 rounded text-center bg-rose-800 text-white placeholder:text-rose-300 focus:outline-none focus:ring-2 focus:ring-rose-400 ${
+              error ? "border border-red-500 shake" : ""
+            }`}
           />
           {error && <span className="text-red-500">{error}</span>}
           <button type="submit" className="rounded-full bg-rose-700 p-3">
@@ -232,28 +238,21 @@ export default function Dashboard() {
         ))}
       </nav>
 
-      <div className="flex-1 flex flex-col overflow-visible min-h-0">
+      <div className="flex-1 flex flex-col min-h-0">
         {activeTab === "carList" ? (
           <>
             {/* Filters */}
             <div className="p-4 shrink-0">
               <div className="mx-auto max-w-7xl rounded-xl bg-white/5 p-3 backdrop-blur">
-                <div className="mx-auto flex w-full max-w-4xl flex-col md:flex-row items-stretch md:items-center gap-3">
-                  {/* Search */}
+                <div className="mx-auto flex w-full max-w-4xl flex-col md:flex-row gap-3">
                   <input
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Search cars…"
-                    className="
-                    h-11 w-full md:flex-1 px-4 rounded-lg
-                    bg-transparent text-white
-                    placeholder:text-rose-300
-                    focus:outline-none focus:ring-2 focus:ring-rose-400
-                  "
+                    className="h-11 w-full md:flex-1 px-4 rounded-lg bg-transparent text-white placeholder:text-rose-300 focus:outline-none focus:ring-2 focus:ring-rose-400"
                   />
 
-                  {/* Sort */}
                   <div className="relative w-full md:w-64">
                     <SortDropdownDashboard
                       options={sortOptions}
@@ -267,7 +266,14 @@ export default function Dashboard() {
               </div>
             </div>
 
-            <div className="flex-1 min-h-0 flex px-4 pb-4">
+            {/* 🔹 Scroll + dim layer */}
+            <div
+              className={`
+                flex-1 min-h-0 px-4 pb-4
+                transition-opacity duration-200
+                ${modalOpen ? "opacity-40 pointer-events-none" : "opacity-100"}
+              `}
+            >
               {loading ? (
                 <LoadingSpinner />
               ) : (
@@ -275,6 +281,7 @@ export default function Dashboard() {
                   cars={filteredCars}
                   setCars={setCars}
                   fetchCars={fetchCars}
+                  setModalOpen={setModalOpen}
                 />
               )}
             </div>

@@ -36,7 +36,7 @@ const formatNumber = (n) =>
 const hasMeaningfulChanges = (a, b) =>
   Object.keys(b).some((k) => a[k] !== b[k]);
 
-const CarListItem = ({ car, setCars }, ref) => {
+const CarListItem = ({ car, setCars, setModalOpen }, ref) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedCar, setEditedCar] = useState(car);
   const [saving, setSaving] = useState(false);
@@ -54,6 +54,16 @@ const CarListItem = ({ car, setCars }, ref) => {
       ...p,
       [name]: NUMERIC_FIELDS.includes(name) ? Number(value) : value,
     }));
+  };
+
+  const openConfirm = () => {
+    setConfirmOpen(true);
+    setModalOpen?.(true);
+  };
+
+  const closeConfirm = () => {
+    setConfirmOpen(false);
+    setModalOpen?.(false);
   };
 
   const save = async () => {
@@ -100,9 +110,10 @@ const CarListItem = ({ car, setCars }, ref) => {
 
       setCars((p) => p.filter((c) => c.$id !== car.$id));
       toast.success("Car deleted");
-      setConfirmOpen(false);
+      closeConfirm();
     } catch {
       toast.error("Delete failed");
+      closeConfirm();
     }
   };
 
@@ -115,14 +126,7 @@ const CarListItem = ({ car, setCars }, ref) => {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -12 }}
       transition={{ duration: 0.25 }}
-      className="
-        relative
-        z-0
-        rounded-xl
-        border border-white/10
-        bg-rose-900/70
-        p-4
-      "
+      className="relative z-0 rounded-xl border border-white/10 bg-rose-900/70 p-4"
     >
       <div className="flex flex-col sm:flex-row gap-4">
         {/* Image */}
@@ -178,7 +182,7 @@ const CarListItem = ({ car, setCars }, ref) => {
                 <FiEdit2 />
               </button>
             )}
-            <button onClick={() => setConfirmOpen(true)} aria-label="Delete">
+            <button onClick={openConfirm} aria-label="Delete">
               <FiTrash2 />
             </button>
           </div>
@@ -290,7 +294,7 @@ const CarListItem = ({ car, setCars }, ref) => {
 
       <ConfirmModal
         isOpen={confirmOpen}
-        onClose={() => setConfirmOpen(false)}
+        onClose={closeConfirm}
         onConfirm={remove}
         title={`Delete ${car.title}?`}
         message="This will permanently remove the car."

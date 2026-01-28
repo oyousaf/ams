@@ -17,24 +17,24 @@ export const aboutTiles = [
     icon: FaCar,
     title: "Assured Quality",
     description:
-      "Every vehicle is thoroughly inspected to ensure long-term reliability, dependable performance, and complete peace of mind.",
+      "Every vehicle undergoes a rigorous inspection to ensure lasting reliability, consistent performance, and complete peace of mind.",
   },
   {
     icon: FaHandshake,
     title: "Superb Service",
     description:
-      "From initial enquiry to final delivery, we provide a transparent, trustworthy used-car buying service for customers across the UK.",
+      "From initial enquiry through to final delivery, we deliver a transparent and dependable used-car buying experience nationwide.",
   },
   {
     icon: FaShieldAlt,
     title: "Flexibility",
     description:
-      "Secure your next car for £99, choose flexible finance, sell your current vehicle with ease, or opt for part exchange.",
+      "Reserve your next car for £99, choose flexible finance options, sell your current vehicle with ease, or take advantage of part-exchange.",
   },
   {
     icon: FaHistory,
     title: `Established ${yearsEstablished} Years`,
-    description: `Trusted since ${establishedYear}, we’ve built our reputation on transparency, integrity, and consistently high standards of service.`,
+    description: `Trusted since ${establishedYear}, we have built our reputation on transparency, integrity, and consistently high standards.`,
   },
 ];
 

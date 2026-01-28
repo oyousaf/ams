@@ -87,20 +87,6 @@ export const gallery = [
 
 export const reviews = [
   {
-    name: "Moshfeq A",
-    feedback:
-      "Professional service, excellent communication, and a quality car at a fair price. I’d definitely recommend them if you’re in the market for a new car.",
-  },
-  {
-    name: "Chrismag",
-    feedback:
-      "Absolutely brilliant service from the team at Ace Motor Sales. I would definitely go back in a heartbeat.",
-  },
-  {
-    name: "John F",
-    feedback: `Just bought a car from Ace Motor Sales. They have outstanding customer service and a fantastic, friendly, no-hassle sale policy. I highly recommend this company to anyone looking to change or buy a vehicle.`,
-  },
-  {
     name: "Eva K",
     feedback: `Bought an Audi A1 from this garage and would 1000% buy again. Unfortunately, I did not like the car as much as I would've hoped but that was no one’s fault but my own. The team at ACE were so professional and made the whole process very easy! Thank you :)`,
   },

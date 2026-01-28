@@ -4,7 +4,12 @@ import { useEffect, useMemo, useRef, useState, useCallback } from "react";
 import Image from "next/image";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
-import { motion, AnimatePresence, useMotionValue, useTransform } from "framer-motion";
+import {
+  motion,
+  AnimatePresence,
+  useMotionValue,
+  useTransform,
+} from "framer-motion";
 import {
   FaTimes,
   FaGasPump,
@@ -51,13 +56,16 @@ export default function CarModal({ car, logo, onClose }) {
 
   /* Embla */
   const autoplay = useRef(
-    Autoplay({ delay: AUTOPLAY_MS, stopOnInteraction: false, stopOnMouseEnter: true }),
+    Autoplay({
+      delay: AUTOPLAY_MS,
+      stopOnInteraction: false,
+      stopOnMouseEnter: true,
+    }),
   );
 
-  const [emblaRef, emblaApi] = useEmblaCarousel(
-    { loop: images.length > 1 },
-    [autoplay.current],
-  );
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: images.length > 1 }, [
+    autoplay.current,
+  ]);
 
   const [activeIndex, setActiveIndex] = useState(0);
   const [progress, setProgress] = useState(0);
@@ -69,27 +77,30 @@ export default function CarModal({ car, logo, onClose }) {
     let raf;
     let start = performance.now();
 
+    const syncIndex = () => {
+      setActiveIndex(emblaApi.selectedScrollSnap());
+      start = performance.now();
+      setProgress(0);
+    };
+
     const tick = (now) => {
       const elapsed = now - start;
       setProgress(Math.min(0.999, elapsed / AUTOPLAY_MS));
       raf = requestAnimationFrame(tick);
     };
 
-    const reset = () => {
-      setActiveIndex(emblaApi.selectedScrollSnap());
-      start = performance.now();
-      setProgress(0);
-    };
+    // Initial sync (fixes pill sticking on first slide)
+    syncIndex();
 
-    emblaApi.on("select", reset);
-    emblaApi.on("pointerDown", reset);
+    emblaApi.on("select", syncIndex);
+    emblaApi.on("pointerDown", syncIndex);
 
     raf = requestAnimationFrame(tick);
 
     return () => {
       cancelAnimationFrame(raf);
-      emblaApi.off("select", reset);
-      emblaApi.off("pointerDown", reset);
+      emblaApi.off("select", syncIndex);
+      emblaApi.off("pointerDown", syncIndex);
     };
   }, [emblaApi]);
 
@@ -244,12 +255,30 @@ export default function CarModal({ car, logo, onClose }) {
 
             {/* Specs */}
             <div className="grid grid-cols-3 gap-6 text-center text-lg mb-6">
-              <div><PiEngineFill className="mx-auto mb-1" />{car.engineType}</div>
-              <div><FaGasPump className="mx-auto mb-1" />{car.engineSize}L</div>
-              <div><GiGearStickPattern className="mx-auto mb-1" />{car.transmission}</div>
-              <div><FaCarSide className="mx-auto mb-1" />{car.carType}</div>
-              <div><FaRegCalendarAlt className="mx-auto mb-1" />{car.year}</div>
-              <div><BiSolidTachometer className="mx-auto mb-1" />{formattedMileage} miles</div>
+              <div>
+                <PiEngineFill className="mx-auto mb-1" />
+                {car.engineType}
+              </div>
+              <div>
+                <FaGasPump className="mx-auto mb-1" />
+                {car.engineSize}L
+              </div>
+              <div>
+                <GiGearStickPattern className="mx-auto mb-1" />
+                {car.transmission}
+              </div>
+              <div>
+                <FaCarSide className="mx-auto mb-1" />
+                {car.carType}
+              </div>
+              <div>
+                <FaRegCalendarAlt className="mx-auto mb-1" />
+                {car.year}
+              </div>
+              <div>
+                <BiSolidTachometer className="mx-auto mb-1" />
+                {formattedMileage} miles
+              </div>
             </div>
 
             <Divider />

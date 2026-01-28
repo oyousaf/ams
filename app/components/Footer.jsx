@@ -46,13 +46,13 @@ const Footer = () => {
                 <iframe
                   title="Ace Motor Sales Location"
                   src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d631.5462629097879!2d-1.6783367301941519!3d53.70835050988343!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x487bdf983824d755%3A0x1ccbf3963f34d05a!2sAce%20Motor%20Sales!5e0!3m2!1sen!2suk!4v1729510614154!5m2!1sen!2suk"
-                  className="w-full h-[400px] md:h-[450px] rounded-xl shadow-lg"
+                  className="w-full h-100 md:h-112.5 rounded-xl shadow-lg"
                   loading="lazy"
                   style={{ border: 0 }}
                   allowFullScreen
                 />
               ) : (
-                <div className="w-full h-[400px] md:h-[450px] rounded-xl bg-black/20 animate-pulse" />
+                <div className="w-full h-100 md:h-112.5 rounded-xl bg-black/20 animate-pulse" />
               )}
             </motion.div>
 

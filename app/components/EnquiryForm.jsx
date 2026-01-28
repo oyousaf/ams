@@ -48,7 +48,7 @@ const EnquiryForm = () => {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="w-full max-w-md p-6 space-y-4 rounded-xl neon-tile bg-gradient-to-br from-rose-900 via-rose-800 to-rose-950 shadow-lg"
+      className="w-full max-w-md p-6 space-y-4 rounded-xl neon-tile bg-linear-to-br from-rose-900 via-rose-800 to-rose-950 shadow-lg"
       autoComplete="off"
       aria-describedby="form-status"
     >

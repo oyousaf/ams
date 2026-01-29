@@ -262,7 +262,7 @@ export default function Dashboard() {
             </div>
 
             <div
-              className={`flex-1 min-h-0 px-4 pb-4 overflow-y-auto transition-opacity duration-200 ${
+              className={`flex-1 min-h-0 px-4 pb-4 transition-opacity duration-200 ${
                 modalOpen ? "opacity-40 pointer-events-none" : "opacity-100"
               }`}
             >

@@ -62,12 +62,10 @@ export default function Dashboard() {
   const [sortOption, setSortOption] = useState("newest");
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
-  /* 🔑 Global modal state */
   const [modalOpen, setModalOpen] = useState(false);
 
   /* Mount / hydration */
   useEffect(() => {
-    document.body.classList.add("overflow-hidden");
     setHydrated(true);
 
     const saved = sessionStorage.getItem(SESSION_KEY);
@@ -83,8 +81,6 @@ export default function Dashboard() {
       sessionStorage.removeItem(SESSION_KEY);
       sessionStorage.removeItem(SESSION_EXPIRY);
     }
-
-    return () => document.body.classList.remove("overflow-hidden");
   }, []);
 
   /* Data */
@@ -175,7 +171,7 @@ export default function Dashboard() {
 
   if (!hydrated || (isAuthenticated && loading && !cars.length)) {
     return (
-      <div className="fixed inset-0 bg-rose-950 flex items-center justify-center">
+      <div className="flex-1 grid place-items-center">
         <LoadingSpinner />
       </div>
     );
@@ -183,7 +179,7 @@ export default function Dashboard() {
 
   if (!isAuthenticated) {
     return (
-      <div className="fixed inset-0 bg-rose-950 flex items-center justify-center px-4">
+      <div className="flex-1 grid place-items-center px-4">
         <motion.form
           onSubmit={handlePass}
           initial={{ opacity: 0, y: 20 }}
@@ -212,7 +208,7 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="fixed inset-0 h-screen bg-rose-950 text-white flex flex-col">
+    <div className="h-full w-full flex flex-col text-white">
       <header className="h-20 shrink-0 px-4 shadow-md">
         <div className="max-w-7xl mx-auto h-full flex items-center justify-between">
           <h1 className="text-2xl font-bold">Dashboard</h1>
@@ -238,10 +234,9 @@ export default function Dashboard() {
         ))}
       </nav>
 
-      <div className="flex-1 flex flex-col min-h-0">
+      <div className="flex-1 min-h-0 flex flex-col">
         {activeTab === "carList" ? (
           <>
-            {/* Filters */}
             <div className="p-4 shrink-0">
               <div className="mx-auto max-w-7xl rounded-xl bg-white/5 p-3 backdrop-blur">
                 <div className="mx-auto flex w-full max-w-4xl flex-col md:flex-row gap-3">
@@ -266,13 +261,10 @@ export default function Dashboard() {
               </div>
             </div>
 
-            {/* 🔹 Scroll + dim layer */}
             <div
-              className={`
-                flex-1 min-h-0 px-4 pb-4
-                transition-opacity duration-200
-                ${modalOpen ? "opacity-40 pointer-events-none" : "opacity-100"}
-              `}
+              className={`flex-1 min-h-0 px-4 pb-4 overflow-y-auto transition-opacity duration-200 ${
+                modalOpen ? "opacity-40 pointer-events-none" : "opacity-100"
+              }`}
             >
               {loading ? (
                 <LoadingSpinner />
@@ -294,7 +286,7 @@ export default function Dashboard() {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -40 }}
               transition={{ duration: 0.25 }}
-              className="h-full"
+              className="flex-1 overflow-y-auto"
             >
               <AddCarForm
                 setCars={setCars}

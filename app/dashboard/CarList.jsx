@@ -7,7 +7,7 @@ import CarListItem from "./CarListItem";
 function CarList({ cars, setCars, fetchCars, setModalOpen }) {
   return (
     <div
-      className="w-full mx-auto space-y-4 p-4 pr-2 overflow-y-auto max-h-[70vh] [&::-webkit-scrollbar]:hidden
+      className="w-full mx-auto space-y-4 p-4 overflow-y-auto max-h-[70vh] [&::-webkit-scrollbar]:hidden
         [-ms-overflow-style:none] [scrollbar-width:none]"
     >
       <ul className="space-y-4">

@@ -179,27 +179,34 @@ export default function Dashboard() {
 
   if (!isAuthenticated) {
     return (
-      <div className="flex-1 grid place-items-center px-4">
+      <div className="fixed inset-0 grid place-items-center bg-rose-950 px-4">
         <motion.form
           onSubmit={handlePass}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
-          className="flex flex-col gap-4 items-center text-white w-full max-w-sm"
+          className="flex w-full max-w-sm flex-col items-center gap-4 text-white"
         >
           <Image src="/logo.png" alt="logo" width={200} height={100} priority />
+
           <input
             type="password"
             value={passkey}
             onChange={(e) => setPasskey(e.target.value)}
             placeholder="Passkey…"
             maxLength={5}
-            className={`px-4 py-2 rounded text-center bg-rose-800 text-white placeholder:text-rose-300 focus:outline-none focus:ring-2 focus:ring-rose-400 ${
+            className={`w-50 rounded bg-rose-800 px-4 py-2 text-center text-white placeholder:text-rose-300 focus:outline-none focus:ring-2 focus:ring-rose-400 ${
               error ? "border border-red-500 shake" : ""
             }`}
           />
+
           {error && <span className="text-red-500">{error}</span>}
-          <button type="submit" className="rounded-full bg-rose-700 p-3">
+
+          <button
+            type="submit"
+            className="rounded-full bg-rose-700 p-3"
+            aria-label="Submit passkey"
+          >
             <IoIosReturnRight size={24} />
           </button>
         </motion.form>

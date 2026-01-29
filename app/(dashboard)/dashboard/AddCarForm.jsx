@@ -3,7 +3,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { databases, storage, ID } from "../lib/appwrite";
+import { databases, storage, ID } from "../../lib/appwrite";
 import { toast } from "sonner";
 import { AiOutlineLoading } from "react-icons/ai";
 import Toggle from "./Toggle";

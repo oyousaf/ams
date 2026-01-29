@@ -12,7 +12,7 @@ import AddCarForm from "./AddCarForm";
 import CarList from "./CarList";
 import SortDropdownDashboard from "./SortDropdownDashboard";
 import LoadingSpinner from "./LoadingSpinner";
-import { databases } from "../lib/appwrite";
+import { databases } from "@/lib/appwrite";
 
 /* ---------------------------------------------
    Constants
@@ -183,7 +183,7 @@ export default function Dashboard() {
 
   if (!isAuthenticated) {
     return (
-      <div className="fixed inset-0 bg-rose-950 flex items-center justify-center px-4 z-50">
+      <div className="fixed inset-0 bg-rose-950 flex items-center justify-center px-4">
         <motion.form
           onSubmit={handlePass}
           initial={{ opacity: 0, y: 20 }}
@@ -212,7 +212,7 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="fixed inset-0 h-screen bg-rose-950 text-white flex flex-col z-50">
+    <div className="fixed inset-0 h-screen bg-rose-950 text-white flex flex-col">
       <header className="h-20 shrink-0 px-4 shadow-md">
         <div className="max-w-7xl mx-auto h-full flex items-center justify-between">
           <h1 className="text-2xl font-bold">Dashboard</h1>

@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { RiMenu3Line, RiCloseLine } from "react-icons/ri";
 import Image from "next/image";
 import { navLinks, socialLinks } from "../constants";
-import logo from "@/public/logo.png";
+import logo from "public/logo.png";
 import { motion, AnimatePresence, useDragControls } from "framer-motion";
 import { usePathname } from "next/navigation";
 

@@ -1,10 +1,10 @@
-import HeroSection from "./components/HeroSection";
-import About from "./components/About";
-import LatestCars from "./components/LatestCars";
-import Reviews from "./components/Reviews";
+import HeroSection from "../components/HeroSection";
+import About from "../components/About";
+import LatestCars from "../components/LatestCars";
+import Reviews from "../components/Reviews";
 
-import ScrollToTopWrapper from "./components/ScrollToTopWrapper";
-import SnowWrapper from "./components/SnowWrapper";
+import ScrollToTopWrapper from "../components/ScrollToTopWrapper";
+import SnowWrapper from "../components/SnowWrapper";
 
 // ---------- Homepage Metadata ----------
 export const metadata = {

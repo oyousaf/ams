@@ -3,7 +3,7 @@
 import React, { useState, useMemo, forwardRef, memo } from "react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
-import { databases } from "../lib/appwrite";
+import { databases } from "../../lib/appwrite";
 import ConfirmModal from "./ConfirmModal";
 import Toggle from "./Toggle";
 import Image from "next/image";
@@ -94,7 +94,7 @@ const CarListItem = ({ car, setCars, setModalOpen }, ref) => {
 
   const remove = async () => {
     try {
-      const { storage } = await import("../lib/appwrite");
+      const { storage } = await import("@/lib/appwrite");
       for (const id of car.imageFileIds || []) {
         await storage.deleteFile(
           process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID,

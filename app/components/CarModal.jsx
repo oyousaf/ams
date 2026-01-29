@@ -4,12 +4,7 @@ import { useEffect, useMemo, useRef, useState, useCallback } from "react";
 import Image from "next/image";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
-import {
-  motion,
-  AnimatePresence,
-  useMotionValue,
-  useTransform,
-} from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   FaTimes,
   FaGasPump,
@@ -22,25 +17,31 @@ import { GiGearStickPattern } from "react-icons/gi";
 import { BiSolidTachometer } from "react-icons/bi";
 import Divider from "./Divider";
 
-const overlayVariants = {
+/* ---------------------------------------------
+   Constants
+--------------------------------------------- */
+const FALLBACK_IMAGE = "/fallback.webp";
+const AUTOPLAY_MS = 5000;
+
+/* ---------------------------------------------
+   Motion
+--------------------------------------------- */
+const overlay = {
   hidden: { opacity: 0 },
   visible: { opacity: 1 },
   exit: { opacity: 0 },
 };
 
-const modalVariants = {
-  hidden: { scale: 0.96, opacity: 0, y: 40 },
+const modal = {
+  hidden: { opacity: 0, scale: 0.96, y: 40 },
   visible: {
-    scale: 1,
     opacity: 1,
+    scale: 1,
     y: 0,
     transition: { type: "spring", stiffness: 420, damping: 32 },
   },
-  exit: { scale: 0.94, opacity: 0, y: 60 },
+  exit: { opacity: 0, scale: 0.94, y: 60 },
 };
-
-const FALLBACK_IMAGE = "/fallback.webp";
-const AUTOPLAY_MS = 5000;
 
 export default function CarModal({ car, logo, onClose }) {
   const images = useMemo(
@@ -48,6 +49,20 @@ export default function CarModal({ car, logo, onClose }) {
     [car.imageUrl],
   );
 
+  /* ---------------------------------------------
+     Pre-decode images
+  --------------------------------------------- */
+  useEffect(() => {
+    images.forEach((src) => {
+      const img = new window.Image();
+      img.src = src;
+      img.decode?.().catch(() => {});
+    });
+  }, [images]);
+
+  /* ---------------------------------------------
+     Embla
+  --------------------------------------------- */
   const autoplay = useRef(
     Autoplay({
       delay: AUTOPLAY_MS,
@@ -56,30 +71,28 @@ export default function CarModal({ car, logo, onClose }) {
     }),
   );
 
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: images.length > 1 }, [
-    autoplay.current,
-  ]);
+  const [emblaRef, emblaApi] = useEmblaCarousel(
+    {
+      loop: images.length > 1,
+      containScroll: "trimSnaps",
+      dragFree: false,
+      align: "center",
+    },
+    [autoplay.current],
+  );
 
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [progress, setProgress] = useState(0);
+  const [active, setActive] = useState(0);
+  const [progressKey, setProgressKey] = useState(0);
 
-  /* --- Progress + pill sync --- */
+  /* ---------------------------------------------
+     Progress sync
+  --------------------------------------------- */
   useEffect(() => {
     if (!emblaApi) return;
 
-    let raf;
-    let start = performance.now();
-
     const sync = () => {
-      setActiveIndex(emblaApi.selectedScrollSnap());
-      start = performance.now();
-      setProgress(0);
-    };
-
-    const tick = (now) => {
-      const pct = (now - start) / AUTOPLAY_MS;
-      setProgress(pct >= 1 ? 1 : pct);
-      raf = requestAnimationFrame(tick);
+      setActive(emblaApi.selectedScrollSnap());
+      setProgressKey((k) => k + 1);
     };
 
     sync();
@@ -87,16 +100,16 @@ export default function CarModal({ car, logo, onClose }) {
     emblaApi.on("pointerDown", sync);
     emblaApi.on("reInit", sync);
 
-    raf = requestAnimationFrame(tick);
-
     return () => {
-      cancelAnimationFrame(raf);
       emblaApi.off("select", sync);
       emblaApi.off("pointerDown", sync);
       emblaApi.off("reInit", sync);
     };
   }, [emblaApi]);
 
+  /* ---------------------------------------------
+     Close + keyboard
+  --------------------------------------------- */
   const close = useCallback(() => onClose?.(), [onClose]);
 
   useEffect(() => {
@@ -113,15 +126,17 @@ export default function CarModal({ car, logo, onClose }) {
     };
   }, [emblaApi, close]);
 
-  const dragY = useMotionValue(0);
-  const imageParallaxY = useTransform(dragY, [-200, 0, 200], [-8, 0, 8]);
-
-  const [copied, setCopied] = useState(false);
+  /* ---------------------------------------------
+     Formatting
+  --------------------------------------------- */
   const formattedMileage =
     car.mileage >= 1000
       ? `${(car.mileage / 1000).toFixed(0)}K`
       : car.mileage.toLocaleString("en-GB");
+
   const formattedPrice = car.price.toLocaleString("en-GB");
+
+  const [copied, setCopied] = useState(false);
 
   const share = async () => {
     try {
@@ -141,34 +156,29 @@ export default function CarModal({ car, logo, onClose }) {
     <AnimatePresence>
       <motion.div
         className="fixed inset-0 z-100 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
-        variants={overlayVariants}
+        variants={overlay}
         initial="hidden"
         animate="visible"
         exit="exit"
       >
         <motion.div
           role="dialog"
-          aria-modal="true"
-          aria-label={`${car.title} details`}
+          aria-modal
           className="relative w-full max-w-3xl max-h-[92vh] rounded-xl bg-linear-to-br from-rose-900 via-rose-800 to-rose-950 text-white shadow-xl overflow-hidden"
-          variants={modalVariants}
+          variants={modal}
           initial="hidden"
           animate="visible"
           exit="exit"
-          drag="y"
-          dragDirectionLock
-          dragElastic={0.08}
-          style={{ y: dragY }}
-          dragConstraints={{ top: 0, bottom: 0 }}
         >
+          {/* Close */}
           <button
             onClick={close}
-            aria-label="Close modal"
             className="absolute top-4 right-4 z-50 rounded-full bg-white/10 p-3"
           >
             <FaTimes />
           </button>
 
+          {/* Header */}
           <div className="sticky top-0 z-40 bg-linear-to-b from-rose-950/90 to-transparent backdrop-blur px-6 pt-4 pb-4 text-center">
             {logo && <div className="mx-auto mb-2 h-12 w-12">{logo}</div>}
             <h4 className="text-xl md:text-2xl font-bold uppercase tracking-wide text-rose-200">
@@ -176,16 +186,18 @@ export default function CarModal({ car, logo, onClose }) {
             </h4>
           </div>
 
+          {/* Body */}
           <div className="overflow-y-auto px-6 pb-6 max-h-[calc(92vh-120px)]">
+            {/* Carousel */}
             <div className="mb-6">
-              <div ref={emblaRef} className="overflow-hidden touch-pan-y">
+              <div ref={emblaRef} className="overflow-hidden">
                 <div className="flex">
                   {images.map((src, i) => (
                     <div
                       key={i}
                       className="relative flex-[0_0_100%] h-72 md:h-105"
                     >
-                      <motion.div style={{ y: imageParallaxY }}>
+                      <div className="relative h-full will-change-transform">
                         <Image
                           src={src}
                           alt={`${car.title} ${i + 1}`}
@@ -194,39 +206,30 @@ export default function CarModal({ car, logo, onClose }) {
                           sizes="(max-width: 768px) 100vw, 800px"
                           className="object-cover rounded-md"
                         />
-                      </motion.div>
+                      </div>
                     </div>
                   ))}
                 </div>
               </div>
 
+              {/* Dots + CSS progress */}
               <div className="mt-4 flex justify-center">
                 <div className="flex gap-2 rounded-full bg-white/10 px-3 py-2 backdrop-blur">
                   {images.map((_, i) => {
-                    const active = i === activeIndex;
+                    const isActive = i === active;
                     return (
                       <button
                         key={i}
-                        onClick={() => {
-                          emblaApi?.scrollTo(i);
-                          autoplay.current?.reset();
-                        }}
-                        className="relative h-2.5 w-6 focus:outline-none"
+                        onClick={() => emblaApi?.scrollTo(i)}
+                        className="relative h-2.5 w-6"
                       >
-                        <span
-                          className="absolute inset-0 rounded-full bg-rose-300/30 transition-all"
-                          style={{ width: active ? 28 : 10 }}
-                        />
-                        {active && (
-                          <span className="absolute inset-0 overflow-hidden rounded-full">
-                            <span
-                              className="block h-full bg-rose-400"
-                              style={{
-                                transform: `scaleX(${progress})`,
-                                transformOrigin: "left",
-                              }}
-                            />
-                          </span>
+                        <span className="absolute inset-0 rounded-full bg-rose-300/30" />
+                        {isActive && (
+                          <span
+                            key={progressKey}
+                            className="absolute inset-0 origin-left rounded-full bg-rose-400 animate-progress"
+                            style={{ animationDuration: `${AUTOPLAY_MS}ms` }}
+                          />
                         )}
                       </button>
                     );
@@ -272,7 +275,7 @@ export default function CarModal({ car, logo, onClose }) {
 
             <button
               onClick={share}
-              className="mx-auto mt-4 flex items-center gap-2 rounded-full bg-rose-400/15 px-6 py-2 text-rose-100 transition-colors hover:bg-rose-400/25"
+              className="mx-auto mt-4 flex items-center gap-2 rounded-full bg-rose-400/15 px-6 py-2 text-rose-100 hover:bg-rose-400/25"
             >
               <FaShareAlt />
               {copied ? "Link copied" : "Share"}

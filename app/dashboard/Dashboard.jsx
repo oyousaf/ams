@@ -183,7 +183,7 @@ export default function Dashboard() {
 
   if (!isAuthenticated) {
     return (
-      <div className="fixed inset-0 bg-rose-950 flex items-center justify-center px-4">
+      <div className="fixed inset-0 bg-rose-950 flex items-center justify-center px-4 z-50">
         <motion.form
           onSubmit={handlePass}
           initial={{ opacity: 0, y: 20 }}

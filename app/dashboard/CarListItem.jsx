@@ -3,7 +3,7 @@
 import React, { useState, useMemo, forwardRef, memo } from "react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
-import { databases } from "../../lib/appwrite";
+import { databases } from "@/lib/appwrite";
 import ConfirmModal from "./ConfirmModal";
 import Toggle from "./Toggle";
 import Image from "next/image";

@@ -214,7 +214,7 @@ export default function AddCarForm({ setCars, fetchCars, setActiveTab }) {
       initial="hidden"
       animate="visible"
     >
-      <form onSubmit={onSubmit} className="flex-1 overflow-y-auto p-4 pb-32">
+      <form onSubmit={onSubmit} className="flex-1 p-4 pb-32">
         <motion.div
           variants={shakeVariant}
           animate={shake ? "shake" : "idle"}

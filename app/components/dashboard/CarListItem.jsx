@@ -253,8 +253,8 @@ const CarListItem = ({ car, setCars, setModalOpen }, ref) => {
                   )
                 ) : (
                   <span className="font-semibold text-rose-300">
-                    {unit}
                     {formatNumber(car[key])}
+                    {unit}
                   </span>
                 )}
               </div>

@@ -30,6 +30,21 @@ const CAR_TYPES = [
 
 const NUMERIC_FIELDS = ["price", "mileage", "engineSize", "year"];
 
+const META_FIELDS = [
+  { label: "Price", key: "price", unit: "£", unitPosition: "prefix" },
+  { label: "Mileage", key: "mileage" },
+  { label: "Engine Type", key: "engineType" },
+  {
+    label: "Engine Size",
+    key: "engineSize",
+    unit: "L",
+    unitPosition: "suffix",
+  },
+  { label: "Transmission", key: "transmission" },
+  { label: "Year", key: "year" },
+  { label: "Type", key: "carType" },
+];
+
 const formatNumber = (n) =>
   typeof n === "number" ? n.toLocaleString("en-GB") : n;
 
@@ -54,16 +69,6 @@ const CarListItem = ({ car, setCars, setModalOpen }, ref) => {
       ...p,
       [name]: NUMERIC_FIELDS.includes(name) ? Number(value) : value,
     }));
-  };
-
-  const openConfirm = () => {
-    setConfirmOpen(true);
-    setModalOpen?.(true);
-  };
-
-  const closeConfirm = () => {
-    setConfirmOpen(false);
-    setModalOpen?.(false);
   };
 
   const save = async () => {
@@ -95,12 +100,15 @@ const CarListItem = ({ car, setCars, setModalOpen }, ref) => {
   const remove = async () => {
     try {
       const { storage } = await import("@/lib/appwrite");
-      for (const fileId of car.imageFileIds || []) {
-        await storage.deleteFile({
-          bucketId: process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID,
-          fileId,
-        });
-      }
+
+      await Promise.all(
+        (car.imageFileIds || []).map((fileId) =>
+          storage.deleteFile({
+            bucketId: process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID,
+            fileId,
+          }),
+        ),
+      );
 
       await databases.deleteDocument({
         databaseId: process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID,
@@ -110,10 +118,12 @@ const CarListItem = ({ car, setCars, setModalOpen }, ref) => {
 
       setCars((p) => p.filter((c) => c.$id !== car.$id));
       toast.success("Car deleted");
-      closeConfirm();
+      setConfirmOpen(false);
+      setModalOpen?.(false);
     } catch {
       toast.error("Delete failed");
-      closeConfirm();
+      setConfirmOpen(false);
+      setModalOpen?.(false);
     }
   };
 
@@ -126,7 +136,7 @@ const CarListItem = ({ car, setCars, setModalOpen }, ref) => {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -12 }}
       transition={{ duration: 0.25 }}
-      className="relative z-0 rounded-xl border border-white/10 bg-rose-900/70 p-4"
+      className="rounded-xl border border-white/10 bg-rose-900/70 p-4"
     >
       <div className="flex flex-col sm:flex-row gap-4">
         {/* Image */}
@@ -146,7 +156,6 @@ const CarListItem = ({ car, setCars, setModalOpen }, ref) => {
             className={`rounded-lg object-cover w-full ${
               car.isSold ? "opacity-60" : ""
             }`}
-            unoptimized={imageUrl.startsWith("blob:")}
           />
 
           {car.isSold && (
@@ -182,7 +191,13 @@ const CarListItem = ({ car, setCars, setModalOpen }, ref) => {
                 <FiEdit2 />
               </button>
             )}
-            <button onClick={openConfirm} aria-label="Delete">
+            <button
+              onClick={() => {
+                setConfirmOpen(true);
+                setModalOpen?.(true);
+              }}
+              aria-label="Delete"
+            >
               <FiTrash2 />
             </button>
           </div>
@@ -214,79 +229,63 @@ const CarListItem = ({ car, setCars, setModalOpen }, ref) => {
 
           {/* Meta */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
-            {[
-              ["Price", "price", "£"],
-              ["Mileage", "mileage"],
-              ["Engine Type", "engineType"],
-              ["Engine Size", "engineSize", "L"],
-              ["Transmission", "transmission"],
-              ["Year", "year"],
-              ["Type", "carType"],
-            ].map(([label, key, unit = ""]) => (
-              <div key={key}>
-                {label}:{" "}
-                {isEditing ? (
-                  NUMERIC_FIELDS.includes(key) ? (
-                    <input
-                      name={key}
-                      type="number"
-                      value={editedCar[key]}
-                      onChange={handleChange}
-                      className="rounded bg-rose-200 px-2 py-1 text-rose-900"
-                    />
+            {META_FIELDS.map(
+              ({ label, key, unit = "", unitPosition = "prefix" }) => (
+                <div key={key}>
+                  {label}:{" "}
+                  {isEditing ? (
+                    NUMERIC_FIELDS.includes(key) ? (
+                      <input
+                        name={key}
+                        type="number"
+                        value={editedCar[key]}
+                        onChange={handleChange}
+                        className="rounded bg-rose-200 px-2 py-1 text-rose-900"
+                      />
+                    ) : (
+                      <select
+                        name={key}
+                        value={editedCar[key]}
+                        onChange={handleChange}
+                        className="rounded bg-rose-200 px-2 py-1 text-rose-900"
+                      >
+                        {(key === "engineType"
+                          ? ENGINE_TYPES
+                          : key === "transmission"
+                            ? TRANSMISSIONS
+                            : CAR_TYPES
+                        ).map((o) => (
+                          <option key={o}>{o}</option>
+                        ))}
+                      </select>
+                    )
                   ) : (
-                    <select
-                      name={key}
-                      value={editedCar[key]}
-                      onChange={handleChange}
-                      className="rounded bg-rose-200 px-2 py-1 text-rose-900"
-                    >
-                      {(key === "engineType"
-                        ? ENGINE_TYPES
-                        : key === "transmission"
-                          ? TRANSMISSIONS
-                          : CAR_TYPES
-                      ).map((o) => (
-                        <option key={o}>{o}</option>
-                      ))}
-                    </select>
-                  )
-                ) : (
-                  <span className="font-semibold text-rose-300">
-                    {formatNumber(car[key])}
-                    {unit}
-                  </span>
-                )}
-              </div>
-            ))}
+                    <span className="font-semibold text-rose-300">
+                      {unitPosition === "prefix" && unit}
+                      {formatNumber(car[key])}
+                      {unitPosition === "suffix" && unit}
+                    </span>
+                  )}
+                </div>
+              ),
+            )}
           </div>
 
           {/* Toggles */}
           {isEditing && (
             <div className="mt-4 flex flex-wrap gap-6">
-              <div className="flex items-center gap-2">
-                <Toggle
-                  checked={!!editedCar.isFeatured}
-                  onChange={(v) =>
-                    setEditedCar((p) => ({ ...p, isFeatured: v }))
-                  }
-                  color="bg-yellow-400"
-                />
-                <span className="font-semibold text-yellow-300 select-none">
-                  Featured
-                </span>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <Toggle
-                  checked={!!editedCar.isSold}
-                  onChange={(v) => setEditedCar((p) => ({ ...p, isSold: v }))}
-                  color="bg-red-500"
-                />
-                <span className="font-semibold text-red-400 select-none">
-                  Sold
-                </span>
-              </div>
+              <Toggle
+                checked={!!editedCar.isFeatured}
+                onChange={(v) => setEditedCar((p) => ({ ...p, isFeatured: v }))}
+                color="bg-yellow-400"
+                label="Featured"
+              />
+              <Toggle
+                checked={!!editedCar.isSold}
+                onChange={(v) => setEditedCar((p) => ({ ...p, isSold: v }))}
+                color="bg-red-500"
+                label="Sold"
+              />
             </div>
           )}
         </div>
@@ -294,7 +293,10 @@ const CarListItem = ({ car, setCars, setModalOpen }, ref) => {
 
       <ConfirmModal
         isOpen={confirmOpen}
-        onClose={closeConfirm}
+        onClose={() => {
+          setConfirmOpen(false);
+          setModalOpen?.(false);
+        }}
         onConfirm={remove}
         title={`Delete ${car.title}?`}
         message="This will permanently remove the car."

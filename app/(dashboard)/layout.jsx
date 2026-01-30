@@ -1,7 +1,7 @@
 export default function DashboardLayout({ children }) {
   return (
     <main
-      className="min-h-dvh bg-rose-950 overflow-hidden [scrollbar-gutter:auto]"
+      className="h-dvh w-screen overflow-hidden bg-rose-950"
       aria-label="Dashboard"
     >
       {children}

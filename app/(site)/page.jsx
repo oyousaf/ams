@@ -12,19 +12,6 @@ export const metadata = {
   description:
     "Trusted used car dealership in Heckmondwike, West Yorkshire. Quality pre-owned vehicles, fully inspected, with nationwide UK delivery.",
 
-  keywords: [
-    "used cars Heckmondwike",
-    "used car dealer Heckmondwike",
-    "used cars West Yorkshire",
-    "independent car dealer West Yorkshire",
-    "used cars near Wakefield",
-    "used cars near Leeds",
-    "used cars near Bradford",
-    "used cars UK delivery",
-    "quality used cars UK",
-    "Ace Motor Sales",
-  ],
-
   alternates: {
     canonical: "https://acemotorsales.uk",
   },
@@ -35,6 +22,8 @@ export const metadata = {
       "Quality pre-owned vehicles from an independent Heckmondwike dealership, with UK-wide delivery.",
     url: "https://acemotorsales.uk",
     siteName: "Ace Motor Sales",
+    locale: "en_GB",
+    type: "website",
     images: [
       {
         url: "https://acemotorsales.uk/hero.jpg",
@@ -43,8 +32,6 @@ export const metadata = {
         alt: "Ace Motor Sales used car forecourt in Heckmondwike",
       },
     ],
-    locale: "en_GB",
-    type: "website",
   },
 
   twitter: {
@@ -56,29 +43,42 @@ export const metadata = {
   },
 };
 
-export default function Home() {
+export default function HomePage() {
   return (
-    <main
-      id="main-content"
-      aria-label="Ace Motor Sales Homepage"
-      className="min-h-screen"
-    >
+    <>
+      {/* Hero */}
       <HeroSection />
 
-      <section id="about" className="scroll-mt-24">
+      {/* About */}
+      <section
+        id="about"
+        aria-labelledby="about-heading"
+        className="scroll-mt-24"
+      >
         <About />
       </section>
 
-      <section id="cars" className="scroll-mt-24">
+      {/* Latest Cars */}
+      <section
+        id="cars"
+        aria-labelledby="cars-heading"
+        className="scroll-mt-24"
+      >
         <LatestCars />
       </section>
 
-      <section id="reviews" className="scroll-mt-24">
+      {/* Reviews */}
+      <section
+        id="reviews"
+        aria-labelledby="reviews-heading"
+        className="scroll-mt-24"
+      >
         <Reviews />
       </section>
 
+      {/* Utilities */}
       <ScrollToTopWrapper />
       <SnowWrapper />
-    </main>
+    </>
   );
 }

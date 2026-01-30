@@ -181,7 +181,6 @@ export default function Dashboard() {
     return (
       <div className="fixed inset-0 grid place-items-center bg-rose-950 px-4">
         <motion.form
-          name="passkeyForm"
           onSubmit={handlePass}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -191,6 +190,7 @@ export default function Dashboard() {
           <Image src="/logo.png" alt="logo" width={200} height={100} priority />
 
           <input
+            name="passkey"
             type="password"
             value={passkey}
             onChange={(e) => setPasskey(e.target.value)}

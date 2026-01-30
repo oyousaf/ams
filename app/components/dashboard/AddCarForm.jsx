@@ -160,11 +160,11 @@ export default function AddCarForm({ setCars, fetchCars, setActiveTab }) {
       const urls = [];
 
       for (const file of car.images) {
-        const uploaded = await storage.createFile(
-          process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID,
-          ID.unique(),
+        const uploaded = await storage.createFile({
+          bucketId: process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID,
+          fileId: ID.unique(),
           file,
-        );
+        });
 
         fileIds.push(uploaded.$id);
         urls.push(
@@ -185,12 +185,12 @@ export default function AddCarForm({ setCars, fetchCars, setActiveTab }) {
 
       delete payload.images;
 
-      const doc = await databases.createDocument(
-        process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID,
-        process.env.NEXT_PUBLIC_APPWRITE_COLLECTION_ID,
-        ID.unique(),
-        payload,
-      );
+      const doc = await databases.createDocument({
+        databaseId: process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID,
+        collectionId: process.env.NEXT_PUBLIC_APPWRITE_COLLECTION_ID,
+        documentId: ID.unique(),
+        data: payload,
+      });
 
       toast.success("Car added");
       setCars((p) => [...p, doc]);

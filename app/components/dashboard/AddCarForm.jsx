@@ -21,6 +21,8 @@ const fadeIn = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.35 } },
 };
 
+const MAX_IMAGES = 15;
+
 /* ---------------------------------------------
    Component
 --------------------------------------------- */
@@ -81,10 +83,43 @@ export default function AddCarForm({ setCars, fetchCars, setActiveTab }) {
     setCar((p) => ({ ...p, [e.target.name]: e.target.value }));
 
   const onImages = (e) => {
-    const files = Array.from(e.target.files);
-    previews.forEach(URL.revokeObjectURL);
-    setCar((p) => ({ ...p, images: files }));
-    setPreviews(files.map((f) => URL.createObjectURL(f)));
+    if (!e.target.files) return;
+
+    const selected = Array.from(e.target.files);
+
+    setCar((prev) => {
+      const existingKeys = new Set(
+        prev.images.map((f) => `${f.name}-${f.size}`),
+      );
+
+      const unique = selected.filter(
+        (f) => !existingKeys.has(`${f.name}-${f.size}`),
+      );
+
+      const combined = [...prev.images, ...unique].slice(0, MAX_IMAGES);
+
+      return { ...prev, images: combined };
+    });
+
+    setPreviews((prev) => {
+      const newPreviews = selected.map((f) => URL.createObjectURL(f));
+      return [...prev, ...newPreviews].slice(0, MAX_IMAGES);
+    });
+
+    // allow re-selecting same files later
+    e.target.value = "";
+  };
+
+  const removeImage = (index) => {
+    setCar((prev) => ({
+      ...prev,
+      images: prev.images.filter((_, i) => i !== index),
+    }));
+
+    setPreviews((prev) => {
+      URL.revokeObjectURL(prev[index]);
+      return prev.filter((_, i) => i !== index);
+    });
   };
 
   const isValid = () => {
@@ -112,6 +147,7 @@ export default function AddCarForm({ setCars, fetchCars, setActiveTab }) {
   --------------------------------------------- */
   const onSubmit = async (e) => {
     e.preventDefault();
+
     if (!isValid()) {
       setShake(true);
       toast.error("Please complete all required fields");
@@ -300,15 +336,15 @@ export default function AddCarForm({ setCars, fetchCars, setActiveTab }) {
             className="flex h-11 cursor-pointer items-center justify-center rounded-lg border border-white/20
             bg-rose-800/60 text-white hover:bg-rose-700/70 transition"
           >
-            Choose images
+            Add images ({car.images.length}/{MAX_IMAGES})
           </label>
 
           {previews.length > 0 && (
             <div className="flex gap-2 overflow-x-auto pt-2">
               {previews.map((src, i) => (
                 <div
-                  key={i}
-                  className="relative w-24 h-16 rounded-lg overflow-hidden"
+                  key={src}
+                  className="relative w-24 h-16 rounded-lg overflow-hidden group"
                 >
                   <Image
                     src={src}
@@ -317,6 +353,14 @@ export default function AddCarForm({ setCars, fetchCars, setActiveTab }) {
                     className="object-cover"
                     unoptimized
                   />
+                  <button
+                    type="button"
+                    onClick={() => removeImage(i)}
+                    className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100
+                    text-white text-sm flex items-center justify-center transition"
+                  >
+                    Remove
+                  </button>
                 </div>
               ))}
             </div>

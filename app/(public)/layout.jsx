@@ -5,7 +5,7 @@ export default function PublicLayout({ children }) {
   return (
     <>
       <a
-        href="#main-content"
+        href="about"
         className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 z-50 rounded bg-black px-4 py-2 text-white shadow-lg"
       >
         Skip to main content

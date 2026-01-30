@@ -70,12 +70,12 @@ const CarListItem = ({ car, setCars, setModalOpen }, ref) => {
     if (saving) return;
     setSaving(true);
     try {
-      const updated = await databases.updateDocument(
-        process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID,
-        process.env.NEXT_PUBLIC_APPWRITE_COLLECTION_ID,
-        car.$id,
-        editedCar,
-      );
+      const updated = await databases.updateDocument({
+        databaseId: process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID,
+        collectionId: process.env.NEXT_PUBLIC_APPWRITE_COLLECTION_ID,
+        documentId: car.$id,
+        data: editedCar,
+      });
 
       if (updated?.$id && hasMeaningfulChanges(car, editedCar)) {
         setCars((prev) =>
@@ -95,18 +95,18 @@ const CarListItem = ({ car, setCars, setModalOpen }, ref) => {
   const remove = async () => {
     try {
       const { storage } = await import("@/lib/appwrite");
-      for (const id of car.imageFileIds || []) {
-        await storage.deleteFile(
-          process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID,
-          id,
-        );
+      for (const fileId of car.imageFileIds || []) {
+        await storage.deleteFile({
+          bucketId: process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID,
+          fileId,
+        });
       }
 
-      await databases.deleteDocument(
-        process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID,
-        process.env.NEXT_PUBLIC_APPWRITE_COLLECTION_ID,
-        car.$id,
-      );
+      await databases.deleteDocument({
+        databaseId: process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID,
+        collectionId: process.env.NEXT_PUBLIC_APPWRITE_COLLECTION_ID,
+        documentId: car.$id,
+      });
 
       setCars((p) => p.filter((c) => c.$id !== car.$id));
       toast.success("Car deleted");

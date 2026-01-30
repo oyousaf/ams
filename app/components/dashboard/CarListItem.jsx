@@ -31,18 +31,42 @@ const CAR_TYPES = [
 const NUMERIC_FIELDS = ["price", "mileage", "engineSize", "year"];
 
 const META_FIELDS = [
-  { label: "Price", key: "price", unit: "£", unitPosition: "prefix" },
-  { label: "Mileage", key: "mileage" },
-  { label: "Engine Type", key: "engineType" },
+  {
+    label: "Price",
+    key: "price",
+    unit: "£",
+    unitPosition: "prefix",
+    format: "number",
+  },
+  {
+    label: "Mileage",
+    key: "mileage",
+    format: "number",
+  },
+  {
+    label: "Engine Type",
+    key: "engineType",
+  },
   {
     label: "Engine Size",
     key: "engineSize",
     unit: "L",
     unitPosition: "suffix",
+    format: "raw",
   },
-  { label: "Transmission", key: "transmission" },
-  { label: "Year", key: "year" },
-  { label: "Type", key: "carType" },
+  {
+    label: "Transmission",
+    key: "transmission",
+  },
+  {
+    label: "Year",
+    key: "year",
+    format: "raw",
+  },
+  {
+    label: "Type",
+    key: "carType",
+  },
 ];
 
 const formatNumber = (n) =>
@@ -230,7 +254,13 @@ const CarListItem = ({ car, setCars, setModalOpen }, ref) => {
           {/* Meta */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
             {META_FIELDS.map(
-              ({ label, key, unit = "", unitPosition = "prefix" }) => (
+              ({
+                label,
+                key,
+                unit = "",
+                unitPosition = "prefix",
+                format = "raw",
+              }) => (
                 <div key={key}>
                   {label}:{" "}
                   {isEditing ? (
@@ -262,7 +292,7 @@ const CarListItem = ({ car, setCars, setModalOpen }, ref) => {
                   ) : (
                     <span className="font-semibold text-rose-300">
                       {unitPosition === "prefix" && unit}
-                      {formatNumber(car[key])}
+                      {format === "number" ? formatNumber(car[key]) : car[key]}
                       {unitPosition === "suffix" && unit}
                     </span>
                   )}

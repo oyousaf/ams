@@ -30,7 +30,7 @@ const About = () => {
       aria-labelledby="about-heading"
       className="py-24 px-4 lg:px-8"
     >
-      {/* Section heading — white */}
+      {/* Section heading */}
       <h2
         id="about-heading"
         className="mb-14 text-center text-4xl font-bold tracking-tight text-white md:text-5xl"

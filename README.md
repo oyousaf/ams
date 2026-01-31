@@ -1,4 +1,4 @@
-# 🚗 Ace Motor Sales (AMS)
+# 🚗 Ace Motor Sales
 
 A modern, high-performance **pre-owned car showroom** built with **Next.js 16** and the App Router.  
 Designed for smooth browsing, rich motion, and a premium automotive feel — without sacrificing performance or accessibility.

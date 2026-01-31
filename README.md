@@ -40,13 +40,6 @@ Designed for smooth browsing, rich motion, and a premium automotive feel — wit
 - 🧪 **Zod**
 - 📝 **React Hook Form**
 
-### Tooling & DX
-
-- 🧭 **next-sitemap**
-- 📊 **@vercel/analytics**
-- ⚡ **@vercel/speed-insights**
-- 🧹 **ESLint (Next 16 config)**
-
 ---
 
 ## 🧠 Notable UI Behaviour
@@ -75,6 +68,5 @@ Everything animates — but nothing distracts.
 
 ## 📌 Status
 
-💚 **Actively developed with care, attention, and long-term vision.**
-
-Built to scale, easy to extend, and production-ready — with performance, clarity, and user experience treated as first-class concerns.
+💚 **Actively developed with love, care, and attention — built with long-term vision.**  
+Production-ready, easy to extend, and designed with performance, clarity, and user experience as first-class concerns.

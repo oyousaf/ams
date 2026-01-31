@@ -50,7 +50,7 @@ export default function CarModal({ car, logo, onClose }) {
   );
 
   /* ---------------------------------------------
-     Pre-decode images
+     Preload images
   --------------------------------------------- */
   useEffect(() => {
     images.forEach((src) => {
@@ -74,9 +74,9 @@ export default function CarModal({ car, logo, onClose }) {
   const [emblaRef, emblaApi] = useEmblaCarousel(
     {
       loop: images.length > 1,
-      containScroll: "trimSnaps",
-      dragFree: false,
       align: "center",
+      dragFree: false,
+      containScroll: "trimSnaps",
     },
     [autoplay.current],
   );
@@ -85,7 +85,7 @@ export default function CarModal({ car, logo, onClose }) {
   const [progressKey, setProgressKey] = useState(0);
 
   /* ---------------------------------------------
-     Progress sync
+     Sync indicator progress
   --------------------------------------------- */
   useEffect(() => {
     if (!emblaApi) return;
@@ -114,11 +114,13 @@ export default function CarModal({ car, logo, onClose }) {
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
+
     const onKey = (e) => {
       if (e.key === "Escape") close();
       if (e.key === "ArrowRight") emblaApi?.scrollNext();
       if (e.key === "ArrowLeft") emblaApi?.scrollPrev();
     };
+
     window.addEventListener("keydown", onKey);
     return () => {
       document.body.style.overflow = "auto";
@@ -163,8 +165,10 @@ export default function CarModal({ car, logo, onClose }) {
       >
         <motion.div
           role="dialog"
-          aria-modal
-          className="relative w-full max-w-3xl max-h-[92vh] rounded-xl bg-linear-to-br from-rose-900 via-rose-800 to-rose-950 text-white shadow-xl overflow-hidden"
+          aria-modal="true"
+          className="relative w-full max-w-3xl max-h-[92vh] overflow-hidden rounded-xl
+                     bg-linear-to-br from-rose-900 via-rose-800 to-rose-950
+                     text-white shadow-xl"
           variants={modal}
           initial="hidden"
           animate="visible"
@@ -173,13 +177,18 @@ export default function CarModal({ car, logo, onClose }) {
           {/* Close */}
           <button
             onClick={close}
-            className="absolute top-4 right-4 z-50 rounded-full bg-white/10 p-3"
+            aria-label="Close"
+            className="absolute right-4 top-4 z-50 rounded-full bg-white/10 p-3
+                       transition hover:bg-white/20"
           >
             <FaTimes />
           </button>
 
           {/* Header */}
-          <div className="sticky top-0 z-40 bg-linear-to-b from-rose-950/90 to-transparent backdrop-blur px-6 pt-4 pb-4 text-center">
+          <div
+            className="sticky top-0 z-40 bg-linear-to-b from-rose-950/90 to-transparent
+                          backdrop-blur px-6 pt-4 pb-4 text-center"
+          >
             {logo && <div className="mx-auto mb-2 h-12 w-12">{logo}</div>}
             <h4 className="text-xl md:text-2xl font-bold uppercase tracking-wide text-rose-200">
               {car.title}
@@ -187,7 +196,7 @@ export default function CarModal({ car, logo, onClose }) {
           </div>
 
           {/* Body */}
-          <div className="overflow-y-auto px-6 pb-6 max-h-[calc(92vh-120px)]">
+          <div className="max-h-[calc(92vh-120px)] overflow-y-auto px-6 pb-6">
             {/* Carousel */}
             <div className="mb-6">
               <div ref={emblaRef} className="overflow-hidden">
@@ -197,37 +206,48 @@ export default function CarModal({ car, logo, onClose }) {
                       key={i}
                       className="relative flex-[0_0_100%] h-72 md:h-105"
                     >
-                      <div className="relative h-full will-change-transform">
-                        <Image
-                          src={src}
-                          alt={`${car.title} ${i + 1}`}
-                          fill
-                          priority={i === 0}
-                          sizes="(max-width: 768px) 100vw, 800px"
-                          className="object-cover rounded-md"
-                        />
-                      </div>
+                      <Image
+                        src={src}
+                        alt={`${car.title} ${i + 1}`}
+                        fill
+                        priority={i === 0}
+                        sizes="(max-width: 768px) 100vw, 800px"
+                        className="rounded-md object-cover"
+                      />
                     </div>
                   ))}
                 </div>
               </div>
 
-              {/* Dots + CSS progress */}
+              {/* Dots / Progress */}
               <div className="mt-4 flex justify-center">
                 <div className="flex gap-2 rounded-full bg-white/10 px-3 py-2 backdrop-blur">
                   {images.map((_, i) => {
                     const isActive = i === active;
+
                     return (
                       <button
                         key={i}
                         onClick={() => emblaApi?.scrollTo(i)}
-                        className="relative h-2.5 w-6"
+                        aria-label={`Go to image ${i + 1}`}
+                        aria-current={isActive ? "true" : undefined}
+                        className={`relative h-2.5 overflow-hidden transition-all
+                                    duration-300 ease-out
+                                    ${isActive ? "w-6" : "w-2.5"}`}
                       >
-                        <span className="absolute inset-0 rounded-full bg-rose-300/30" />
+                        <span
+                          className={`absolute inset-0 rounded-full
+                                      ${
+                                        isActive
+                                          ? "bg-rose-300/30"
+                                          : "bg-rose-300/40"
+                                      }`}
+                        />
                         {isActive && (
                           <span
-                            key={progressKey}
-                            className="absolute inset-0 origin-left rounded-full bg-rose-400 animate-progress"
+                            key={`${i}-${progressKey}`}
+                            className="absolute inset-0 origin-left rounded-full
+                                       bg-rose-400 animate-progress"
                             style={{ animationDuration: `${AUTOPLAY_MS}ms` }}
                           />
                         )}
@@ -244,7 +264,7 @@ export default function CarModal({ car, logo, onClose }) {
 
             <Divider />
 
-            <div className="grid grid-cols-3 gap-6 text-center text-lg mb-6 text-zinc-200">
+            <div className="mb-6 grid grid-cols-3 gap-6 text-center text-lg text-zinc-200">
               <div>
                 <PiEngineFill className="mx-auto mb-1 text-rose-300" />
                 {car.engineType}
@@ -275,7 +295,8 @@ export default function CarModal({ car, logo, onClose }) {
 
             <button
               onClick={share}
-              className="mx-auto mt-4 flex items-center gap-2 rounded-full bg-rose-400/15 px-6 py-2 text-rose-100 hover:bg-rose-400/25"
+              className="mx-auto mt-4 flex items-center gap-2 rounded-full bg-rose-400/15 px-6 py-2 text-rose-100
+                         transition hover:bg-rose-400/25"
             >
               <FaShareAlt />
               {copied ? "Link copied" : "Share"}

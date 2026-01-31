@@ -8,18 +8,15 @@ import { motion } from "framer-motion";
    Motion
 --------------------------------------------- */
 const container = {
-  hidden: {},
-  visible: {
-    transition: { staggerChildren: 0.08 },
-  },
+  visible: { transition: { staggerChildren: 0.08 } },
 };
 
 const item = {
-  hidden: { opacity: 0, y: 28 },
+  hidden: { opacity: 0, y: 20 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.5, ease: "easeOut" },
+    transition: { duration: 0.45, ease: "easeOut" },
   },
 };
 
@@ -33,6 +30,7 @@ const About = () => {
       aria-labelledby="about-heading"
       className="py-24 px-4 lg:px-8"
     >
+      {/* Section heading — white */}
       <h2
         id="about-heading"
         className="mb-14 text-center text-4xl font-bold tracking-tight text-white md:text-5xl"
@@ -45,21 +43,31 @@ const About = () => {
         className="mx-auto grid max-w-7xl grid-cols-1 gap-8 text-center sm:grid-cols-2 lg:grid-cols-4"
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, amount: 0.5 }}
+        viewport={{ once: true, amount: 0.25 }}
         variants={container}
       >
         {aboutTiles.map((tile, index) => (
           <motion.div
             key={index}
             variants={item}
-            whileHover={{ y: -6 }}
-            transition={{ type: "spring", stiffness: 420, damping: 26 }}
-            className="tile-glow group flex flex-col items-center rounded-2xl p-6 surface-primary"
+            whileHover={{
+              y: -6,
+              transition: { type: "spring", stiffness: 420, damping: 26 },
+            }}
+            className="tile-glow group flex flex-col items-center rounded-2xl p-6 surface-primary will-change-transform"
           >
+            {/* Icon */}
             <tile.icon className="mb-4 text-4xl text-rose-400" />
-            <h3 className="mb-2 text-xl font-semibold text-rose-200 group-hover:text-rose-100">
+
+            {/* Tile title */}
+            <h3
+              className="mb-2 text-xl font-semibold text-rose-200 group-hover:text-rose-100 transition-colors
+              "
+            >
               {tile.title}
             </h3>
+
+            {/* Description */}
             <p className="text-base leading-relaxed text-zinc-300">
               {tile.description}
             </p>
@@ -71,6 +79,7 @@ const About = () => {
       <div className="mx-auto mt-20 max-w-7xl">
         <motion.div
           className="grid grid-cols-1 gap-4 md:grid-cols-4"
+          initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.5 }}
           variants={container}
@@ -83,7 +92,9 @@ const About = () => {
               <motion.div
                 key={index}
                 variants={item}
-                className={isWide ? "md:col-span-2" : ""}
+                className={`overflow-hidden rounded-xl shadow-md ${
+                  isWide ? "md:col-span-2" : ""
+                }`}
               >
                 <ImageTile
                   src={src}

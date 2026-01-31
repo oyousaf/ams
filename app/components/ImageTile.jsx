@@ -14,13 +14,20 @@ const ImageTile = ({
     <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.5, ease: "easeInOut" }}
+      transition={{ duration: 0.45, ease: "easeOut" }}
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.98 }}
-      className="relative w-full h-75 md:h-100 overflow-hidden rounded-lg"
+      className="relative w-full overflow-hidden rounded-lg h-64 md:h-80
+      "
     >
       {/* Overlay */}
-      <div className="absolute inset-0 z-10 rounded-lg bg-rose-800 opacity-50 transition-opacity duration-500 ease-in-out hover:opacity-0 pointer-events-none" />
+      <motion.div
+        className="absolute inset-0 z-10 rounded-lg bg-rose-800 pointer-events-none"
+        initial={{ opacity: 0.5 }}
+        whileHover={{ opacity: 0 }}
+        whileTap={{ opacity: 0 }}
+        transition={{ duration: 0.35, ease: "easeOut" }}
+      />
 
       {/* Image */}
       <Image

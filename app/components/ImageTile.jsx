@@ -22,7 +22,7 @@ const ImageTile = ({
     >
       {/* Overlay */}
       <motion.div
-        className="absolute inset-0 z-10 rounded-lg bg-rose-800 pointer-events-none"
+        className="absolute inset-0 z-10 rounded-lg bg-rose-800"
         initial={{ opacity: 0.5 }}
         whileHover={{ opacity: 0 }}
         whileTap={{ opacity: 0 }}

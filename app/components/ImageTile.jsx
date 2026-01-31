@@ -16,11 +16,13 @@ const ImageTile = ({
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.5, ease: "easeInOut" }}
       whileHover={{ scale: 1.05 }}
-      viewport={{ once: true, amount: 0.2 }}
+      whileTap={{ scale: 0.98 }}
       className="relative w-full h-75 md:h-100 overflow-hidden rounded-lg"
     >
-      <div className="absolute inset-0 bg-rose-800 opacity-50 transition-opacity duration-500 ease-in-out hover:opacity-0 rounded-lg z-10" />
+      {/* Overlay */}
+      <div className="absolute inset-0 z-10 rounded-lg bg-rose-800 opacity-50 transition-opacity duration-500 ease-in-out hover:opacity-0 pointer-events-none" />
 
+      {/* Image */}
       <Image
         src={src}
         alt={alt}
@@ -31,12 +33,13 @@ const ImageTile = ({
         loading={priority ? "eager" : "lazy"}
         sizes={
           isFirst
-            ? "(max-width: 768px) 100vw, (min-width: 769px) 25vw"
+            ? "(max-width: 768px) 100vw, 25vw"
             : isWide
-            ? "(max-width: 768px) 100vw, (max-width: 1024px) 100vw, (min-width: 1025px) 50vw"
-            : "(max-width: 768px) 100vw, (max-width: 1024px) 50vw, (min-width: 1025px) 25vw"
+              ? "(max-width: 768px) 100vw, 50vw"
+              : "(max-width: 768px) 100vw, 25vw"
         }
         className="object-cover rounded-lg"
+        draggable={false}
       />
     </motion.div>
   );

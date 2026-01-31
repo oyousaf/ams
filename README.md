@@ -60,16 +60,6 @@ Designed for smooth browsing, rich motion, and a premium automotive feel — wit
 
 ---
 
-## 📂 Project Structure (High-Level)
-
-- `/app` — Next.js App Router pages & layouts
-- `/components` — reusable UI components (cards, modals, carousels)
-- `/constants` — static content and configuration
-- `/lib` — helpers, utilities, integrations
-- `/styles` — global styles & Tailwind layers
-
----
-
 ## 🚀 Philosophy
 
 This project prioritises:

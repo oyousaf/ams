@@ -87,9 +87,12 @@ export default function CarModal({ car, logo, onClose }) {
   const [paused, setPaused] = useState(false);
 
   /* ---------------------------------------------
-     Helpers
+     Interaction intent gate
   --------------------------------------------- */
+  const userInteracted = useRef(false);
+
   const pauseAutoplay = useCallback(() => {
+    userInteracted.current = true;
     autoplay.current.stop();
     setPaused(true);
   }, []);
@@ -110,13 +113,17 @@ export default function CarModal({ car, logo, onClose }) {
     const sync = () => {
       setActive(emblaApi.selectedScrollSnap());
       setProgressKey((k) => k + 1);
-      autoplay.current.reset();
+
+      if (userInteracted.current) {
+        autoplay.current.reset();
+        userInteracted.current = false;
+      }
     };
 
     sync();
+
     emblaApi.on("select", sync);
     emblaApi.on("reInit", sync);
-
     emblaApi.on("pointerDown", pauseAutoplay);
 
     return () => {
@@ -202,10 +209,7 @@ export default function CarModal({ car, logo, onClose }) {
           </button>
 
           {/* Header */}
-          <div
-            className="sticky top-0 z-40 bg-linear-to-b from-rose-950/90 to-transparent
-             backdrop-blur px-6 pt-4 pb-4 text-center"
-          >
+          <div className="sticky top-0 z-40 bg-linear-to-b from-rose-950/90 to-transparent backdrop-blur px-6 pt-4 pb-4 text-center">
             {logo && <div className="mx-auto mb-2 h-12 w-12">{logo}</div>}
             <h4 className="text-xl md:text-2xl font-bold uppercase tracking-wide text-rose-200">
               {car.title}
@@ -250,6 +254,7 @@ export default function CarModal({ car, logo, onClose }) {
                       <button
                         key={i}
                         onClick={() => {
+                          userInteracted.current = true;
                           emblaApi?.scrollTo(i);
                           pauseAutoplay();
                         }}
@@ -269,8 +274,7 @@ export default function CarModal({ car, logo, onClose }) {
                         {isActive && !paused && (
                           <span
                             key={`${i}-${progressKey}`}
-                            className="absolute inset-0 origin-left
-                                       rounded-full bg-rose-400 animate-progress"
+                            className="absolute inset-0 origin-left rounded-full bg-rose-400 animate-progress"
                             style={{ animationDuration: `${AUTOPLAY_MS}ms` }}
                           />
                         )}
@@ -279,13 +283,11 @@ export default function CarModal({ car, logo, onClose }) {
                   })}
                 </div>
 
-                {/* Play button */}
                 {paused && (
                   <button
                     onClick={resumeAutoplay}
                     aria-label="Resume slideshow"
-                    className="rounded-full bg-white/10 p-2 text-rose-200 transition
-                     hover:bg-white/20 hover:text-rose-100"
+                    className="rounded-full bg-white/10 p-2 text-rose-200 transition hover:bg-white/20 hover:text-rose-100"
                   >
                     <FaPlay className="text-sm" />
                   </button>
@@ -333,7 +335,7 @@ export default function CarModal({ car, logo, onClose }) {
             <button
               onClick={share}
               className="mx-auto mt-4 flex items-center gap-2 rounded-full bg-rose-400/15 px-6 py-2
-                         text-rose-100 transition hover:bg-rose-400/25"
+               text-rose-100 transition hover:bg-rose-400/25"
             >
               <FaShareAlt />
               {copied ? "Link copied" : "Share"}

@@ -60,11 +60,8 @@ const CarCard = React.memo(({ car, logo, onOpen }) => {
 
         {car.isSold && (
           <div
-            className="
-              absolute inset-0 flex items-center justify-center
-              bg-rose-950/60 text-rose-200
-              text-4xl font-extrabold tracking-widest
-              rounded-md pointer-events-none
+            className="absolute inset-0 flex items-center justify-center bg-rose-950/60 text-rose-200
+              text-4xl font-extrabold tracking-widest rounded-md pointer-events-none
             "
           >
             SOLD

@@ -11,6 +11,7 @@ import {
   FaRegCalendarAlt,
   FaCarSide,
   FaShareAlt,
+  FaPlay,
 } from "react-icons/fa";
 import { PiEngineFill } from "react-icons/pi";
 import { GiGearStickPattern } from "react-icons/gi";
@@ -61,13 +62,13 @@ export default function CarModal({ car, logo, onClose }) {
   }, [images]);
 
   /* ---------------------------------------------
-     Embla
+     Embla + Autoplay
   --------------------------------------------- */
   const autoplay = useRef(
     Autoplay({
       delay: AUTOPLAY_MS,
       stopOnInteraction: false,
-      stopOnMouseEnter: true,
+      stopOnMouseEnter: false,
     }),
   );
 
@@ -83,9 +84,25 @@ export default function CarModal({ car, logo, onClose }) {
 
   const [active, setActive] = useState(0);
   const [progressKey, setProgressKey] = useState(0);
+  const [paused, setPaused] = useState(false);
 
   /* ---------------------------------------------
-     Sync indicator progress
+     Helpers
+  --------------------------------------------- */
+  const pauseAutoplay = useCallback(() => {
+    autoplay.current.stop();
+    setPaused(true);
+  }, []);
+
+  const resumeAutoplay = useCallback(() => {
+    autoplay.current.play();
+    autoplay.current.reset();
+    setProgressKey((k) => k + 1);
+    setPaused(false);
+  }, []);
+
+  /* ---------------------------------------------
+     Sync slide + progress
   --------------------------------------------- */
   useEffect(() => {
     if (!emblaApi) return;
@@ -93,19 +110,21 @@ export default function CarModal({ car, logo, onClose }) {
     const sync = () => {
       setActive(emblaApi.selectedScrollSnap());
       setProgressKey((k) => k + 1);
+      autoplay.current.reset();
     };
 
     sync();
     emblaApi.on("select", sync);
-    emblaApi.on("pointerDown", sync);
     emblaApi.on("reInit", sync);
+
+    emblaApi.on("pointerDown", pauseAutoplay);
 
     return () => {
       emblaApi.off("select", sync);
-      emblaApi.off("pointerDown", sync);
       emblaApi.off("reInit", sync);
+      emblaApi.off("pointerDown", pauseAutoplay);
     };
-  }, [emblaApi]);
+  }, [emblaApi, pauseAutoplay]);
 
   /* ---------------------------------------------
      Close + keyboard
@@ -166,9 +185,8 @@ export default function CarModal({ car, logo, onClose }) {
         <motion.div
           role="dialog"
           aria-modal="true"
-          className="relative w-full max-w-3xl max-h-[92vh] overflow-hidden rounded-xl
-                     bg-linear-to-br from-rose-900 via-rose-800 to-rose-950
-                     text-white shadow-xl"
+          className="relative flex max-h-[92vh] w-full max-w-3xl flex-col overflow-hidden rounded-xl
+           bg-linear-to-br from-rose-900 via-rose-800 to-rose-950 text-white shadow-xl"
           variants={modal}
           initial="hidden"
           animate="visible"
@@ -178,8 +196,7 @@ export default function CarModal({ car, logo, onClose }) {
           <button
             onClick={close}
             aria-label="Close"
-            className="absolute right-4 top-4 z-50 rounded-full bg-white/10 p-3
-                       transition hover:bg-white/20"
+            className="absolute right-4 top-4 z-50 rounded-full bg-white/10 p-3 transition hover:bg-white/20"
           >
             <FaTimes />
           </button>
@@ -187,7 +204,7 @@ export default function CarModal({ car, logo, onClose }) {
           {/* Header */}
           <div
             className="sticky top-0 z-40 bg-linear-to-b from-rose-950/90 to-transparent
-                          backdrop-blur px-6 pt-4 pb-4 text-center"
+             backdrop-blur px-6 pt-4 pb-4 text-center"
           >
             {logo && <div className="mx-auto mb-2 h-12 w-12">{logo}</div>}
             <h4 className="text-xl md:text-2xl font-bold uppercase tracking-wide text-rose-200">
@@ -196,10 +213,14 @@ export default function CarModal({ car, logo, onClose }) {
           </div>
 
           {/* Body */}
-          <div className="max-h-[calc(92vh-120px)] overflow-y-auto px-6 pb-6">
+          <div className="flex-1 overflow-y-auto scrollbar-hide px-6 pb-6">
             {/* Carousel */}
             <div className="mb-6">
-              <div ref={emblaRef} className="overflow-hidden">
+              <div
+                ref={emblaRef}
+                className="overflow-hidden"
+                onClick={pauseAutoplay}
+              >
                 <div className="flex">
                   {images.map((src, i) => (
                     <div
@@ -219,8 +240,8 @@ export default function CarModal({ car, logo, onClose }) {
                 </div>
               </div>
 
-              {/* Dots / Progress */}
-              <div className="mt-4 flex justify-center">
+              {/* Dots + Play */}
+              <div className="mt-4 flex items-center justify-center gap-3">
                 <div className="flex gap-2 rounded-full bg-white/10 px-3 py-2 backdrop-blur">
                   {images.map((_, i) => {
                     const isActive = i === active;
@@ -228,12 +249,14 @@ export default function CarModal({ car, logo, onClose }) {
                     return (
                       <button
                         key={i}
-                        onClick={() => emblaApi?.scrollTo(i)}
+                        onClick={() => {
+                          emblaApi?.scrollTo(i);
+                          pauseAutoplay();
+                        }}
                         aria-label={`Go to image ${i + 1}`}
                         aria-current={isActive ? "true" : undefined}
-                        className={`relative h-2.5 overflow-hidden transition-all
-                                    duration-300 ease-out
-                                    ${isActive ? "w-6" : "w-2.5"}`}
+                        className={`relative h-2.5 overflow-hidden transition-all duration-300 ease-out
+                           ${isActive ? "w-6" : "w-2.5"}`}
                       >
                         <span
                           className={`absolute inset-0 rounded-full
@@ -243,11 +266,11 @@ export default function CarModal({ car, logo, onClose }) {
                                           : "bg-rose-300/40"
                                       }`}
                         />
-                        {isActive && (
+                        {isActive && !paused && (
                           <span
                             key={`${i}-${progressKey}`}
-                            className="absolute inset-0 origin-left rounded-full
-                                       bg-rose-400 animate-progress"
+                            className="absolute inset-0 origin-left
+                                       rounded-full bg-rose-400 animate-progress"
                             style={{ animationDuration: `${AUTOPLAY_MS}ms` }}
                           />
                         )}
@@ -255,6 +278,18 @@ export default function CarModal({ car, logo, onClose }) {
                     );
                   })}
                 </div>
+
+                {/* Play button */}
+                {paused && (
+                  <button
+                    onClick={resumeAutoplay}
+                    aria-label="Resume slideshow"
+                    className="rounded-full bg-white/10 p-2 text-rose-200 transition
+                     hover:bg-white/20 hover:text-rose-100"
+                  >
+                    <FaPlay className="text-sm" />
+                  </button>
+                )}
               </div>
             </div>
 
@@ -264,6 +299,7 @@ export default function CarModal({ car, logo, onClose }) {
 
             <Divider />
 
+            {/* Specs */}
             <div className="mb-6 grid grid-cols-3 gap-6 text-center text-lg text-zinc-200">
               <div>
                 <PiEngineFill className="mx-auto mb-1 text-rose-300" />
@@ -293,10 +329,11 @@ export default function CarModal({ car, logo, onClose }) {
 
             <Divider />
 
+            {/* Share */}
             <button
               onClick={share}
-              className="mx-auto mt-4 flex items-center gap-2 rounded-full bg-rose-400/15 px-6 py-2 text-rose-100
-                         transition hover:bg-rose-400/25"
+              className="mx-auto mt-4 flex items-center gap-2 rounded-full bg-rose-400/15 px-6 py-2
+                         text-rose-100 transition hover:bg-rose-400/25"
             >
               <FaShareAlt />
               {copied ? "Link copied" : "Share"}

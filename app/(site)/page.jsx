@@ -57,28 +57,6 @@ export default function HomePage() {
       >
         <About />
       </section>
-
-      {/* Latest Cars */}
-      <section
-        id="cars"
-        aria-labelledby="cars-heading"
-        className="scroll-mt-24"
-      >
-        <LatestCars />
-      </section>
-
-      {/* Reviews */}
-      <section
-        id="reviews"
-        aria-labelledby="reviews-heading"
-        className="scroll-mt-24"
-      >
-        <Reviews />
-      </section>
-
-      {/* Utilities */}
-      <ScrollToTopWrapper />
-      <SnowWrapper />
     </>
   );
 }

@@ -79,10 +79,9 @@ const About = () => {
       <div className="mx-auto mt-20 max-w-7xl">
         <motion.div
           className="grid grid-cols-1 gap-4 md:grid-cols-4"
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.5 }}
           variants={container}
+          initial={false}
+          animate="visible"
         >
           {gallery.map((src, index) => {
             const isWide = index === 1 || index === 4;

@@ -1,6 +1,6 @@
 "use client";
 
-import { aboutTiles, gallery } from "../constants";
+import { aboutTiles, gallery } from "@/constants";
 import ImageTile from "./ImageTile";
 import { motion } from "framer-motion";
 

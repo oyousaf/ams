@@ -12,6 +12,18 @@ const springNav = { type: "spring", stiffness: 600, damping: 28 };
 const springIcon = { type: "spring", stiffness: 500, damping: 30 };
 const springMorph = { type: "spring", stiffness: 420, damping: 34 };
 
+const listVariants = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.08, delayChildren: 0.05 } },
+  exit: { transition: { staggerChildren: 0.06, staggerDirection: -1 } },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 28, scale: 0.96 },
+  show: { opacity: 1, y: 0, scale: 1 },
+  exit: { opacity: 0, y: 28, scale: 0.96 },
+};
+
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const panelRef = useRef(null);
@@ -31,9 +43,7 @@ export default function Navbar() {
   useEffect(() => {
     if (!menuOpen) return;
     document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = "";
-    };
+    return () => (document.body.style.overflow = "");
   }, [menuOpen]);
 
   /* Route change close */
@@ -50,7 +60,6 @@ export default function Navbar() {
   /* Focus trap */
   useEffect(() => {
     if (!menuOpen || !panelRef.current) return;
-
     const focusables = panelRef.current.querySelectorAll(
       'button, a, [tabindex]:not([tabindex="-1"])',
     );
@@ -78,12 +87,8 @@ export default function Navbar() {
   return (
     <LayoutGroup>
       {/* ================= FLOATING NAV ================= */}
-      <nav
-        className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2rem)] max-w-7xl rounded-2xl bg-black
-          border border-white/10 backdrop-blur-xl shadow-xl text-white"
-      >
+      <nav className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2rem)] max-w-7xl rounded-2xl bg-black border border-white/10 backdrop-blur-xl shadow-xl text-white">
         <div className="flex items-center justify-between px-4 py-3 sm:px-6">
-          {/* Logo */}
           <motion.div
             whileHover={{ scale: 1.05 }}
             transition={springIcon}
@@ -99,40 +104,19 @@ export default function Navbar() {
             />
           </motion.div>
 
-          {/* Desktop nav */}
           <ul className="hidden items-center gap-6 md:flex lg:gap-10">
-            {navLinks.map(({ id, href, name }, i) => (
-              <motion.li
-                key={id}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{
-                  opacity: { delay: i * 0.08, duration: 0.25, ease: "easeOut" },
-                  y: {
-                    delay: i * 0.08,
-                    type: "spring",
-                    stiffness: 600,
-                    damping: 28,
-                  },
-                }}
-                whileHover={{
-                  y: -2,
-                  transition: { type: "spring", stiffness: 700, damping: 32 },
-                }}
-              >
+            {navLinks.map(({ id, href, name }) => (
+              <li key={id}>
                 <button
                   onClick={() => handleScroll(href)}
-                  className="relative cursor-pointer text-lg md:text-xl font-bold uppercase tracking-wide
-                    text-white/90 hover:text-white after:absolute after:left-0 after:-bottom-1
-                    after:h-0.5 after:w-0 after:bg-rose-600 after:transition-all hover:after:w-full"
+                  className="text-lg md:text-xl font-bold uppercase tracking-wide text-white/90 hover:text-white"
                 >
                   {name}
                 </button>
-              </motion.li>
+              </li>
             ))}
           </ul>
 
-          {/* Desktop socials */}
           <div className="hidden items-center gap-5 md:flex">
             {socialLinks.map(({ id, href, icon, name }) => (
               <motion.a
@@ -150,7 +134,6 @@ export default function Navbar() {
             ))}
           </div>
 
-          {/* Mobile toggle */}
           <motion.button
             layoutId="mobile-menu-anchor"
             onClick={toggleMenu}
@@ -171,7 +154,6 @@ export default function Navbar() {
       <AnimatePresence>
         {menuOpen && (
           <>
-            {/* Backdrop */}
             <motion.div
               className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm md:hidden"
               initial={{ opacity: 0 }}
@@ -180,48 +162,41 @@ export default function Navbar() {
               onClick={closeMenu}
             />
 
-            {/* Morphing panel */}
             <motion.div
-              layoutId="mobile-menu-anchor"
               ref={panelRef}
               role="dialog"
               aria-modal="true"
               className="fixed inset-0 z-50 md:hidden flex items-center justify-center px-4"
+              initial={{ opacity: 0, scale: 0.94 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.94 }}
               transition={springMorph}
             >
-              <div
-                className="
-                  relative w-full max-w-md
-                  rounded-3xl bg-zinc-900/95
-                  border border-white/10
-                  shadow-2xl
-                  px-6 pt-10 pb-12
-                "
+              <motion.div
+                layoutId="mobile-menu-anchor"
+                className="relative w-full max-w-md rounded-3xl bg-zinc-900/95 border border-white/10 shadow-2xl px-6 pt-10 pb-12"
               >
-                {/* Close */}
                 <button
                   onClick={closeMenu}
                   aria-label="Close menu"
-                  className="
-                    absolute right-4 top-4
-                    h-10 w-10 rounded-full
-                    grid place-items-center
-                    bg-rose-600/20 hover:bg-rose-600/30
-                  "
+                  className="absolute right-4 top-4 h-10 w-10 rounded-full grid place-items-center bg-rose-600/20 hover:bg-rose-600/30"
                 >
                   <RiCloseLine className="text-2xl text-rose-600" />
                 </button>
 
-                {/* Links */}
-                <ul className="mt-6 space-y-8 text-center">
+                {/* Nav links – staggered */}
+                <motion.ul
+                  className="mt-6 space-y-8 text-center"
+                  variants={listVariants}
+                  initial="hidden"
+                  animate="show"
+                  exit="exit"
+                >
                   {navLinks.map(({ id, href, name }) => (
                     <motion.li
                       key={id}
-                      initial={{ opacity: 0, y: 24 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: 24 }}
+                      variants={itemVariants}
                       transition={springNav}
-                      whileHover={{ y: -2 }}
                     >
                       <button
                         onClick={() => handleScroll(href)}
@@ -231,10 +206,16 @@ export default function Navbar() {
                       </button>
                     </motion.li>
                   ))}
-                </ul>
+                </motion.ul>
 
-                {/* Socials */}
-                <div className="mt-16 flex justify-center gap-6">
+                {/* Socials – staggered, reverse exit */}
+                <motion.div
+                  className="mt-16 flex justify-center gap-6"
+                  variants={listVariants}
+                  initial="hidden"
+                  animate="show"
+                  exit="exit"
+                >
                   {socialLinks.map(({ id, href, icon, name }) => (
                     <motion.a
                       key={id}
@@ -242,16 +223,17 @@ export default function Navbar() {
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label={name}
+                      variants={itemVariants}
+                      transition={springIcon}
                       className="text-white hover:text-rose-600"
                       whileHover={{ scale: 1.12 }}
                       whileTap={{ scale: 0.95 }}
-                      transition={springIcon}
                     >
                       {icon}
                     </motion.a>
                   ))}
-                </div>
-              </div>
+                </motion.div>
+              </motion.div>
             </motion.div>
           </>
         )}

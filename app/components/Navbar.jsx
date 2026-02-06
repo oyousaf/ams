@@ -31,7 +31,9 @@ export default function Navbar() {
   useEffect(() => {
     if (!menuOpen) return;
     document.body.style.overflow = "hidden";
-    return () => (document.body.style.overflow = "");
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, [menuOpen]);
 
   /* Route change close */
@@ -77,9 +79,8 @@ export default function Navbar() {
     <LayoutGroup>
       {/* ================= FLOATING NAV ================= */}
       <nav
-        className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2rem)] max-w-7xl
-          rounded-2xl bg-black border border-white/10 backdrop-blur-xl shadow-xl
-          text-white"
+        className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2rem)] max-w-7xl rounded-2xl bg-black
+          border border-white/10 backdrop-blur-xl shadow-xl text-white"
       >
         <div className="flex items-center justify-between px-4 py-3 sm:px-6">
           {/* Logo */}
@@ -105,12 +106,23 @@ export default function Navbar() {
                 key={id}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                whileHover={{ y: -2 }}
-                transition={{ ...springNav, delay: i * 0.08 }}
+                transition={{
+                  opacity: { delay: i * 0.08, duration: 0.25, ease: "easeOut" },
+                  y: {
+                    delay: i * 0.08,
+                    type: "spring",
+                    stiffness: 600,
+                    damping: 28,
+                  },
+                }}
+                whileHover={{
+                  y: -2,
+                  transition: { type: "spring", stiffness: 700, damping: 32 },
+                }}
               >
                 <button
                   onClick={() => handleScroll(href)}
-                  className="relative text-lg md:text-xl font-bold uppercase tracking-wide cursor-pointer
+                  className="relative cursor-pointer text-lg md:text-xl font-bold uppercase tracking-wide
                     text-white/90 hover:text-white after:absolute after:left-0 after:-bottom-1
                     after:h-0.5 after:w-0 after:bg-rose-600 after:transition-all hover:after:w-full"
                 >
@@ -178,14 +190,22 @@ export default function Navbar() {
               transition={springMorph}
             >
               <div
-                className="relative w-full max-w-md rounded-3xl bg-zinc-900/95 border border-white/10
-                  shadow-2xl px-6 pt-10 pb-12"
+                className="
+                  relative w-full max-w-md
+                  rounded-3xl bg-zinc-900/95
+                  border border-white/10
+                  shadow-2xl
+                  px-6 pt-10 pb-12
+                "
               >
                 {/* Close */}
                 <button
                   onClick={closeMenu}
                   aria-label="Close menu"
-                  className="absolute right-4 top-4 h-10 w-10 rounded-full grid place-items-center
+                  className="
+                    absolute right-4 top-4
+                    h-10 w-10 rounded-full
+                    grid place-items-center
                     bg-rose-600/20 hover:bg-rose-600/30
                   "
                 >
@@ -205,7 +225,7 @@ export default function Navbar() {
                     >
                       <button
                         onClick={() => handleScroll(href)}
-                        className="text-4xl font-bold uppercase text-white/90 hover:text-rose-600 transition"
+                        className="text-4xl font-bold uppercase text-white/90 hover:text-rose-600"
                       >
                         {name}
                       </button>
@@ -214,7 +234,7 @@ export default function Navbar() {
                 </ul>
 
                 {/* Socials */}
-                <div className="mt-25 flex justify-center gap-6">
+                <div className="mt-16 flex justify-center gap-6">
                   {socialLinks.map(({ id, href, icon, name }) => (
                     <motion.a
                       key={id}
@@ -222,7 +242,7 @@ export default function Navbar() {
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label={name}
-                      className="text-white hover:text-rose-600 transition"
+                      className="text-white hover:text-rose-600"
                       whileHover={{ scale: 1.12 }}
                       whileTap={{ scale: 0.95 }}
                       transition={springIcon}

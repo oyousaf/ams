@@ -184,7 +184,7 @@ export default function Navbar() {
                   <RiCloseLine className="text-2xl text-rose-600" />
                 </button>
 
-                {/* Nav links – staggered */}
+                {/* Nav links */}
                 <motion.ul
                   className="mt-6 space-y-8 text-center"
                   variants={listVariants}
@@ -208,7 +208,7 @@ export default function Navbar() {
                   ))}
                 </motion.ul>
 
-                {/* Socials – staggered, reverse exit */}
+                {/* Socials */}
                 <motion.div
                   className="mt-16 flex justify-center gap-6"
                   variants={listVariants}

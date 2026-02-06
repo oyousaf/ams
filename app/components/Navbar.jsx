@@ -5,39 +5,37 @@ import { RiMenu3Line, RiCloseLine } from "react-icons/ri";
 import Image from "next/image";
 import { navLinks, socialLinks } from "../constants";
 import logo from "public/logo.png";
-import { motion, AnimatePresence, useDragControls } from "framer-motion";
+import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
 import { usePathname } from "next/navigation";
 
-const Navbar = () => {
+const springNav = { type: "spring", stiffness: 600, damping: 28 };
+const springIcon = { type: "spring", stiffness: 500, damping: 30 };
+const springMorph = { type: "spring", stiffness: 420, damping: 34 };
+
+export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const panelRef = useRef(null);
-  const dragControls = useDragControls();
   const pathname = usePathname();
 
   const toggleMenu = () => setMenuOpen((p) => !p);
   const closeMenu = () => setMenuOpen(false);
 
-  const handleScroll = (sectionId) => {
-    const section = document.getElementById(sectionId);
-    if (section) {
-      section.scrollIntoView({ behavior: "smooth" });
-      closeMenu();
-    }
+  const handleScroll = (id) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.scrollIntoView({ behavior: "smooth" });
+    closeMenu();
   };
 
   /* Scroll lock */
   useEffect(() => {
     if (!menuOpen) return;
     document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = "";
-    };
+    return () => (document.body.style.overflow = "");
   }, [menuOpen]);
 
-  /* Route change auto-close */
-  useEffect(() => {
-    closeMenu();
-  }, [pathname]);
+  /* Route change close */
+  useEffect(() => closeMenu(), [pathname]);
 
   /* Escape close */
   useEffect(() => {
@@ -76,83 +74,88 @@ const Navbar = () => {
   }, [menuOpen]);
 
   return (
-    <nav className="fixed top-0 inset-x-0 z-50 bg-black text-white shadow-md">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-2 py-4 sm:px-4 md:px-8">
-        {/* Logo */}
-        <motion.div
-          whileHover={{ scale: 1.05 }}
-          transition={{ type: "spring", stiffness: 500, damping: 30 }}
-          className="cursor-pointer"
-          onClick={() => handleScroll("hero")}
-        >
-          <Image
-            src={logo}
-            alt="Ace Motor Sales"
-            priority
-            className="w-32 sm:w-40 md:w-44"
-          />
-        </motion.div>
+    <LayoutGroup>
+      {/* ================= FLOATING NAV ================= */}
+      <nav
+        className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2rem)] max-w-7xl
+          rounded-2xl bg-black border border-white/10 backdrop-blur-xl shadow-xl
+          text-white"
+      >
+        <div className="flex items-center justify-between px-4 py-3 sm:px-6">
+          {/* Logo */}
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            transition={springIcon}
+            className="cursor-pointer"
+            onClick={() => handleScroll("hero")}
+          >
+            <Image
+              src={logo}
+              alt="Ace Motor Sales"
+              priority
+              draggable={false}
+              className="w-32 sm:w-40 md:w-44"
+            />
+          </motion.div>
 
-        {/* Desktop navigation */}
-        <ul className="hidden items-center gap-6 md:flex lg:gap-10">
-          {navLinks.map(({ id, href, name }, index) => (
-            <motion.li
-              key={id}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              whileHover={{ y: -2 }}
-              transition={{
-                opacity: { duration: 0.25, ease: "easeOut" },
-                y: { type: "spring", stiffness: 600, damping: 28 },
-                delay: index * 0.08,
-              }}
-            >
-              <button
-                onClick={() => handleScroll(href)}
-                className="relative cursor-pointer text-lg md:text-xl font-bold uppercase tracking-wide
-                  text-white/90 hover:text-white transition after:absolute after:left-0 after:-bottom-1
-                  after:h-0.5 after:w-0 after:bg-rose-600 after:transition-all hover:after:w-full"
+          {/* Desktop nav */}
+          <ul className="hidden items-center gap-6 md:flex lg:gap-10">
+            {navLinks.map(({ id, href, name }, i) => (
+              <motion.li
+                key={id}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                whileHover={{ y: -2 }}
+                transition={{ ...springNav, delay: i * 0.08 }}
               >
-                {name}
-              </button>
-            </motion.li>
-          ))}
-        </ul>
+                <button
+                  onClick={() => handleScroll(href)}
+                  className="relative text-lg md:text-xl font-bold uppercase tracking-wide cursor-pointer
+                    text-white/90 hover:text-white after:absolute after:left-0 after:-bottom-1
+                    after:h-0.5 after:w-0 after:bg-rose-600 after:transition-all hover:after:w-full"
+                >
+                  {name}
+                </button>
+              </motion.li>
+            ))}
+          </ul>
 
-        {/* Desktop socials */}
-        <div className="hidden items-center gap-5 md:flex">
-          {socialLinks.map(({ id, href, icon, name }) => (
-            <motion.a
-              key={id}
-              href={href}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={name}
-              whileHover={{ y: -3 }}
-              transition={{ type: "spring", stiffness: 500, damping: 30 }}
-              className="cursor-pointer hover:text-rose-600"
-            >
-              {icon}
-            </motion.a>
-          ))}
+          {/* Desktop socials */}
+          <div className="hidden items-center gap-5 md:flex">
+            {socialLinks.map(({ id, href, icon, name }) => (
+              <motion.a
+                key={id}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={name}
+                whileHover={{ y: -3 }}
+                transition={springIcon}
+                className="hover:text-rose-600"
+              >
+                {icon}
+              </motion.a>
+            ))}
+          </div>
+
+          {/* Mobile toggle */}
+          <motion.button
+            layoutId="mobile-menu-anchor"
+            onClick={toggleMenu}
+            className="md:hidden"
+            aria-expanded={menuOpen}
+            aria-label="Toggle navigation menu"
+          >
+            {menuOpen ? (
+              <RiCloseLine className="text-5xl text-rose-600" />
+            ) : (
+              <RiMenu3Line className="text-5xl text-rose-600" />
+            )}
+          </motion.button>
         </div>
+      </nav>
 
-        {/* Mobile toggle */}
-        <button
-          onClick={toggleMenu}
-          className="z-60 md:hidden"
-          aria-expanded={menuOpen}
-          aria-label="Toggle navigation menu"
-        >
-          {menuOpen ? (
-            <RiCloseLine className="text-5xl text-rose-600" />
-          ) : (
-            <RiMenu3Line className="text-5xl text-rose-600" />
-          )}
-        </button>
-      </div>
-
-      {/* ===== Mobile menu ===== */}
+      {/* ================= MOBILE MENU ================= */}
       <AnimatePresence>
         {menuOpen && (
           <>
@@ -165,140 +168,74 @@ const Navbar = () => {
               onClick={closeMenu}
             />
 
-            {/* Panel */}
+            {/* Morphing panel */}
             <motion.div
+              layoutId="mobile-menu-anchor"
               ref={panelRef}
-              className="fixed inset-0 z-50 flex flex-col bg-zinc-900/90 md:hidden"
-              initial={{ x: "100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "100%" }}
-              drag="x"
-              dragControls={dragControls}
-              dragListener={false}
-              dragConstraints={{ left: 0, right: 0 }}
-              onDragEnd={(_, info) => {
-                if (info.offset.x > 120 || info.velocity.x > 600) closeMenu();
-              }}
-              transition={{ type: "spring", stiffness: 220, damping: 30 }}
+              role="dialog"
+              aria-modal="true"
+              className="fixed inset-0 z-50 md:hidden flex items-center justify-center px-4"
+              transition={springMorph}
             >
               <div
-                className="flex grow flex-col items-center justify-center"
-                onPointerDown={(e) => dragControls.start(e)}
+                className="relative w-full max-w-md rounded-3xl bg-zinc-900/95 border border-white/10
+                  shadow-2xl px-6 pt-10 pb-12"
               >
-                <motion.ul
-                  className="space-y-8 text-center"
-                  initial="closed"
-                  animate="open"
-                  exit="closed"
-                  variants={{
-                    open: {
-                      transition: {
-                        staggerChildren: 0.08,
-                        delayChildren: 0.15,
-                      },
-                    },
-                    closed: {
-                      transition: {
-                        staggerChildren: 0.05,
-                        staggerDirection: -1,
-                      },
-                    },
-                  }}
+                {/* Close */}
+                <button
+                  onClick={closeMenu}
+                  aria-label="Close menu"
+                  className="absolute right-4 top-4 h-10 w-10 rounded-full grid place-items-center
+                    bg-rose-600/20 hover:bg-rose-600/30
+                  "
                 >
+                  <RiCloseLine className="text-2xl text-rose-600" />
+                </button>
+
+                {/* Links */}
+                <ul className="mt-6 space-y-8 text-center">
                   {navLinks.map(({ id, href, name }) => (
                     <motion.li
                       key={id}
-                      variants={{
-                        open: {
-                          opacity: 1,
-                          y: 0,
-                          scale: 1,
-                          transition: {
-                            type: "spring",
-                            stiffness: 600,
-                            damping: 28,
-                          },
-                        },
-                        closed: {
-                          opacity: 0,
-                          y: 24,
-                          scale: 0.96,
-                          transition: { duration: 0.15 },
-                        },
-                      }}
+                      initial={{ opacity: 0, y: 24 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 24 }}
+                      transition={springNav}
                       whileHover={{ y: -2 }}
                     >
                       <button
                         onClick={() => handleScroll(href)}
-                        className="cursor-pointer text-4xl font-bold uppercase text-white/90 transition hover:text-rose-600"
+                        className="text-4xl font-bold uppercase text-white/90 hover:text-rose-600 transition"
                       >
                         {name}
                       </button>
                     </motion.li>
                   ))}
-                </motion.ul>
-              </div>
+                </ul>
 
-              {/* Mobile socials */}
-              <motion.div
-                className="mb-20 flex justify-center gap-6"
-                initial="closed"
-                animate="open"
-                exit="closed"
-                variants={{
-                  open: {
-                    transition: {
-                      staggerChildren: 0.04,
-                      delayChildren: 0.25,
-                    },
-                  },
-                  closed: {
-                    transition: {
-                      staggerChildren: 0.03,
-                      staggerDirection: -1,
-                    },
-                  },
-                }}
-              >
-                {socialLinks.map(({ id, href, icon, name }) => (
-                  <motion.a
-                    key={id}
-                    href={href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={name}
-                    className="cursor-pointer text-white hover:text-rose-600"
-                    variants={{
-                      open: {
-                        opacity: 1,
-                        y: 0,
-                        scale: 1,
-                        transition: {
-                          type: "spring",
-                          stiffness: 500,
-                          damping: 26,
-                        },
-                      },
-                      closed: {
-                        opacity: 0,
-                        y: 8,
-                        scale: 0.96,
-                        transition: { duration: 0.12 },
-                      },
-                    }}
-                    whileHover={{ scale: 1.12 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    {icon}
-                  </motion.a>
-                ))}
-              </motion.div>
+                {/* Socials */}
+                <div className="mt-25 flex justify-center gap-6">
+                  {socialLinks.map(({ id, href, icon, name }) => (
+                    <motion.a
+                      key={id}
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={name}
+                      className="text-white hover:text-rose-600 transition"
+                      whileHover={{ scale: 1.12 }}
+                      whileTap={{ scale: 0.95 }}
+                      transition={springIcon}
+                    >
+                      {icon}
+                    </motion.a>
+                  ))}
+                </div>
+              </div>
             </motion.div>
           </>
         )}
       </AnimatePresence>
-    </nav>
+    </LayoutGroup>
   );
-};
-
-export default Navbar;
+}

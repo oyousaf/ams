@@ -107,12 +107,16 @@ export default function Navbar() {
           <ul className="hidden items-center gap-6 md:flex lg:gap-10">
             {navLinks.map(({ id, href, name }) => (
               <li key={id}>
-                <button
+                <motion.button
                   onClick={() => handleScroll(href)}
-                  className="text-lg md:text-xl font-bold uppercase tracking-wide text-white/90 hover:text-white"
+                  whileHover={{ y: -2 }}
+                  transition={{ duration: 0.18, ease: "easeOut" }}
+                  className="relative text-lg md:text-xl font-bold cursor-pointer uppercase tracking-wide text-white/90 hover:text-white group"
                 >
                   {name}
-                </button>
+
+                  <span className="pointer-events-none absolute left-0 -bottom-1 h-0.5 w-0 bg-rose-600 transition-all duration-300 group-hover:w-full" />
+                </motion.button>
               </li>
             ))}
           </ul>

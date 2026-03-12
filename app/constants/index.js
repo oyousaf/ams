@@ -87,6 +87,12 @@ export const gallery = [
 
 export const reviews = [
   {
+    name: "Jack P",
+    feedback: `Can not recommend highly enough. Very friendly, accommodating and knowledgable. Car purchased needed a few things for MOT; AMS went above and beyond even sticking on brand new tyres.
+    I popped in to browse after seeing a BMW I liked online, not being dead set on a specific car I had a conversation with the owner who suggested the Audi A5 Black Edition that he was currently driving (at a significant discount to the online listing). Timing belt and water pump recently done, engine is sweet as a nut, immaculate condition inside and out.
+    Communication was great throughout - will definitely be returning to AMS when I’m next on the look out for a new (to me) motor.`,
+  },
+  {
     name: "Ethun M",
     feedback: `I had a great experience with Ace Motor Sales. Their professional service, excellent communication, and high-quality car at a fair price made the whole process smooth and stress-free. I’d definitely recommend them if you’re in the market for a new car.`,
   },
@@ -121,11 +127,6 @@ export const reviews = [
     name: "Daniel L",
     feedback:
       "Bought a Mini Cooper a few weeks ago. Amazing service from start to finish. Was very transparent with everything and gave a 5* service. Will definitely buy from Ace Motor Sales again. Daniel and Rebekah.",
-  },
-  {
-    name: "Kieran M",
-    feedback:
-      "Hands down the best used car dealer I've ever had the pleasure of dealing with. From start to finish the service provided was nothing short of amazing, any questions were answered promptly and nothing was too much of a hassle for Faisal. He really does go above and beyond for his customers, I would have no problem recommending buying a car for him, top class service!",
   },
   {
     name: "Omar 🍉",

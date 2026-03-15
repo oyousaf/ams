@@ -2,12 +2,14 @@
 
 import { useEffect, useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { databases } from "../lib/appwrite";
 import { carMakes, carLogos } from "../constants";
 import CarCard from "./CarCard";
 import CarModal from "./CarModal";
 import SkeletonCarCard from "./SkeletonCarCard";
 import SortDropdown from "./SortDropdown";
+import { normalizeCar } from "@/lib/normaliseCar";
+
+const API = process.env.NEXT_PUBLIC_API_URL;
 
 const sortOptions = [
   { key: "mileage", label: "Mileage" },
@@ -23,6 +25,25 @@ const sortOptions = [
   { key: "titleDesc", label: "Z-A" },
 ];
 
+const safeNum = (v) => {
+  const n = Number(v);
+  return Number.isFinite(n) ? n : 0;
+};
+
+function enrichCar(car) {
+  const title = car.title?.toLowerCase().replace(/\s+/g, "") || "";
+
+  const make = carMakes.find((m) =>
+    title.includes(m.toLowerCase().replace(/\s+/g, "")),
+  );
+
+  return {
+    ...car,
+    make,
+    logo: make ? carLogos[make] : null,
+  };
+}
+
 const LatestCars = () => {
   const [cars, setCars] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -34,29 +55,22 @@ const LatestCars = () => {
   useEffect(() => {
     const fetchCars = async () => {
       try {
-        const databaseId = process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID;
-        const collectionId = process.env.NEXT_PUBLIC_APPWRITE_COLLECTION_ID;
+        setLoading(true);
+        setError(null);
 
-        if (!databaseId || !collectionId) {
-          throw new Error("Missing Appwrite environment variables");
-        }
-
-        const res = await databases.listDocuments(databaseId, collectionId);
-
-        const processed = res.documents.map((car) => {
-          const title = car.title?.toLowerCase().replace(/\s+/g, "");
-          const make = carMakes.find((m) =>
-            title?.includes(m.toLowerCase().replace(/\s+/g, "")),
-          );
-
-          return {
-            ...car,
-            make,
-            logo: make ? carLogos[make] : null,
-          };
+        const res = await fetch(`${API}/api/cars`, {
+          cache: "no-store",
         });
 
-        setCars(processed);
+        if (!res.ok) throw new Error("Failed to fetch cars");
+
+        const data = await res.json();
+
+        const rows = Array.isArray(data) ? data : (data.cars ?? []);
+
+        const normalized = rows.map((row) => enrichCar(normalizeCar(row)));
+
+        setCars(normalized);
       } catch (err) {
         console.error(err);
         setError("Unable to load vehicles. Please try again shortly.");
@@ -79,57 +93,58 @@ const LatestCars = () => {
         );
         result.sort(
           (a, b) =>
-            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+            new Date(b.createdAt || 0).getTime() -
+            new Date(a.createdAt || 0).getTime(),
         );
         break;
 
       case "priceLow":
-        result.sort((a, b) => (a.price ?? 0) - (b.price ?? 0));
+        result.sort((a, b) => safeNum(a.price) - safeNum(b.price));
         break;
 
       case "priceHigh":
-        result.sort((a, b) => (b.price ?? 0) - (a.price ?? 0));
+        result.sort((a, b) => safeNum(b.price) - safeNum(a.price));
         break;
 
       case "mileage":
-        result.sort((a, b) => (a.mileage ?? 0) - (b.mileage ?? 0));
+        result.sort((a, b) => safeNum(a.mileage) - safeNum(b.mileage));
         break;
 
       case "engineLow":
-        result.sort((a, b) => (a.engineSize ?? 0) - (b.engineSize ?? 0));
+        result.sort((a, b) => safeNum(a.engineSize) - safeNum(b.engineSize));
         break;
 
       case "engineHigh":
-        result.sort((a, b) => (b.engineSize ?? 0) - (a.engineSize ?? 0));
+        result.sort((a, b) => safeNum(b.engineSize) - safeNum(a.engineSize));
         break;
 
       case "oldest":
         result.sort(
           (a, b) =>
-            new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+            new Date(a.createdAt || 0).getTime() -
+            new Date(b.createdAt || 0).getTime(),
         );
         break;
 
       case "titleAsc":
-        result.sort((a, b) => a.title.localeCompare(b.title));
+        result.sort((a, b) => (a.title || "").localeCompare(b.title || ""));
         break;
 
       case "titleDesc":
-        result.sort((a, b) => b.title.localeCompare(a.title));
+        result.sort((a, b) => (b.title || "").localeCompare(a.title || ""));
         break;
 
       default:
         result.sort(
           (a, b) =>
-            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+            new Date(b.createdAt || 0).getTime() -
+            new Date(a.createdAt || 0).getTime(),
         );
     }
 
-    // Always prioritise featured vehicles
     return result.sort((a, b) => {
-      if (a.isFeatured && !b.isFeatured) return -1;
-      if (!a.isFeatured && b.isFeatured) return 1;
-      return 0;
+      if (a.isFeatured === b.isFeatured) return 0;
+      return a.isFeatured ? -1 : 1;
     });
   }, [cars, sortOption]);
 
@@ -166,21 +181,7 @@ const LatestCars = () => {
           ))}
         </div>
       ) : error ? (
-        <p
-          role="alert"
-          aria-live="assertive"
-          className="mx-auto max-w-md rounded-xl bg-black/40 px-6 py-4 text-center text-red-400"
-        >
-          {error}
-        </p>
-      ) : sortedCars.length === 0 ? (
-        <p
-          role="status"
-          aria-live="polite"
-          className="mx-auto max-w-md rounded-xl bg-black/40 px-6 py-8 text-center text-lg text-zinc-200 backdrop-blur"
-        >
-          No cars available at the moment. Please check back soon.
-        </p>
+        <p className="mx-auto max-w-md text-center text-red-400">{error}</p>
       ) : (
         <motion.ul
           layout
@@ -189,12 +190,11 @@ const LatestCars = () => {
           <AnimatePresence>
             {sortedCars.map((car) => (
               <motion.li
-                key={car.$id}
+                key={car.id}
                 layout
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: 0.35, ease: "easeOut" }}
               >
                 <CarCard
                   car={car}

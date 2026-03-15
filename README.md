@@ -36,7 +36,6 @@ Designed for smooth browsing, rich motion, and a premium automotive feel — wit
 
 ### Data & Forms
 
-- 🗄️ **Appwrite**
 - 🧪 **Zod**
 - 📝 **React Hook Form**
 

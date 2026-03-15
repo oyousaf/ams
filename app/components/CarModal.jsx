@@ -17,16 +17,10 @@ import { PiEngineFill } from "react-icons/pi";
 import { GiGearStickPattern } from "react-icons/gi";
 import { BiSolidTachometer } from "react-icons/bi";
 import Divider from "./Divider";
+import { resolveImages } from "@/lib/resolveImage";
 
-/* ---------------------------------------------
-   Constants
---------------------------------------------- */
-const FALLBACK_IMAGE = "/fallback.webp";
 const AUTOPLAY_MS = 5000;
 
-/* ---------------------------------------------
-   Motion
---------------------------------------------- */
 const overlay = {
   hidden: { opacity: 0 },
   visible: { opacity: 1 },
@@ -45,14 +39,11 @@ const modal = {
 };
 
 export default function CarModal({ car, logo, onClose }) {
-  const images = useMemo(
-    () => (car.imageUrl?.length ? car.imageUrl : [FALLBACK_IMAGE]),
-    [car.imageUrl],
-  );
+  const images = useMemo(() => {
+    return resolveImages(car.imageUrls);
+  }, [car.imageUrls]);
 
-  /* ---------------------------------------------
-     Preload images
-  --------------------------------------------- */
+  /* preload */
   useEffect(() => {
     images.forEach((src) => {
       const img = new window.Image();
@@ -61,10 +52,7 @@ export default function CarModal({ car, logo, onClose }) {
     });
   }, [images]);
 
-  /* ---------------------------------------------
-     Embla + Autoplay
-  --------------------------------------------- */
-  const autoplay = useRef(
+  const autoplayRef = useRef(
     Autoplay({
       delay: AUTOPLAY_MS,
       stopOnInteraction: false,
@@ -76,37 +64,30 @@ export default function CarModal({ car, logo, onClose }) {
     {
       loop: images.length > 1,
       align: "center",
-      dragFree: false,
       containScroll: "trimSnaps",
     },
-    [autoplay.current],
+    [autoplayRef.current],
   );
 
   const [active, setActive] = useState(0);
   const [progressKey, setProgressKey] = useState(0);
   const [paused, setPaused] = useState(false);
 
-  /* ---------------------------------------------
-     Interaction intent gate
-  --------------------------------------------- */
   const userInteracted = useRef(false);
 
   const pauseAutoplay = useCallback(() => {
     userInteracted.current = true;
-    autoplay.current.stop();
+    autoplayRef.current.stop();
     setPaused(true);
   }, []);
 
   const resumeAutoplay = useCallback(() => {
-    autoplay.current.play();
-    autoplay.current.reset();
+    autoplayRef.current.play();
+    autoplayRef.current.reset();
     setProgressKey((k) => k + 1);
     setPaused(false);
   }, []);
 
-  /* ---------------------------------------------
-     Sync slide + progress
-  --------------------------------------------- */
   useEffect(() => {
     if (!emblaApi) return;
 
@@ -115,7 +96,7 @@ export default function CarModal({ car, logo, onClose }) {
       setProgressKey((k) => k + 1);
 
       if (userInteracted.current) {
-        autoplay.current.reset();
+        autoplayRef.current.reset();
         userInteracted.current = false;
       }
     };
@@ -133,9 +114,6 @@ export default function CarModal({ car, logo, onClose }) {
     };
   }, [emblaApi, pauseAutoplay]);
 
-  /* ---------------------------------------------
-     Close + keyboard
-  --------------------------------------------- */
   const close = useCallback(() => onClose?.(), [onClose]);
 
   useEffect(() => {
@@ -148,21 +126,22 @@ export default function CarModal({ car, logo, onClose }) {
     };
 
     window.addEventListener("keydown", onKey);
+
     return () => {
       document.body.style.overflow = "auto";
       window.removeEventListener("keydown", onKey);
     };
   }, [emblaApi, close]);
 
-  /* ---------------------------------------------
-     Formatting
-  --------------------------------------------- */
-  const formattedMileage =
-    car.mileage >= 1000
-      ? `${(car.mileage / 1000).toFixed(0)}K`
-      : car.mileage.toLocaleString("en-GB");
+  const mileage = Number(car.mileage) || 0;
+  const price = Number(car.price) || 0;
 
-  const formattedPrice = car.price.toLocaleString("en-GB");
+  const formattedMileage =
+    mileage >= 1000
+      ? `${(mileage / 1000).toFixed(0)}K`
+      : mileage.toLocaleString("en-GB");
+
+  const formattedPrice = price ? price.toLocaleString("en-GB") : "POA";
 
   const [copied, setCopied] = useState(false);
 
@@ -199,16 +178,14 @@ export default function CarModal({ car, logo, onClose }) {
           animate="visible"
           exit="exit"
         >
-          {/* Close */}
           <button
             onClick={close}
             aria-label="Close"
-            className="absolute right-4 top-4 z-50 rounded-full bg-white/10 p-3 transition hover:bg-white/20"
+            className="absolute right-4 top-4 z-50 rounded-full bg-white/10 p-3 hover:bg-white/20"
           >
             <FaTimes />
           </button>
 
-          {/* Header */}
           <div className="sticky top-0 z-40 bg-linear-to-b from-rose-950/90 to-transparent backdrop-blur px-6 pt-4 pb-4 text-center">
             {logo && <div className="mx-auto mb-2 h-12 w-12">{logo}</div>}
             <h4 className="text-xl md:text-2xl font-bold uppercase tracking-wide text-rose-200">
@@ -216,9 +193,8 @@ export default function CarModal({ car, logo, onClose }) {
             </h4>
           </div>
 
-          {/* Body */}
           <div className="flex-1 overflow-y-auto scrollbar-hide px-6 pb-6">
-            {/* Carousel */}
+            {/* carousel */}
             <div className="mb-6">
               <div
                 ref={emblaRef}
@@ -236,15 +212,16 @@ export default function CarModal({ car, logo, onClose }) {
                         alt={`${car.title} ${i + 1}`}
                         fill
                         priority={i === 0}
-                        sizes="(max-width: 768px) 100vw, 800px"
+                        sizes="(max-width:768px) 100vw, 800px"
                         className="rounded-md object-cover"
+                        unoptimized
                       />
                     </div>
                   ))}
                 </div>
               </div>
 
-              {/* Dots + Play */}
+              {/* dots */}
               <div className="mt-4 flex items-center justify-center gap-3">
                 <div className="flex gap-2 rounded-full bg-white/10 px-3 py-2 backdrop-blur">
                   {images.map((_, i) => {
@@ -258,19 +235,14 @@ export default function CarModal({ car, logo, onClose }) {
                           emblaApi?.scrollTo(i);
                           pauseAutoplay();
                         }}
-                        aria-label={`Go to image ${i + 1}`}
-                        aria-current={isActive ? "true" : undefined}
-                        className={`relative h-2.5 overflow-hidden transition-all duration-300 ease-out
-                           ${isActive ? "w-6" : "w-2.5"}`}
+                        className={`relative h-2.5 overflow-hidden transition-all
+                          ${isActive ? "w-6" : "w-2.5"}`}
                       >
                         <span
                           className={`absolute inset-0 rounded-full
-                                      ${
-                                        isActive
-                                          ? "bg-rose-300/30"
-                                          : "bg-rose-300/40"
-                                      }`}
+                            ${isActive ? "bg-rose-300/30" : "bg-rose-300/40"}`}
                         />
+
                         {isActive && !paused && (
                           <span
                             key={`${i}-${progressKey}`}
@@ -286,8 +258,7 @@ export default function CarModal({ car, logo, onClose }) {
                 {paused && (
                   <button
                     onClick={resumeAutoplay}
-                    aria-label="Resume slideshow"
-                    className="rounded-full bg-white/10 p-2 text-rose-200 transition hover:bg-white/20 hover:text-rose-100"
+                    className="rounded-full bg-white/10 p-2 text-rose-200 hover:bg-white/20"
                   >
                     <FaPlay className="text-sm" />
                   </button>
@@ -301,7 +272,6 @@ export default function CarModal({ car, logo, onClose }) {
 
             <Divider />
 
-            {/* Specs */}
             <div className="mb-6 grid grid-cols-3 gap-6 text-center text-lg text-zinc-200">
               <div>
                 <PiEngineFill className="mx-auto mb-1 text-rose-300" />
@@ -331,11 +301,9 @@ export default function CarModal({ car, logo, onClose }) {
 
             <Divider />
 
-            {/* Share */}
             <button
               onClick={share}
-              className="mx-auto mt-4 flex items-center gap-2 rounded-full bg-rose-400/15 px-6 py-2
-               text-rose-100 transition hover:bg-rose-400/25"
+              className="mx-auto mt-4 flex items-center gap-2 rounded-full bg-rose-400/15 px-6 py-2 text-rose-100 hover:bg-rose-400/25"
             >
               <FaShareAlt />
               {copied ? "Link copied" : "Share"}

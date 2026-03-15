@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import emailjs from "emailjs-com";
+import emailjs from "@emailjs/browser";
 
 const formSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -15,33 +15,47 @@ const formSchema = z.object({
   message: z.string().min(1, "Message is required"),
 });
 
+const SERVICE_ID = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID;
+const TEMPLATE_ID = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID;
+const PUBLIC_KEY = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY;
+
 const EnquiryForm = () => {
   const [status, setStatus] = useState({ type: "", message: "" });
+
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-    reset, // 👈 added reset from useForm
+    reset,
   } = useForm({
     resolver: zodResolver(formSchema),
   });
 
   const onSubmit = async (formData) => {
+    if (!SERVICE_ID || !TEMPLATE_ID || !PUBLIC_KEY) {
+      setStatus({
+        type: "error",
+        message: "Email service configuration missing.",
+      });
+      return;
+    }
+
     try {
-      await emailjs.send(
-        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID,
-        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID,
-        formData,
-        process.env.NEXT_PUBLIC_EMAILJS_USER_ID
-      );
-      setStatus({ type: "success", message: "Message sent successfully!" });
-      reset(); // 👈 clears the form after success
+      await emailjs.send(SERVICE_ID, TEMPLATE_ID, formData, PUBLIC_KEY);
+
+      setStatus({
+        type: "success",
+        message: "Message sent successfully!",
+      });
+
+      reset();
     } catch (error) {
+      console.error("EmailJS Error:", error);
+
       setStatus({
         type: "error",
         message: "Failed to send. Please try again.",
       });
-      console.error("EmailJS Error:", error);
     }
   };
 
@@ -57,6 +71,7 @@ const EnquiryForm = () => {
         <label htmlFor="name" className="sr-only">
           Name
         </label>
+
         <input
           id="name"
           {...register("name")}
@@ -65,6 +80,7 @@ const EnquiryForm = () => {
           aria-invalid={!!errors.name}
           className="w-full p-3 rounded-md border border-rose-900/40 bg-white/95 text-black focus:ring-2 focus:ring-rose-600 focus:border-rose-600"
         />
+
         {errors.name && (
           <p className="text-red-200 text-sm mt-1" role="alert">
             {errors.name.message}
@@ -77,6 +93,7 @@ const EnquiryForm = () => {
         <label htmlFor="email" className="sr-only">
           Email
         </label>
+
         <input
           id="email"
           {...register("email")}
@@ -86,6 +103,7 @@ const EnquiryForm = () => {
           aria-invalid={!!errors.email}
           className="w-full p-3 rounded-md border border-rose-900/40 bg-white/95 text-black focus:ring-2 focus:ring-rose-600 focus:border-rose-600"
         />
+
         {errors.email && (
           <p className="text-red-200 text-sm mt-1" role="alert">
             {errors.email.message}
@@ -98,6 +116,7 @@ const EnquiryForm = () => {
         <label htmlFor="phone" className="sr-only">
           Phone
         </label>
+
         <input
           id="phone"
           {...register("phone")}
@@ -107,6 +126,7 @@ const EnquiryForm = () => {
           aria-invalid={!!errors.phone}
           className="w-full p-3 rounded-md border border-rose-900/40 bg-white/95 text-black focus:ring-2 focus:ring-rose-600 focus:border-rose-600"
         />
+
         {errors.phone && (
           <p className="text-red-200 text-sm mt-1" role="alert">
             {errors.phone.message}
@@ -119,6 +139,7 @@ const EnquiryForm = () => {
         <label htmlFor="message" className="sr-only">
           Message
         </label>
+
         <textarea
           id="message"
           {...register("message")}
@@ -126,6 +147,7 @@ const EnquiryForm = () => {
           aria-invalid={!!errors.message}
           className="w-full h-32 p-3 rounded-md border border-rose-900/40 bg-white/95 text-black focus:ring-2 focus:ring-rose-600 focus:border-rose-600"
         />
+
         {errors.message && (
           <p className="text-red-200 text-sm mt-1" role="alert">
             {errors.message.message}
@@ -133,7 +155,7 @@ const EnquiryForm = () => {
         )}
       </div>
 
-      {/* Status Message */}
+      {/* Status */}
       {status.message && (
         <p
           id="form-status"

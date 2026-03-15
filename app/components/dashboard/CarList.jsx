@@ -4,25 +4,32 @@ import React, { memo } from "react";
 import { AnimatePresence } from "framer-motion";
 import CarListItem from "./CarListItem";
 
-function CarList({ cars, setCars, fetchCars, setModalOpen }) {
+function CarList({ cars, setCars, setModalOpen }) {
+  if (!Array.isArray(cars) || cars.length === 0) {
+    return (
+      <div className="w-full h-full grid place-items-center text-rose-200">
+        No cars found
+      </div>
+    );
+  }
+
   return (
     <div
-      className="w-full mx-auto space-y-4 p-4 overflow-y-auto max-h-[70vh] [&::-webkit-scrollbar]:hidden
-        [-ms-overflow-style:none] [scrollbar-width:none]"
+      className="w-full mx-auto space-y-4 p-4 overflow-y-auto max-h-[70vh]
+      [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
     >
-      <ul className="space-y-4">
-        <AnimatePresence mode="popLayout">
+      <AnimatePresence initial={false} mode="popLayout">
+        <ul className="space-y-4">
           {cars.map((car) => (
             <CarListItem
-              key={car.$id}
+              key={car.id}
               car={car}
               setCars={setCars}
-              fetchCars={fetchCars}
               setModalOpen={setModalOpen}
             />
           ))}
-        </AnimatePresence>
-      </ul>
+        </ul>
+      </AnimatePresence>
     </div>
   );
 }

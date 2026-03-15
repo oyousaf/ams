@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -31,6 +31,19 @@ const EnquiryForm = () => {
     resolver: zodResolver(formSchema),
   });
 
+  useEffect(() => {
+    if (!PUBLIC_KEY) return;
+
+    emailjs.init({
+      publicKey: PUBLIC_KEY,
+      blockHeadless: true,
+      limitRate: {
+        id: "enquiry-form",
+        throttle: 10000,
+      },
+    });
+  }, []);
+
   const onSubmit = async (formData) => {
     if (!SERVICE_ID || !TEMPLATE_ID || !PUBLIC_KEY) {
       setStatus({
@@ -40,8 +53,10 @@ const EnquiryForm = () => {
       return;
     }
 
+    setStatus({ type: "", message: "" });
+
     try {
-      await emailjs.send(SERVICE_ID, TEMPLATE_ID, formData, PUBLIC_KEY);
+      await emailjs.send(SERVICE_ID, TEMPLATE_ID, formData);
 
       setStatus({
         type: "success",
@@ -66,12 +81,10 @@ const EnquiryForm = () => {
       autoComplete="off"
       aria-describedby="form-status"
     >
-      {/* Name */}
       <div>
         <label htmlFor="name" className="sr-only">
           Name
         </label>
-
         <input
           id="name"
           {...register("name")}
@@ -80,7 +93,6 @@ const EnquiryForm = () => {
           aria-invalid={!!errors.name}
           className="w-full p-3 rounded-md border border-rose-900/40 bg-white/95 text-black focus:ring-2 focus:ring-rose-600 focus:border-rose-600"
         />
-
         {errors.name && (
           <p className="text-red-200 text-sm mt-1" role="alert">
             {errors.name.message}
@@ -88,12 +100,10 @@ const EnquiryForm = () => {
         )}
       </div>
 
-      {/* Email */}
       <div>
         <label htmlFor="email" className="sr-only">
           Email
         </label>
-
         <input
           id="email"
           {...register("email")}
@@ -103,7 +113,6 @@ const EnquiryForm = () => {
           aria-invalid={!!errors.email}
           className="w-full p-3 rounded-md border border-rose-900/40 bg-white/95 text-black focus:ring-2 focus:ring-rose-600 focus:border-rose-600"
         />
-
         {errors.email && (
           <p className="text-red-200 text-sm mt-1" role="alert">
             {errors.email.message}
@@ -111,12 +120,10 @@ const EnquiryForm = () => {
         )}
       </div>
 
-      {/* Phone */}
       <div>
         <label htmlFor="phone" className="sr-only">
           Phone
         </label>
-
         <input
           id="phone"
           {...register("phone")}
@@ -126,7 +133,6 @@ const EnquiryForm = () => {
           aria-invalid={!!errors.phone}
           className="w-full p-3 rounded-md border border-rose-900/40 bg-white/95 text-black focus:ring-2 focus:ring-rose-600 focus:border-rose-600"
         />
-
         {errors.phone && (
           <p className="text-red-200 text-sm mt-1" role="alert">
             {errors.phone.message}
@@ -134,12 +140,10 @@ const EnquiryForm = () => {
         )}
       </div>
 
-      {/* Message */}
       <div>
         <label htmlFor="message" className="sr-only">
           Message
         </label>
-
         <textarea
           id="message"
           {...register("message")}
@@ -147,7 +151,6 @@ const EnquiryForm = () => {
           aria-invalid={!!errors.message}
           className="w-full h-32 p-3 rounded-md border border-rose-900/40 bg-white/95 text-black focus:ring-2 focus:ring-rose-600 focus:border-rose-600"
         />
-
         {errors.message && (
           <p className="text-red-200 text-sm mt-1" role="alert">
             {errors.message.message}
@@ -155,7 +158,6 @@ const EnquiryForm = () => {
         )}
       </div>
 
-      {/* Status */}
       {status.message && (
         <p
           id="form-status"
@@ -168,18 +170,17 @@ const EnquiryForm = () => {
         </p>
       )}
 
-      {/* Submit */}
       <button
         type="submit"
         disabled={isSubmitting}
         className={`w-full flex items-center justify-center gap-2 py-3 bg-rose-600 text-white rounded-md font-semibold hover:glow-pulse hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-rose-600 ${
-          isSubmitting && "opacity-70 cursor-not-allowed"
+          isSubmitting ? "opacity-70 cursor-not-allowed" : ""
         }`}
         aria-busy={isSubmitting}
       >
         {isSubmitting ? (
           <>
-            <span className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+            <span className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
             Sending...
           </>
         ) : (

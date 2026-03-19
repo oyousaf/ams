@@ -1,21 +1,21 @@
 # 🚗 Ace Motor Sales
 
 A modern, high-performance **pre-owned car showroom** built with **Next.js 16** and the App Router.  
-Designed for smooth browsing, rich motion, and a premium automotive feel — without sacrificing performance or accessibility.
+Designed for smooth browsing, rich motion, and a premium automotive feel while maintaining strong performance and accessibility.
 
 ---
 
 ## ✨ Highlights
 
-- ⚡ **Next.js 16 (App Router)** — latest framework features, fast routing, modern architecture
+- ⚡ **Next.js 16 (App Router)** — fast routing, modern architecture
 - 🎞️ **Advanced image carousel** — Embla-powered with autoplay, progress indicators, and user-controlled playback
-- 🎨 **Framer Motion animations** — subtle, spring-based motion throughout the UI
-- 📱 **Responsive & mobile-first** — optimised for small screens and touch interactions
-- 🧠 **User-intent aware UX** — autoplay pauses on interaction, resumes only when requested
-- 🖼️ **High-quality imagery** — Next/Image with preloading and decoding for smooth transitions
-- 🧾 **Headless CMS backend** — Appwrite for content and data management
+- 🎨 **Framer Motion animations** — subtle, spring-based motion
+- 📱 **Responsive & mobile-first** — optimised for touch and small screens
+- 🧠 **User-intent aware UX** — autoplay pauses on interaction and resumes manually
+- 🖼️ **High-quality imagery** — Next/Image with preloading and decoding
+- 🗄️ **PostgreSQL backend** — scalable relational database
 - 🎯 **SEO & performance focused** — next-sitemap, Vercel Analytics, Speed Insights
-- ♿ **Accessibility-aware** — keyboard navigation, ARIA roles, reduced-motion friendly
+- ♿ **Accessibility-aware** — keyboard navigation, ARIA roles, reduced-motion support
 
 ---
 
@@ -24,7 +24,7 @@ Designed for smooth browsing, rich motion, and a premium automotive feel — wit
 ### Core
 
 - ⚛️ **React 18**
-- ▲ **Next.js 16** (App Router)
+- ▲ **Next.js 16 (App Router)**
 - 💨 **Tailwind CSS v4**
 - 🎬 **Framer Motion**
 
@@ -34,8 +34,9 @@ Designed for smooth browsing, rich motion, and a premium automotive feel — wit
 - 🎨 **React Icons**
 - 🔔 **Sonner / React Toastify**
 
-### Data & Forms
+### Data & Backend
 
+- 🗄️ **PostgreSQL**
 - 🧪 **Zod**
 - 📝 **React Hook Form**
 
@@ -43,12 +44,12 @@ Designed for smooth browsing, rich motion, and a premium automotive feel — wit
 
 ## 🧠 Notable UI Behaviour
 
-- ▶️ **Autoplay carousel** with visual progress
-- ✋ **Instant pause on user interaction** (click, drag, dot navigation)
-- ▶️ **Manual resume control** via a subtle play button
-- 🧊 **No stutter / no drift** — autoplay and animations stay perfectly in sync
+- ▶️ **Autoplay carousel** with visual progress tracking
+- ✋ **Instant pause on interaction** (click, drag, navigation)
+- ▶️ **Manual resume control** via subtle play button
+- 🧊 **No stutter / no drift** — animations stay in sync
 - 🧼 **Scrollable modals without visible scrollbars**
-- 🧭 Keyboard navigation support (ESC, arrows)
+- 🧭 **Keyboard navigation support** (ESC, arrow keys)
 
 ---
 
@@ -61,11 +62,11 @@ This project prioritises:
 - **User control over automation**
 - **Performance as a feature**
 
-Everything animates — but nothing distracts.
+Everything animates, nothing distracts.
 
 ---
 
 ## 📌 Status
 
-💚 **Actively developed with love, care, and attention — built with long-term vision.**  
-Production-ready, easy to extend, and designed with performance, clarity, and user experience as first-class concerns.
+💚 **Actively developed and production-ready.**  
+Built with long-term scalability in mind, easy to extend, and focused on performance, clarity, and user experience.

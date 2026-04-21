@@ -21,10 +21,9 @@ export default function LiveChat() {
     return () => clearInterval(interval);
   }, []);
 
-  // Match scroll behaviour
   useEffect(() => {
     const handleScroll = () => {
-      setShow(window.scrollY > 600);
+      setShow(window.scrollY > 700);
     };
 
     window.addEventListener("scroll", handleScroll);
@@ -56,7 +55,7 @@ export default function LiveChat() {
                 fixed bottom-6 left-6 z-50 w-14 h-14 rounded-full flex items-center justify-center text-white surface-primary
               border border-white/10 backdrop-blur-md shadow-lg transition-all duration-300 hover:scale-110
               hover:shadow-[0_0_25px_rgba(244,63,94,0.45)] ${ready ? "animate-pulseRing" : ""}
-            `} 
+            `}
           >
             <FiMessageCircle size={25} />
           </motion.button>

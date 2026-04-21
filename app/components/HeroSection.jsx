@@ -25,7 +25,7 @@ const HeroSection = () => {
         fill
         priority
         fetchPriority="high"
-        quality={30}
+        quality={55}
         sizes="100vw"
         className="absolute inset-0 z-0 object-cover"
       />
@@ -34,7 +34,7 @@ const HeroSection = () => {
       <div className="absolute inset-0 z-10 bg-linear-to-br from-black/70 via-zinc-900/60 to-black/70" />
 
       {/* Blur layer */}
-      <div className="pointer-events-none absolute inset-0 z-10 backdrop-blur-[5px]" />
+      <div className="pointer-events-none absolute inset-0 z-10 backdrop-blur-[1px]" />
 
       {/* Content */}
       <div className="relative z-20 w-full max-w-7xl mx-auto">

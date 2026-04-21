@@ -54,7 +54,7 @@ const About = () => {
               y: -6,
               transition: { type: "spring", stiffness: 420, damping: 26 },
             }}
-            className="tile-glow group flex flex-col items-center rounded-2xl p-6 surface-primary will-change-transform"
+            className="tile-glow group flex flex-col items-center rounded-2xl p-6 surface-primary"
           >
             {/* Icon */}
             <tile.icon className="mb-4 text-4xl text-rose-400" />
@@ -85,7 +85,6 @@ const About = () => {
         >
           {gallery.map((src, index) => {
             const isWide = index === 1 || index === 4;
-            const isFirst = index === 0;
 
             return (
               <motion.div
@@ -98,9 +97,7 @@ const About = () => {
                 <ImageTile
                   src={src}
                   alt={`Ace Motor Sales gallery image ${index + 1}`}
-                  priority={isFirst}
                   isWide={isWide}
-                  isFirst={isFirst}
                 />
               </motion.div>
             );

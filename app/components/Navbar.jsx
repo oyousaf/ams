@@ -89,7 +89,7 @@ export default function Navbar() {
       {/* ================= FLOATING NAV ================= */}
       <nav className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2rem)] max-w-7xl rounded-2xl bg-black border border-white/10 backdrop-blur-xl shadow-xl text-white">
         <div className="flex items-center justify-between px-4 py-3 sm:px-6">
-          <motion.div
+          <motion.button
             whileHover={{ scale: 1.05 }}
             transition={springIcon}
             className="cursor-pointer"
@@ -102,7 +102,7 @@ export default function Navbar() {
               className="w-32 sm:w-40 md:w-44"
               sizes="(max-width: 640px) 128px, (max-width: 768px) 160px, 176px"
             />
-          </motion.div>
+          </motion.button>
 
           <ul className="hidden items-center gap-6 md:flex lg:gap-10">
             {navLinks.map(({ id, href, name }) => (

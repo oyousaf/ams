@@ -5,6 +5,7 @@ import Reviews from "@/components/Reviews";
 
 import ScrollToTopWrapper from "@/components/ScrollToTopWrapper";
 import SnowWrapper from "@/components/SnowWrapper";
+import LiveChat from "@/components/LiveChat";
 
 // ---------- Homepage Metadata ----------
 export const metadata = {
@@ -77,6 +78,7 @@ export default function HomePage() {
       </section>
 
       {/* Utilities */}
+      <LiveChat />
       <ScrollToTopWrapper />
       <SnowWrapper />
     </>

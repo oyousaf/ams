@@ -78,9 +78,9 @@ export default function HomePage() {
       </section>
 
       {/* Utilities */}
-      <LiveChat />
       <ScrollToTop />
       <SnowWrapper />
+      <LiveChat />
     </>
   );
 }

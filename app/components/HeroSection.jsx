@@ -26,7 +26,7 @@ const HeroSection = () => {
         priority
         fetchPriority="high"
         decoding="async"
-        quality={85}
+        quality={70}
         sizes="100vw"
         className="absolute inset-0 z-0 scale-105 object-cover"
       />

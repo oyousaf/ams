@@ -1,74 +1,45 @@
 "use client";
 
-import { aboutTiles, gallery } from "@/constants";
+import { aboutTiles, gallery } from "../constants";
 import ImageTile from "./ImageTile";
 import { motion } from "framer-motion";
 
-/* ---------------------------------------------
-   Motion
---------------------------------------------- */
-const container = {
-  visible: { transition: { staggerChildren: 0.08 } },
-};
-
-const item = {
-  hidden: { opacity: 0, y: 20 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.45, ease: "easeOut" },
-  },
-};
-
-/* ---------------------------------------------
-   Component
---------------------------------------------- */
 const About = () => {
   return (
-    <section
-      id="about"
-      aria-labelledby="about-heading"
-      className="py-24 px-4 lg:px-8"
-    >
-      {/* Section heading */}
+    <section aria-labelledby="about-heading" className="py-24 px-4 lg:px-8">
       <h2
         id="about-heading"
-        className="mb-14 text-center text-4xl font-bold tracking-tight text-white md:text-5xl"
+        className="text-4xl md:text-5xl font-bold text-center mb-12 text-white tracking-tight"
       >
-        What Sets Us Apart
+        About Us
       </h2>
 
       {/* Feature Tiles */}
       <motion.div
-        className="mx-auto grid max-w-7xl grid-cols-1 gap-8 text-center sm:grid-cols-2 lg:grid-cols-4"
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto text-center"
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, amount: 0.25 }}
-        variants={container}
+        viewport={{ once: true, amount: 0.2 }}
+        variants={{
+          hidden: {},
+          visible: {
+            transition: { staggerChildren: 0.12 },
+          },
+        }}
       >
         {aboutTiles.map((tile, index) => (
           <motion.div
             key={index}
-            variants={item}
-            whileHover={{
-              y: -6,
-              transition: { type: "spring", stiffness: 420, damping: 26 },
-            }}
-            className="tile-glow group flex flex-col items-center rounded-2xl p-6 surface-primary"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ type: "spring", stiffness: 200, damping: 20 }}
+            whileHover={{ scale: 1.05, rotateZ: 1 }}
+            className="tile-glow flex flex-col items-center bg-linear-to-br from-rose-800 via-rose-700 to-rose-900 p-6 rounded-2xl shadow-inner border-2 border-transparent hover:border-rose-500/80 duration-200"
           >
-            {/* Icon */}
-            <tile.icon className="mb-4 text-4xl text-rose-400" />
-
-            {/* Tile title */}
-            <h3
-              className="mb-2 text-xl font-semibold text-rose-200 group-hover:text-rose-100 transition-colors
-              "
-            >
-              {tile.title}
-            </h3>
-
-            {/* Description */}
-            <p className="text-base leading-relaxed text-zinc-300">
+            <tile.icon className="text-white text-5xl mb-4 drop-shadow-md" />
+            <h3 className="text-2xl font-bold text-white mb-2">{tile.title}</h3>
+            <p className="md:text-lg text-zinc-100 leading-relaxed">
               {tile.description}
             </p>
           </motion.div>
@@ -76,28 +47,42 @@ const About = () => {
       </motion.div>
 
       {/* Gallery */}
-      <div className="mx-auto mt-20 max-w-7xl">
+      <div className="mt-20 max-w-7xl mx-auto">
         <motion.div
-          className="grid grid-cols-1 gap-4 md:grid-cols-4"
-          variants={container}
-          initial={false}
-          animate="visible"
+          className="grid grid-cols-1 md:grid-cols-4 gap-4"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
+          variants={{
+            hidden: { opacity: 0 },
+            visible: {
+              opacity: 1,
+              transition: { staggerChildren: 0.12 },
+            },
+          }}
         >
           {gallery.map((src, index) => {
             const isWide = index === 1 || index === 4;
+            const isFirst = index === 0;
 
             return (
               <motion.div
                 key={index}
-                variants={item}
-                className={`overflow-hidden rounded-xl shadow-md ${
+                className={`flex justify-center ${
                   isWide ? "md:col-span-2" : ""
-                }`}
+                } overflow-hidden rounded-xl shadow-lg`}
+                variants={{
+                  hidden: { opacity: 0, y: 40 },
+                  visible: { opacity: 1, y: 0 },
+                }}
+                transition={{ type: "spring", stiffness: 180, damping: 18 }}
               >
                 <ImageTile
                   src={src}
-                  alt={`Ace Motor Sales gallery image ${index + 1}`}
+                  alt={`Gallery image ${index + 1}`}
+                  priority={isFirst}
                   isWide={isWide}
+                  isFirst={isFirst}
                 />
               </motion.div>
             );

@@ -3,7 +3,7 @@ import About from "@/components/About";
 import LatestCars from "@/components/LatestCars";
 import Reviews from "@/components/Reviews";
 
-import ScrollToTopWrapper from "@/components/ScrollToTopWrapper";
+import ScrollToTop from "@/components/ScrollToTop";
 import SnowWrapper from "@/components/SnowWrapper";
 import LiveChat from "@/components/LiveChat";
 
@@ -79,7 +79,7 @@ export default function HomePage() {
 
       {/* Utilities */}
       <LiveChat />
-      <ScrollToTopWrapper />
+      <ScrollToTop />
       <SnowWrapper />
     </>
   );

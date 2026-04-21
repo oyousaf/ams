@@ -146,9 +146,9 @@ export default function Navbar() {
             aria-label="Toggle navigation menu"
           >
             {menuOpen ? (
-              <RiCloseLine className="text-5xl text-rose-600" />
+              <RiCloseLine className="text-4xl text-rose-600" />
             ) : (
-              <RiMenu3Line className="text-5xl text-rose-600" />
+              <RiMenu3Line className="text-4xl text-rose-600" />
             )}
           </motion.button>
         </div>

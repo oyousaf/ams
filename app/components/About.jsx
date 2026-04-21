@@ -98,7 +98,6 @@ const About = () => {
                   src={src}
                   alt={`Ace Motor Sales gallery image ${index + 1}`}
                   isWide={isWide}
-
                 />
               </motion.div>
             );

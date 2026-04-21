@@ -98,7 +98,6 @@ export default function Navbar() {
             <Image
               src={logo}
               alt="Ace Motor Sales"
-              priority
               draggable={false}
               className="w-32 sm:w-40 md:w-44"
             />

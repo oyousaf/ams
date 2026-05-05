@@ -7,20 +7,19 @@ import ScrollToTop from "@/components/ScrollToTop";
 import SnowWrapper from "@/components/SnowWrapper";
 import LiveChat from "@/components/LiveChat";
 
-// ---------- Homepage Metadata ----------
 export const metadata = {
-  title: "Used Cars in Heckmondwike with Nationwide UK Delivery",
+  title: "Used Cars in Heckmondwike | West Yorkshire Car Dealer",
   description:
-    "Trusted used car dealership in Heckmondwike, West Yorkshire. Quality pre-owned vehicles, fully inspected, with nationwide UK delivery.",
+    "Browse used cars for sale in Heckmondwike, West Yorkshire. Fully inspected vehicles with competitive prices and nationwide UK delivery available.",
 
   alternates: {
     canonical: "https://acemotorsales.uk",
   },
 
   openGraph: {
-    title: "Ace Motor Sales | Used Cars in Heckmondwike – UK Delivery",
+    title: "Used Cars in Heckmondwike | Ace Motor Sales",
     description:
-      "Quality pre-owned vehicles from an independent Heckmondwike dealership, with UK-wide delivery.",
+      "Explore quality used cars in Heckmondwike with UK-wide delivery. Trusted independent dealer.",
     url: "https://acemotorsales.uk",
     siteName: "Ace Motor Sales",
     locale: "en_GB",
@@ -30,16 +29,16 @@ export const metadata = {
         url: "https://acemotorsales.uk/hero.jpg",
         width: 1200,
         height: 630,
-        alt: "Ace Motor Sales used car forecourt in Heckmondwike",
+        alt: "Used cars at Ace Motor Sales Heckmondwike",
       },
     ],
   },
 
   twitter: {
     card: "summary_large_image",
-    title: "Ace Motor Sales | Used Cars in Heckmondwike",
+    title: "Used Cars in Heckmondwike | Ace Motor Sales",
     description:
-      "Quality pre-owned vehicles with UK-wide delivery from an independent Heckmondwike dealer.",
+      "Quality used cars with UK delivery from a trusted Heckmondwike dealership.",
     images: ["https://acemotorsales.uk/hero.jpg"],
   },
 };
@@ -47,10 +46,8 @@ export const metadata = {
 export default function HomePage() {
   return (
     <>
-      {/* Hero */}
       <HeroSection />
 
-      {/* About */}
       <section
         id="about"
         aria-labelledby="about-heading"
@@ -59,7 +56,6 @@ export default function HomePage() {
         <About />
       </section>
 
-      {/* Latest Cars */}
       <section
         id="cars"
         aria-labelledby="cars-heading"
@@ -68,7 +64,6 @@ export default function HomePage() {
         <LatestCars />
       </section>
 
-      {/* Reviews */}
       <section
         id="reviews"
         aria-labelledby="reviews-heading"
@@ -77,7 +72,6 @@ export default function HomePage() {
         <Reviews />
       </section>
 
-      {/* Utilities */}
       <ScrollToTop />
       <SnowWrapper />
       <LiveChat />

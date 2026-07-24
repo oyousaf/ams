@@ -87,6 +87,10 @@ export const gallery = [
 
 export const reviews = [
   {
+    name: "Ingus",
+    feedback: `I had a great experience with AMS and would recommend them to anyone buying a used car who understands the financial benefits of choosing a vehicle that's priced below the market average.`,
+  },
+  {
     name: "Jack P",
     feedback: `Can not recommend highly enough. Very friendly, accommodating and knowledgable. Car purchased needed a few things for MOT; AMS went above and beyond even sticking on brand new tyres.
     I popped in to browse after seeing a BMW I liked online, not being dead set on a specific car I had a conversation with the owner who suggested the Audi A5 Black Edition that he was currently driving (at a significant discount to the online listing). Timing belt and water pump recently done, engine is sweet as a nut, immaculate condition inside and out.
@@ -127,10 +131,6 @@ export const reviews = [
     name: "Daniel L",
     feedback:
       "Bought a Mini Cooper a few weeks ago. Amazing service from start to finish. Was very transparent with everything and gave a 5* service. Will definitely buy from Ace Motor Sales again. Daniel and Rebekah.",
-  },
-  {
-    name: "Omar 🍉",
-    feedback: `It was a pleasure dealing with AMS! They offered excellent service from start to finish, were attentive to all my needs, and provide a fantastic selection of quality vehicles. Fez was professional, friendly, and knowledgeable. Highly recommend!`,
   },
 ];
 

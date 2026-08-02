@@ -87,6 +87,11 @@ export const gallery = [
 
 export const reviews = [
   {
+    name: "Ashleigh N",
+    feedback:
+      "Just purchased my stepdaughter's new car. The staff were fantastic and incredibly helpful. They answered every question we had and made the whole process easy from start to finish. 10/10! We will definitely be back and will happily recommend to our family and friends.",
+  },
+  {
     name: "Ingus",
     feedback: `I had a great experience with AMS and would recommend them to anyone buying a used car who understands the financial benefits of choosing a vehicle that's priced below the market average.`,
   },
@@ -126,11 +131,6 @@ export const reviews = [
     name: "Mohammad R",
     feedback:
       "Bought my car 5 months ago now and I honestly couldn’t ask for much more! Brilliant service. Reasonable prices. Lovely variety of stock.",
-  },
-  {
-    name: "Daniel L",
-    feedback:
-      "Bought a Mini Cooper a few weeks ago. Amazing service from start to finish. Was very transparent with everything and gave a 5* service. Will definitely buy from Ace Motor Sales again. Daniel and Rebekah.",
   },
 ];
 

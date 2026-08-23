@@ -26,8 +26,7 @@ const fadeIn = {
 
 const MAX_IMAGES = 15;
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") || "";
-const endpoint = API_BASE ? `${API_BASE}/api/cars` : "/api/cars";
+const endpoint = "/api/cars";
 
 function numOrEmpty(value) {
   if (value === "" || value === null || value === undefined) return "";

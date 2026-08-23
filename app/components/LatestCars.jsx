@@ -9,7 +9,8 @@ import SkeletonCarCard from "./SkeletonCarCard";
 import SortDropdown from "./SortDropdown";
 import { normalizeCar } from "@/lib/normaliseCar";
 
-const API = process.env.NEXT_PUBLIC_API_URL;
+const API = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") || "";
+const API_ENDPOINT = API ? `${API}/api/cars` : "/api/cars";
 
 const sortOptions = [
   { key: "mileage", label: "Mileage" },
@@ -58,7 +59,7 @@ const LatestCars = () => {
         setLoading(true);
         setError(null);
 
-        const res = await fetch(`${API}/api/cars`, {
+        const res = await fetch(API_ENDPOINT, {
           cache: "no-store",
         });
 

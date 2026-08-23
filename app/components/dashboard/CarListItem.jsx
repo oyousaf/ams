@@ -9,7 +9,7 @@ import Image from "next/image";
 import { FiEdit2, FiTrash2, FiSave, FiX } from "react-icons/fi";
 import { resolveImage } from "@/lib/resolveImage";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "";
+const API_BASE = "";
 const FALLBACK_IMAGE = "/fallback.webp";
 
 const ENGINE_TYPES = ["Electric", "Diesel", "Hybrid", "Petrol"];

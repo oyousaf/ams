@@ -17,8 +17,6 @@ import LoadingSpinner from "./LoadingSpinner";
 CONFIG
 -------------------------------------------------- */
 
-const SESSION_KEY = "dashboard_session";
-const SESSION_EXPIRY = "dashboard_session_expiry";
 const DEBOUNCE_MS = 300;
 
 const sortOptions = [
@@ -84,12 +82,6 @@ function mapCar(c) {
   };
 }
 
-const getExpiryDate = (months = 6) => {
-  const d = new Date();
-  d.setMonth(d.getMonth() + months);
-  return d;
-};
-
 /* --------------------------------------------------
 DASHBOARD
 -------------------------------------------------- */
@@ -121,19 +113,20 @@ SESSION CHECK
   useEffect(() => {
     setHydrated(true);
 
-    const saved = sessionStorage.getItem(SESSION_KEY);
-    const expiry = sessionStorage.getItem(SESSION_EXPIRY);
+    const checkSession = async () => {
+      try {
+        const res = await fetch("/api/dashboard/session", {
+          cache: "no-store",
+        });
 
-    if (
-      saved === process.env.NEXT_PUBLIC_DASHBOARD_PASSKEY &&
-      expiry &&
-      new Date(expiry) > new Date()
-    ) {
-      setIsAuthenticated(true);
-    } else {
-      sessionStorage.removeItem(SESSION_KEY);
-      sessionStorage.removeItem(SESSION_EXPIRY);
-    }
+        const data = await res.json();
+        setIsAuthenticated(Boolean(data?.authenticated));
+      } catch {
+        setIsAuthenticated(false);
+      }
+    };
+
+    checkSession();
   }, []);
 
   /* --------------------------------------------------
@@ -144,13 +137,14 @@ FETCH CARS
     setLoading(true);
 
     try {
-      const res = await fetch("https://api.acemotorsales.uk/api/cars", {
+      const res = await fetch("/api/cars", {
         cache: "no-store",
       });
 
       const data = await res.json();
+      const rows = Array.isArray(data) ? data : data.cars ?? [];
 
-      const mapped = data.map(mapCar);
+      const mapped = rows.map(mapCar);
 
       setCars(mapped);
     } catch {
@@ -222,19 +216,30 @@ DERIVED LIST
 AUTH
 -------------------------------------------------- */
 
-  const handlePass = (e) => {
+  const handlePass = async (e) => {
     e.preventDefault();
 
-    if (passkey === process.env.NEXT_PUBLIC_DASHBOARD_PASSKEY) {
-      const expiry = getExpiryDate().toISOString();
+    try {
+      const res = await fetch("/api/dashboard/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ passkey }),
+      });
 
-      sessionStorage.setItem(SESSION_KEY, passkey);
-      sessionStorage.setItem(SESSION_EXPIRY, expiry);
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok) {
+        setError(data?.error || "Incorrect passkey");
+        return;
+      }
 
       setIsAuthenticated(true);
       setError("");
-    } else {
-      setError("Incorrect passkey");
+      setPasskey("");
+    } catch {
+      setError("Unable to sign in");
     }
   };
 
@@ -302,9 +307,22 @@ UI
         <div className="max-w-7xl mx-auto h-full flex items-center justify-between">
           <h1 className="text-2xl font-bold">Dashboard</h1>
 
-          <Link href="/">
-            <GoHomeFill size={28} />
-          </Link>
+          <div className="flex items-center gap-4">
+            <button
+              type="button"
+              onClick={async () => {
+                await fetch("/api/dashboard/logout", { method: "POST" });
+                setIsAuthenticated(false);
+              }}
+              className="rounded-full bg-rose-700 px-3 py-1 text-sm font-semibold text-white"
+            >
+              Logout
+            </button>
+
+            <Link href="/">
+              <GoHomeFill size={28} />
+            </Link>
+          </div>
         </div>
       </header>
 

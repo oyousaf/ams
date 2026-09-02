@@ -87,6 +87,11 @@ export const gallery = [
 
 export const reviews = [
   {
+    name: "Christina C",
+    feedback:
+      "I bought my car from here and the service was impeccable from start to finish. Adam was incredibly friendly, approachable and professional, making the entire experience smooth and completely stress-free. Nothing was ever too much trouble, and I honestly couldn’t thank him enough for all his help. I would highly recommend them to anyone looking to buy a car!",
+  },
+  {
     name: "Ashleigh N",
     feedback:
       "Just purchased my stepdaughter's new car. The staff were fantastic and incredibly helpful. They answered every question we had and made the whole process easy from start to finish. 10/10! We will definitely be back and will happily recommend to our family and friends.",
@@ -126,11 +131,6 @@ export const reviews = [
     name: "Saeed A",
     feedback:
       "Top quality cars & service. Had my car 3 months now and have no complaints whatsoever. I had one issue within the warranty period and it got rectified without hesitation by the guys at Ace Motor Sales. Highly recommend!",
-  },
-  {
-    name: "Mohammad R",
-    feedback:
-      "Bought my car 5 months ago now and I honestly couldn’t ask for much more! Brilliant service. Reasonable prices. Lovely variety of stock.",
   },
 ];
 

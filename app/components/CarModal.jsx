@@ -52,7 +52,7 @@ export default function CarModal({ car, logo, onClose }) {
     });
   }, [images]);
 
-  const autoplayRef = useRef(
+  const [autoplay] = useState(() =>
     Autoplay({
       delay: AUTOPLAY_MS,
       stopOnInteraction: false,
@@ -66,7 +66,7 @@ export default function CarModal({ car, logo, onClose }) {
       align: "center",
       containScroll: "trimSnaps",
     },
-    [autoplayRef.current],
+    [autoplay],
   );
 
   const [active, setActive] = useState(0);
@@ -77,16 +77,16 @@ export default function CarModal({ car, logo, onClose }) {
 
   const pauseAutoplay = useCallback(() => {
     userInteracted.current = true;
-    autoplayRef.current.stop();
+    autoplay.stop();
     setPaused(true);
-  }, []);
+  }, [autoplay]);
 
   const resumeAutoplay = useCallback(() => {
-    autoplayRef.current.play();
-    autoplayRef.current.reset();
+    autoplay.play();
+    autoplay.reset();
     setProgressKey((k) => k + 1);
     setPaused(false);
-  }, []);
+  }, [autoplay]);
 
   useEffect(() => {
     if (!emblaApi) return;
@@ -96,7 +96,7 @@ export default function CarModal({ car, logo, onClose }) {
       setProgressKey((k) => k + 1);
 
       if (userInteracted.current) {
-        autoplayRef.current.reset();
+        autoplay.reset();
         userInteracted.current = false;
       }
     };
@@ -112,7 +112,7 @@ export default function CarModal({ car, logo, onClose }) {
       emblaApi.off("reInit", sync);
       emblaApi.off("pointerDown", pauseAutoplay);
     };
-  }, [emblaApi, pauseAutoplay]);
+  }, [emblaApi, pauseAutoplay, autoplay]);
 
   const close = useCallback(() => onClose?.(), [onClose]);
 
@@ -171,6 +171,7 @@ export default function CarModal({ car, logo, onClose }) {
         <motion.div
           role="dialog"
           aria-modal="true"
+          aria-labelledby="car-modal-title"
           className="relative flex max-h-[92vh] w-full max-w-3xl flex-col overflow-hidden rounded-xl
            bg-linear-to-br from-rose-900 via-rose-800 to-rose-950 text-white shadow-xl"
           variants={modal}
@@ -188,9 +189,12 @@ export default function CarModal({ car, logo, onClose }) {
 
           <div className="sticky top-0 z-40 bg-linear-to-b from-rose-950/90 to-transparent backdrop-blur px-6 pt-4 pb-4 text-center">
             {logo && <div className="mx-auto mb-2 h-12 w-12">{logo}</div>}
-            <h4 className="text-xl md:text-2xl font-bold uppercase tracking-wide text-rose-200">
+            <h3
+              id="car-modal-title"
+              className="text-xl md:text-2xl font-bold uppercase tracking-wide text-rose-100"
+            >
               {car.title}
-            </h4>
+            </h3>
           </div>
 
           <div className="flex-1 overflow-y-auto scrollbar-hide px-6 pb-6">
@@ -214,7 +218,6 @@ export default function CarModal({ car, logo, onClose }) {
                         priority={i === 0}
                         sizes="(max-width:768px) 100vw, 800px"
                         className="rounded-md object-cover"
-                        unoptimized
                       />
                     </div>
                   ))}

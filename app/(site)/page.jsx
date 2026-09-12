@@ -6,6 +6,7 @@ import Reviews from "@/components/Reviews";
 import ScrollToTop from "@/components/ScrollToTop";
 import SnowWrapper from "@/components/SnowWrapper";
 import LiveChat from "@/components/LiveChat";
+import { fetchCarsServer } from "@/lib/fetchCars";
 
 export const metadata = {
   title: "Used Cars in Heckmondwike | West Yorkshire Car Dealer",
@@ -26,9 +27,9 @@ export const metadata = {
     type: "website",
     images: [
       {
-        url: "https://acemotorsales.uk/hero.jpg",
-        width: 1200,
-        height: 630,
+        url: "https://acemotorsales.uk/hero.webp",
+        width: 968,
+        height: 726,
         alt: "Used cars at Ace Motor Sales Heckmondwike",
       },
     ],
@@ -39,11 +40,13 @@ export const metadata = {
     title: "Used Cars in Heckmondwike | Ace Motor Sales",
     description:
       "Quality used cars with UK delivery from a trusted Heckmondwike dealership.",
-    images: ["https://acemotorsales.uk/hero.jpg"],
+    images: ["https://acemotorsales.uk/hero.webp"],
   },
 };
 
-export default function HomePage() {
+export default async function HomePage() {
+  const initialCars = await fetchCarsServer();
+
   return (
     <>
       <HeroSection />
@@ -61,7 +64,7 @@ export default function HomePage() {
         aria-labelledby="cars-heading"
         className="scroll-mt-24"
       >
-        <LatestCars />
+        <LatestCars initialCars={initialCars} />
       </section>
 
       <section

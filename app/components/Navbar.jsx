@@ -47,7 +47,12 @@ export default function Navbar() {
   }, [menuOpen]);
 
   /* Route change close */
-  useEffect(() => closeMenu(), [pathname]);
+  useEffect(() => {
+    // Resetting UI state when a prop/derived value (pathname) changes -
+    // the React-docs-endorsed pattern, flagged by the newer strict lint rule.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    closeMenu();
+  }, [pathname]);
 
   /* Escape close */
   useEffect(() => {

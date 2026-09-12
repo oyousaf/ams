@@ -45,18 +45,20 @@ function enrichCar(car) {
   };
 }
 
-const LatestCars = () => {
-  const [cars, setCars] = useState([]);
-  const [loading, setLoading] = useState(true);
+const LatestCars = ({ initialCars = [] }) => {
+  const [rawCars, setRawCars] = useState(initialCars);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState(null);
   const [sortOption, setSortOption] = useState("newest");
   const [selectedCar, setSelectedCar] = useState(null);
   const [isDropdownOpen, setDropdownOpen] = useState(false);
 
   useEffect(() => {
+    let cancelled = false;
+
     const fetchCars = async () => {
       try {
-        setLoading(true);
+        setIsRefreshing(true);
         setError(null);
 
         const res = await fetch(API_ENDPOINT, {
@@ -66,22 +68,29 @@ const LatestCars = () => {
         if (!res.ok) throw new Error("Failed to fetch cars");
 
         const data = await res.json();
-
         const rows = Array.isArray(data) ? data : (data.cars ?? []);
 
-        const normalized = rows.map((row) => enrichCar(normalizeCar(row)));
-
-        setCars(normalized);
+        if (!cancelled) setRawCars(rows.map(normalizeCar));
       } catch (err) {
         console.error(err);
-        setError("Unable to load vehicles. Please try again shortly.");
+        if (!cancelled) {
+          setError("Unable to load vehicles. Please try again shortly.");
+        }
       } finally {
-        setLoading(false);
+        if (!cancelled) setIsRefreshing(false);
       }
     };
 
     fetchCars();
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
+
+  const cars = useMemo(() => rawCars.map(enrichCar), [rawCars]);
+  const showSkeleton = isRefreshing && cars.length === 0;
+  const showError = Boolean(error) && cars.length === 0;
 
   const sortedCars = useMemo(() => {
     let result = [...cars];
@@ -171,7 +180,7 @@ const LatestCars = () => {
         />
       </div>
 
-      {loading ? (
+      {showSkeleton ? (
         <div
           role="status"
           aria-live="polite"
@@ -181,7 +190,7 @@ const LatestCars = () => {
             <SkeletonCarCard key={i} />
           ))}
         </div>
-      ) : error ? (
+      ) : showError ? (
         <p className="mx-auto max-w-md text-center text-red-400">{error}</p>
       ) : (
         <motion.ul

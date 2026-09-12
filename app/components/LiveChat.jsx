@@ -246,7 +246,7 @@ export default function LiveChat() {
             {/* Disclaimer */}
             <p className="px-4 pb-1 text-[11px] leading-tight text-white/40">
               AI-generated guidance - not a substitute for a full inspection or
-              our team's advice.
+              our team&apos;s advice.
             </p>
 
             {/* Input */}

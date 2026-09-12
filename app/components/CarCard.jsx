@@ -54,16 +54,17 @@ const CarCard = React.memo(function CarCard({ car, logo, onOpen }) {
           </span>
         )}
 
-        <Image
-          src={firstImage}
-          alt={car.title || "Vehicle image"}
-          width={500}
-          height={192}
-          unoptimized
-          className={`w-full rounded-md object-cover transition-opacity ${
-            car.isSold ? "opacity-60" : "opacity-100"
-          }`}
-        />
+        <div className="relative h-48 w-full overflow-hidden rounded-md">
+          <Image
+            src={firstImage}
+            alt={car.title || "Vehicle image"}
+            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            className={`object-cover transition-opacity ${
+              car.isSold ? "opacity-60" : "opacity-100"
+            }`}
+          />
+        </div>
 
         {car.isSold && (
           <div

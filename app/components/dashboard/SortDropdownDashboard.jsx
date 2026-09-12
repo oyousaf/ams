@@ -1,8 +1,9 @@
 "use client";
 
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useLayoutEffect, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { createPortal } from "react-dom";
+import { useHasMounted } from "@/lib/useHasMounted";
 
 export default function SortDropdownDashboard({
   options,
@@ -12,9 +13,8 @@ export default function SortDropdownDashboard({
   onToggle,
 }) {
   const rootRef = useRef(null);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => setMounted(true), []);
+  const mounted = useHasMounted();
+  const [rect, setRect] = useState(null);
 
   /* Close on outside click / ESC */
   useEffect(() => {
@@ -39,7 +39,20 @@ export default function SortDropdownDashboard({
     };
   }, [isOpen, onToggle]);
 
-  const rect = rootRef.current?.getBoundingClientRect();
+  /* Track trigger position for the portaled menu */
+  useLayoutEffect(() => {
+    if (!isOpen || !rootRef.current) return;
+
+    const updateRect = () => setRect(rootRef.current.getBoundingClientRect());
+    updateRect();
+
+    window.addEventListener("resize", updateRect);
+    window.addEventListener("scroll", updateRect, true);
+    return () => {
+      window.removeEventListener("resize", updateRect);
+      window.removeEventListener("scroll", updateRect, true);
+    };
+  }, [isOpen]);
 
   return (
     <div ref={rootRef} className="relative z-100 w-full">

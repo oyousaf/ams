@@ -4,6 +4,7 @@ import { Analytics } from "@vercel/analytics/next";
 import { Toaster } from "sonner";
 import Script from "next/script";
 import { Manrope } from "next/font/google";
+import { MotionConfig } from "motion/react";
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -63,7 +64,7 @@ const structuredData = {
   name: "Ace Motor Sales",
   url: "https://acemotorsales.uk",
   logo: "https://acemotorsales.uk/apple-touch-icon.png",
-  image: "https://acemotorsales.uk/hero.jpg",
+  image: "https://acemotorsales.uk/hero.webp",
   telephone: "+447809107655",
   openingHours: "Mo-Su 09:00-20:00",
   address: {
@@ -84,7 +85,7 @@ export default function RootLayout({ children }) {
       className={`${manrope.variable} scroll-smooth antialiased`}
     >
       <body className="min-h-screen bg-neutral-900 text-zinc-100 selection:bg-rose-400/20">
-        {children}
+        <MotionConfig reducedMotion="user">{children}</MotionConfig>
 
         <Toaster
           position="top-right"

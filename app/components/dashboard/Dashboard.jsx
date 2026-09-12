@@ -12,6 +12,7 @@ import AddCarForm from "./AddCarForm";
 import CarList from "./CarList";
 import SortDropdownDashboard from "./SortDropdownDashboard";
 import LoadingSpinner from "./LoadingSpinner";
+import { useHasMounted } from "@/lib/useHasMounted";
 
 /* --------------------------------------------------
 CONFIG
@@ -87,7 +88,7 @@ DASHBOARD
 -------------------------------------------------- */
 
 export default function Dashboard() {
-  const [hydrated, setHydrated] = useState(false);
+  const hydrated = useHasMounted();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const [passkey, setPasskey] = useState("");
@@ -111,8 +112,6 @@ SESSION CHECK
 -------------------------------------------------- */
 
   useEffect(() => {
-    setHydrated(true);
-
     const checkSession = async () => {
       try {
         const res = await fetch("/api/dashboard/session", {
@@ -155,6 +154,10 @@ FETCH CARS
   }, []);
 
   useEffect(() => {
+    // fetchCars sets loading state immediately (before its first await) so the
+    // spinner shows without delay - the standard data-fetch-on-condition-change
+    // pattern from the React docs, just flagged by the newer strict lint rule.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (isAuthenticated) fetchCars();
   }, [isAuthenticated, fetchCars]);
 

@@ -160,12 +160,17 @@ const LatestCars = ({ initialCars = [] }) => {
 
   return (
     <section aria-labelledby="cars-heading" className="py-24 px-6 md:px-12">
-      <h2
-        id="cars-heading"
-        className="mb-12 text-center text-4xl font-bold tracking-tight text-white md:text-5xl"
-      >
-        Available Vehicles
-      </h2>
+      <div className="mx-auto mb-12 max-w-2xl text-center">
+        <span className="mb-3 inline-block text-xs font-semibold uppercase tracking-[0.2em] text-rose-400">
+          Fresh On The Forecourt
+        </span>
+        <h2
+          id="cars-heading"
+          className="text-4xl font-bold tracking-tight text-white md:text-5xl"
+        >
+          Available Vehicles
+        </h2>
+      </div>
 
       <div className="mb-12 flex justify-center">
         <SortDropdown

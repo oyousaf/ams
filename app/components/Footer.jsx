@@ -13,15 +13,20 @@ const Footer = () => {
     <footer id="contact" className="py-28 px-4 lg:px-8 text-white relative">
       <div className="space-y-20">
         {/* Heading */}
-        <motion.h2
-          className="text-4xl md:text-5xl font-bold text-center tracking-tight"
+        <motion.div
+          className="mx-auto max-w-2xl text-center"
           initial={{ opacity: 0, y: 12 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          Get in Touch
-        </motion.h2>
+          <span className="mb-3 inline-block text-xs font-semibold uppercase tracking-[0.2em] text-rose-400">
+            Let&apos;s Get You Moving
+          </span>
+          <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-white">
+            Get in Touch
+          </h2>
+        </motion.div>
 
         {/* Main Panel */}
         <motion.div

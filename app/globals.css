@@ -100,12 +100,6 @@ img {
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
   }
 
-  .tile-glow:hover {
-    box-shadow: 0 10px 30px rgba(244, 63, 94, 0.45);
-    transform: translateY(-4px);
-    transition: all 0.2s ease-out;
-  }
-
   .mobile-menu {
     background-image: linear-gradient(
       135deg,

@@ -1,9 +1,8 @@
 export const navLinks = [
-  { id: 1, href: "hero", name: "Home" },
-  { id: 2, href: "about", name: "About" },
-  { id: 3, href: "cars", name: "Cars" },
-  { id: 4, href: "reviews", name: "Reviews" },
-  { id: 5, href: "contact", name: "Contact" },
+  { id: 1, href: "about", name: "About" },
+  { id: 2, href: "cars", name: "Cars" },
+  { id: 3, href: "reviews", name: "Reviews" },
+  { id: 4, href: "contact", name: "Contact" },
 ];
 
 import { FaCar, FaHandshake, FaHistory, FaShieldAlt } from "react-icons/fa";

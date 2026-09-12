@@ -74,85 +74,89 @@ const EnquiryForm = () => {
     }
   };
 
+  const fieldClass =
+    "w-full rounded-lg border border-white/15 bg-white/10 px-4 py-3 text-white placeholder-white/35 transition focus:border-rose-300 focus:outline-none focus:ring-2 focus:ring-rose-300/60";
+  const labelClass = "mb-1.5 block text-sm font-medium text-white/70";
+
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="w-full max-w-md p-6 space-y-4 rounded-xl neon-tile bg-linear-to-br from-rose-900 via-rose-800 to-rose-950 shadow-lg"
+      className="w-full max-w-md space-y-4 rounded-2xl border border-white/10 bg-black/20 p-6 shadow-lg backdrop-blur-sm sm:p-8"
       autoComplete="off"
       aria-describedby="form-status"
     >
       <div>
-        <label htmlFor="name" className="sr-only">
+        <label htmlFor="name" className={labelClass}>
           Name
         </label>
         <input
           id="name"
           {...register("name")}
-          placeholder="Name"
+          placeholder="Your full name"
           autoComplete="name"
           aria-invalid={!!errors.name}
-          className="w-full p-3 rounded-md border border-rose-900/40 bg-white/95 text-black focus:ring-2 focus:ring-rose-600 focus:border-rose-600"
+          className={fieldClass}
         />
         {errors.name && (
-          <p className="text-red-200 text-sm mt-1" role="alert">
+          <p className="mt-1 text-sm text-red-300" role="alert">
             {errors.name.message}
           </p>
         )}
       </div>
 
       <div>
-        <label htmlFor="email" className="sr-only">
+        <label htmlFor="email" className={labelClass}>
           Email
         </label>
         <input
           id="email"
           {...register("email")}
           type="email"
-          placeholder="Email"
+          placeholder="you@example.com"
           autoComplete="email"
           aria-invalid={!!errors.email}
-          className="w-full p-3 rounded-md border border-rose-900/40 bg-white/95 text-black focus:ring-2 focus:ring-rose-600 focus:border-rose-600"
+          className={fieldClass}
         />
         {errors.email && (
-          <p className="text-red-200 text-sm mt-1" role="alert">
+          <p className="mt-1 text-sm text-red-300" role="alert">
             {errors.email.message}
           </p>
         )}
       </div>
 
       <div>
-        <label htmlFor="phone" className="sr-only">
+        <label htmlFor="phone" className={labelClass}>
           Phone
         </label>
         <input
           id="phone"
           {...register("phone")}
           type="tel"
-          placeholder="Phone"
+          placeholder="07xxx xxxxxx"
           autoComplete="tel"
           aria-invalid={!!errors.phone}
-          className="w-full p-3 rounded-md border border-rose-900/40 bg-white/95 text-black focus:ring-2 focus:ring-rose-600 focus:border-rose-600"
+          className={fieldClass}
         />
         {errors.phone && (
-          <p className="text-red-200 text-sm mt-1" role="alert">
+          <p className="mt-1 text-sm text-red-300" role="alert">
             {errors.phone.message}
           </p>
         )}
       </div>
 
       <div>
-        <label htmlFor="message" className="sr-only">
+        <label htmlFor="message" className={labelClass}>
           Message
         </label>
         <textarea
           id="message"
           {...register("message")}
-          placeholder="Message..."
+          placeholder="Tell us what you're looking for..."
           aria-invalid={!!errors.message}
-          className="w-full h-32 p-3 rounded-md border border-rose-900/40 bg-white/95 text-black focus:ring-2 focus:ring-rose-600 focus:border-rose-600"
+          className={`h-32 resize-none ${fieldClass}`}
         />
         {errors.message && (
-          <p className="text-red-200 text-sm mt-1" role="alert">
+          <p className="mt-1 text-sm text-red-300" role="alert">
             {errors.message.message}
           </p>
         )}
@@ -163,7 +167,7 @@ const EnquiryForm = () => {
           id="form-status"
           aria-live="polite"
           className={`text-sm mt-2 ${
-            status.type === "success" ? "text-green-200" : "text-red-200"
+            status.type === "success" ? "text-green-300" : "text-red-300"
           }`}
         >
           {status.message}
@@ -173,8 +177,10 @@ const EnquiryForm = () => {
       <button
         type="submit"
         disabled={isSubmitting}
-        className={`w-full flex items-center justify-center gap-2 py-3 bg-rose-600 text-white rounded-md font-semibold hover:glow-pulse hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-rose-600 ${
-          isSubmitting ? "opacity-70 cursor-not-allowed" : ""
+        className={`flex w-full items-center justify-center gap-2 rounded-full bg-linear-to-r from-rose-600 to-rose-500 py-3.5 font-semibold text-white shadow-lg shadow-black/30 transition-shadow focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-300 ${
+          isSubmitting
+            ? "cursor-not-allowed opacity-70"
+            : "hover:shadow-[0_0_25px_rgba(244,63,94,0.55)]"
         }`}
         aria-busy={isSubmitting}
       >

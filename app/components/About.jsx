@@ -7,16 +7,21 @@ import { motion } from "motion/react";
 const About = () => {
   return (
     <section aria-labelledby="about-heading" className="py-24 px-4 lg:px-8">
-      <h2
-        id="about-heading"
-        className="text-4xl md:text-5xl font-bold text-center mb-12 text-white tracking-tight"
-      >
-        About Us
-      </h2>
+      <div className="mx-auto mb-12 max-w-2xl text-center">
+        <span className="mb-3 inline-block text-xs font-semibold uppercase tracking-[0.2em] text-rose-400">
+          Why Ace Motor Sales
+        </span>
+        <h2
+          id="about-heading"
+          className="text-4xl font-bold tracking-tight text-white md:text-5xl"
+        >
+          About Us
+        </h2>
+      </div>
 
       {/* Feature Tiles */}
       <motion.div
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto text-center"
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto text-center"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.2 }}
@@ -34,12 +39,14 @@ const About = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ type: "spring", stiffness: 200, damping: 20 }}
-            whileHover={{ scale: 1.05, rotateZ: 1 }}
-            className="tile-glow flex flex-col items-center bg-linear-to-br from-rose-800 via-rose-700 to-rose-900 p-6 rounded-2xl shadow-inner border-2 border-transparent hover:border-rose-500/80 duration-200"
+            whileHover={{ y: -4 }}
+            className="flex flex-col items-center rounded-2xl border border-white/10 bg-white/4 p-6 backdrop-blur-sm transition-colors duration-200 hover:border-rose-500/50 hover:bg-white/6"
           >
-            <tile.icon className="text-white text-5xl mb-4 drop-shadow-md" />
-            <h3 className="text-2xl font-bold text-white mb-2">{tile.title}</h3>
-            <p className="md:text-lg text-zinc-100 leading-relaxed">
+            <div className="surface-primary mb-4 grid h-16 w-16 shrink-0 place-items-center rounded-full">
+              <tile.icon className="text-2xl text-white" />
+            </div>
+            <h3 className="mb-2 text-xl font-bold text-white">{tile.title}</h3>
+            <p className="text-base leading-relaxed text-white/65">
               {tile.description}
             </p>
           </motion.div>

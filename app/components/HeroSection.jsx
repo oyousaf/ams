@@ -2,22 +2,19 @@
 
 import Image from "next/image";
 import { motion } from "motion/react";
-import { FaArrowDown } from "react-icons/fa";
+import { FaArrowDown, FaChevronRight } from "react-icons/fa";
 
 const HeroSection = () => {
-  const handleScrollToAbout = () => {
-    document.getElementById("about")?.scrollIntoView({ behavior: "smooth" });
+  const scrollTo = (id) => () => {
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
     <header
       id="hero"
       aria-labelledby="hero-heading"
-      className="relative flex min-h-screen items-center justify-center overflow-hidden px-6 py-12 text-center"
+      className="relative flex min-h-screen items-end overflow-hidden px-6 pb-20 pt-40 text-left sm:items-center sm:pb-12 sm:text-center"
     >
-      {/* Dark base */}
-      <div className="absolute inset-0 z-0 bg-black/90" />
-
       {/* Hero image */}
       <Image
         src="/hero.webp"
@@ -31,47 +28,71 @@ const HeroSection = () => {
         className="absolute inset-0 z-0 scale-105 object-cover"
       />
 
-      {/* Overlay */}
-      <div className="absolute inset-0 z-10 bg-linear-to-br from-black/70 via-zinc-900/60 to-black/70 backdrop-blur-sm" />
+      {/* Scrim - strongest at the bottom/left where the text sits, with a
+          deliberate subtle rose tint (not pure black) matching the site's
+          rose/maroon palette used elsewhere (cards, buttons, chat). */}
+      <div className="absolute inset-0 z-10 bg-linear-to-t from-rose-950/85 via-rose-950/55 to-rose-950/15 backdrop-blur-sm sm:bg-linear-to-br sm:from-rose-950/65 sm:via-rose-950/40 sm:to-rose-950/20" />
 
       {/* Content wrapper */}
-      <div className="relative z-20 w-full max-w-7xl mx-auto">
+      <div className="relative z-20 mx-auto w-full max-w-4xl">
         <motion.div
           initial={{ opacity: 0, y: 32 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.65, ease: "easeOut" }}
-          className="mx-auto max-w-4xl text-white"
         >
+          <span className="mb-4 inline-flex items-center gap-2 rounded-full border border-rose-400/30 bg-rose-950/40 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-rose-200 backdrop-blur-sm sm:text-sm">
+            Heckmondwike &middot; West Yorkshire
+          </span>
+
           <h1
             id="hero-heading"
-            className="mb-6 rounded-xl bg-rose-950/50 px-4 py-3 text-4xl font-extrabold leading-tight tracking-tight shadow-md backdrop-blur-md md:text-6xl"
+            className="mb-5 text-4xl font-extrabold leading-[1.05] tracking-tight text-white text-balance [text-shadow:0_2px_24px_rgba(0,0,0,0.6)] sm:mx-auto sm:max-w-3xl md:text-6xl lg:text-7xl"
           >
             Quality Without Compromise
           </h1>
 
-          <p className="mx-auto mb-8 max-w-3xl rounded-lg bg-rose-950/30 px-3 py-2 text-lg text-white/90 shadow-md backdrop-blur md:text-xl">
+          <p className="max-w-xl text-lg leading-relaxed text-white/85 [text-shadow:0_1px_12px_rgba(0,0,0,0.5)] sm:mx-auto sm:max-w-2xl md:text-xl">
             Carefully selected used vehicles, rigorously inspected and
             professionally prepared for the road ahead.
           </p>
+
+          <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:justify-center">
+            <motion.button
+              type="button"
+              onClick={scrollTo("cars")}
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
+              className="inline-flex items-center justify-center gap-2 rounded-full bg-linear-to-br from-rose-700 via-rose-600 to-rose-800 px-7 py-3.5 text-base font-semibold text-white shadow-lg shadow-rose-950/50 transition-shadow hover:shadow-[0_0_30px_rgba(244,63,94,0.5)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-300"
+            >
+              View Our Cars
+              <FaChevronRight className="text-sm" />
+            </motion.button>
+
+            <motion.button
+              type="button"
+              onClick={scrollTo("contact")}
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
+              className="inline-flex items-center justify-center gap-2 rounded-full border border-white/25 bg-white/5 px-7 py-3.5 text-base font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
+            >
+              Get in Touch
+            </motion.button>
+          </div>
         </motion.div>
 
         {/* Scroll cue */}
         <motion.button
           type="button"
           aria-label="Scroll to about section"
-          onClick={handleScrollToAbout}
+          onClick={scrollTo("about")}
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{
-            duration: 0.33,
-            ease: "easeOut",
-          }}
+          transition={{ duration: 0.33, ease: "easeOut" }}
           whileHover={{ scale: 1.15 }}
           whileTap={{ scale: 0.95 }}
-          className="mx-auto mt-10 flex justify-center cursor-pointer text-rose-500/80 hover:text-rose-400
-          transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500/40"
+          className="mx-auto mt-14 hidden cursor-pointer justify-center text-rose-400/70 transition-colors duration-300 hover:text-rose-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500/40 sm:flex"
         >
-          <FaArrowDown className="animate-bounce text-5xl" />
+          <FaArrowDown className="animate-bounce text-3xl" />
         </motion.button>
       </div>
     </header>

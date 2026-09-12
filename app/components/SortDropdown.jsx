@@ -46,7 +46,7 @@ const SortDropdown = ({ options, selected, onSelect, isOpen, onToggle }) => {
       <button
         ref={buttonRef}
         id="sort-button"
-        className="w-64 bg-linear-to-br from-rose-900 via-rose-800 to-rose-950 text-white text-lg font-semibold rounded-lg p-3 shadow-md text-center"
+        className="surface-primary w-64 rounded-full p-3 text-center text-base font-semibold text-white shadow-md transition-shadow hover:shadow-[0_0_20px_rgba(244,63,94,0.35)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-300"
         onClick={() => onToggle((prev) => !prev)}
         aria-haspopup="listbox"
         aria-expanded={isOpen}
@@ -61,7 +61,7 @@ const SortDropdown = ({ options, selected, onSelect, isOpen, onToggle }) => {
             id="sort-options"
             role="listbox"
             aria-activedescendant={`option-${selected}`}
-            className="absolute w-64 mt-2 border border-rose-700 bg-rose-800 rounded-lg shadow-lg z-50"
+            className="surface-primary absolute z-50 mt-2 w-64 rounded-xl p-1.5"
             initial="hidden"
             animate="visible"
             exit="exit"
@@ -74,10 +74,10 @@ const SortDropdown = ({ options, selected, onSelect, isOpen, onToggle }) => {
                 role="option"
                 aria-selected={selected === key}
                 onClick={() => onSelect(key)}
-                className={`p-2 cursor-pointer hover:bg-rose-100 hover:text-rose-700 rounded-md text-center ${
+                className={`cursor-pointer rounded-lg p-2 text-center transition-colors ${
                   selected === key
-                    ? "font-bold text-white bg-rose-700 bg-opacity-50 glow-pulse"
-                    : ""
+                    ? "bg-white/15 font-bold text-white"
+                    : "text-white/80 hover:bg-white/10 hover:text-white"
                 }`}
               >
                 {label}

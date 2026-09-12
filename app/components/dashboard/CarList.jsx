@@ -16,7 +16,7 @@ function CarList({ cars, setCars, setModalOpen }) {
   return (
     <div
       className="w-full mx-auto space-y-4 p-4 overflow-y-auto max-h-[70vh]
-      [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+      [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] scrollbar-none"
     >
       <AnimatePresence initial={false} mode="popLayout">
         <ul className="space-y-4">

@@ -69,18 +69,6 @@ img {
 /* ---------------------------------------------
    Animations
 --------------------------------------------- */
-@keyframes glowPulse {
-  0% {
-    box-shadow: 0 0 5px #f43f5e;
-  }
-  50% {
-    box-shadow: 0 0 20px #f43f5eaa;
-  }
-  100% {
-    box-shadow: 0 0 5px #f43f5e;
-  }
-}
-
 @keyframes shake {
   0%,
   100% {
@@ -93,37 +81,6 @@ img {
   40%,
   80% {
     transform: translateX(6px);
-  }
-}
-
-@keyframes pulseGlow {
-  0% {
-    text-shadow: 0 0 0 #f43f5e;
-  }
-  50% {
-    text-shadow: 0 0 10px #f43f5e;
-  }
-  100% {
-    text-shadow: 0 0 0 #f43f5e;
-  }
-}
-
-@keyframes pulseRing {
-  0%,
-  100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.05);
-  }
-}
-
-/* ---------------------------------------------
-   Utilities
---------------------------------------------- */
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
   }
 }
 
@@ -147,15 +104,6 @@ img {
     box-shadow: 0 10px 30px rgba(244, 63, 94, 0.45);
     transform: translateY(-4px);
     transition: all 0.2s ease-out;
-  }
-
-  .nav-link {
-    color: rgb(209 213 219);
-    transition: color 0.3s ease;
-  }
-
-  .nav-link:hover {
-    color: rgb(244 63 94);
   }
 
   .mobile-menu {

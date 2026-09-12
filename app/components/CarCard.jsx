@@ -4,7 +4,7 @@ import React, { useMemo } from "react";
 import Image from "next/image";
 import { FaEye } from "react-icons/fa";
 import Divider from "./Divider";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { resolveImages } from "@/lib/resolveImage";
 
 const PHONE_NUMBER = "+447809107655";

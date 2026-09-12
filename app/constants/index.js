@@ -179,6 +179,9 @@ import {
   SiVolvo,
   SiVauxhall,
 } from "react-icons/si";
+// react-icons is pinned to an exact version (see package.json) because SiMercedes
+// is removed from newer Simple Icons releases. Verify SiMercedes still exports
+// before bumping react-icons past 5.3.0.
 
 export const carLogos = {
   alfaromeo: <SiAlfaromeo className="w-12 h-12" />,

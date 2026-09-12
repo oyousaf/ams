@@ -37,3 +37,12 @@ accounts.txt
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# next-sitemap generated output (regenerated on every build)
+/public/robots.txt
+/public/sitemap.xml
+/public/sitemap-*.xml
+
+# Next.js auto-generated AI agent instruction files
+/AGENTS.md
+/CLAUDE.md

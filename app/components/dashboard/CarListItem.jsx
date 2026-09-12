@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef, forwardRef, memo } from "react";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { toast } from "sonner";
 import ConfirmModal from "./ConfirmModal";
 import Toggle from "./Toggle";

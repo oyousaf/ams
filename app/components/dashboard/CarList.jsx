@@ -1,7 +1,7 @@
 "use client";
 
 import React, { memo } from "react";
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "motion/react";
 import CarListItem from "./CarListItem";
 
 function CarList({ cars, setCars, setModalOpen }) {

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { FaArrowUp } from "react-icons/fa";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "motion/react";
 
 export default function ScrollToTop() {
   const [show, setShow] = useState(false);

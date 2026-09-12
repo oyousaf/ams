@@ -2,7 +2,7 @@
 
 import { aboutTiles, gallery } from "../constants";
 import ImageTile from "./ImageTile";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 
 const About = () => {
   return (

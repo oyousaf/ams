@@ -1,12 +1,13 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useRef } from "react";
+import { motion, useInView } from "motion/react";
 import { socialLinks } from "../constants";
 import EnquiryForm from "./EnquiryForm";
-import { useInView } from "react-intersection-observer";
 
 const Footer = () => {
-  const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.2 });
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, amount: 0.2 });
 
   return (
     <footer id="contact" className="py-28 px-4 lg:px-8 text-white relative">

@@ -5,7 +5,7 @@ import { RiMenu3Line, RiCloseLine } from "react-icons/ri";
 import Image from "next/image";
 import { navLinks, socialLinks } from "../constants";
 import logo from "public/logo.png";
-import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
+import { motion, AnimatePresence, LayoutGroup } from "motion/react";
 import { usePathname } from "next/navigation";
 
 const springNav = { type: "spring", stiffness: 600, damping: 28 };

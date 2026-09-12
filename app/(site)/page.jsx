@@ -5,7 +5,7 @@ import Reviews from "@/components/Reviews";
 
 import ScrollToTop from "@/components/ScrollToTop";
 import SnowWrapper from "@/components/SnowWrapper";
-// import LiveChat from "@/components/LiveChat";
+import LiveChat from "@/components/LiveChat";
 
 export const metadata = {
   title: "Used Cars in Heckmondwike | West Yorkshire Car Dealer",
@@ -74,7 +74,7 @@ export default function HomePage() {
 
       <ScrollToTop />
       <SnowWrapper />
-      {/* LiveChat intentionally disabled for testing */}
+      <LiveChat />
     </>
   );
 }

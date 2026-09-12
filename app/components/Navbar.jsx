@@ -8,6 +8,7 @@ import logo from "public/logo.png";
 import { motion, AnimatePresence, LayoutGroup } from "motion/react";
 import { usePathname } from "next/navigation";
 import { useEscapeKey } from "@/lib/useEscapeKey";
+import { useBodyScrollLock } from "@/lib/useBodyScrollLock";
 
 const springNav = { type: "spring", stiffness: 600, damping: 28 };
 const springIcon = { type: "spring", stiffness: 500, damping: 30 };
@@ -41,11 +42,7 @@ export default function Navbar() {
   };
 
   /* Scroll lock */
-  useEffect(() => {
-    if (!menuOpen) return;
-    document.body.style.overflow = "hidden";
-    return () => (document.body.style.overflow = "");
-  }, [menuOpen]);
+  useBodyScrollLock(menuOpen);
 
   /* Route change close */
   useEffect(() => {

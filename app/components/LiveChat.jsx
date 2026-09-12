@@ -180,6 +180,9 @@ export default function LiveChat() {
         aria-label={
           isOpen ? "Close chat with AMS" : "Chat with AMS, our car assistant"
         }
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.6, duration: 0.4, ease: "easeOut" }}
         whileHover={shouldReduceMotion ? undefined : { scale: 1.1 }}
         whileTap={shouldReduceMotion ? undefined : { scale: 0.96 }}
         className="surface-primary fixed bottom-6 left-6 z-40 grid h-12 w-12 place-items-center rounded-full text-white shadow-lg transition-all duration-300 hover:shadow-[0_0_25px_rgba(244,63,94,0.45)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-300"

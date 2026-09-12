@@ -18,6 +18,7 @@ import { GiGearStickPattern } from "react-icons/gi";
 import { BiSolidTachometer } from "react-icons/bi";
 import Divider from "./Divider";
 import { resolveImages } from "@/lib/resolveImage";
+import { useBodyScrollLock } from "@/lib/useBodyScrollLock";
 
 const AUTOPLAY_MS = 5000;
 
@@ -116,9 +117,9 @@ export default function CarModal({ car, logo, onClose }) {
 
   const close = useCallback(() => onClose?.(), [onClose]);
 
-  useEffect(() => {
-    document.body.style.overflow = "hidden";
+  useBodyScrollLock(true);
 
+  useEffect(() => {
     const onKey = (e) => {
       if (e.key === "Escape") close();
       if (e.key === "ArrowRight") emblaApi?.scrollNext();
@@ -127,10 +128,7 @@ export default function CarModal({ car, logo, onClose }) {
 
     window.addEventListener("keydown", onKey);
 
-    return () => {
-      document.body.style.overflow = "auto";
-      window.removeEventListener("keydown", onKey);
-    };
+    return () => window.removeEventListener("keydown", onKey);
   }, [emblaApi, close]);
 
   const mileage = Number(car.mileage) || 0;
@@ -172,7 +170,7 @@ export default function CarModal({ car, logo, onClose }) {
           role="dialog"
           aria-modal="true"
           aria-labelledby="car-modal-title"
-          className="relative flex max-h-[92vh] w-full max-w-3xl flex-col overflow-hidden rounded-xl
+          className="relative flex max-h-[92dvh] w-full max-w-3xl flex-col overflow-hidden rounded-xl
            bg-linear-to-br from-rose-900 via-rose-800 to-rose-950 text-white shadow-xl"
           variants={modal}
           initial="hidden"
@@ -182,7 +180,7 @@ export default function CarModal({ car, logo, onClose }) {
           <button
             onClick={close}
             aria-label="Close"
-            className="absolute right-4 top-4 z-50 rounded-full bg-white/10 p-3 hover:bg-white/20"
+            className="absolute right-4 top-4 z-50 rounded-full bg-white/10 p-3 transition-colors duration-200 hover:bg-white/20"
           >
             <FaTimes />
           </button>
@@ -197,7 +195,7 @@ export default function CarModal({ car, logo, onClose }) {
             </h3>
           </div>
 
-          <div className="flex-1 overflow-y-auto scrollbar-hide px-6 pb-6">
+          <div className="flex-1 overflow-y-auto overscroll-contain scrollbar-hide px-6 pb-6">
             {/* carousel */}
             <div className="mb-6">
               <div
@@ -238,7 +236,7 @@ export default function CarModal({ car, logo, onClose }) {
                           emblaApi?.scrollTo(i);
                           pauseAutoplay();
                         }}
-                        className={`relative h-2.5 overflow-hidden transition-all
+                        className={`relative h-2.5 overflow-hidden transition-all duration-300 ease-out
                           ${isActive ? "w-6" : "w-2.5"}`}
                       >
                         <span
@@ -261,7 +259,7 @@ export default function CarModal({ car, logo, onClose }) {
                 {paused && (
                   <button
                     onClick={resumeAutoplay}
-                    className="rounded-full bg-white/10 p-2 text-rose-200 hover:bg-white/20"
+                    className="rounded-full bg-white/10 p-2 text-rose-200 transition-colors duration-200 hover:bg-white/20"
                   >
                     <FaPlay className="text-sm" />
                   </button>
@@ -306,7 +304,7 @@ export default function CarModal({ car, logo, onClose }) {
 
             <button
               onClick={share}
-              className="mx-auto mt-4 flex items-center gap-2 rounded-full bg-rose-400/15 px-6 py-2 text-rose-100 hover:bg-rose-400/25"
+              className="mx-auto mt-4 flex items-center gap-2 rounded-full bg-rose-400/15 px-6 py-2 text-rose-100 transition-colors duration-200 hover:bg-rose-400/25"
             >
               <FaShareAlt />
               {copied ? "Link copied" : "Share"}

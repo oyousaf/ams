@@ -31,7 +31,7 @@ const HeroSection = () => {
       {/* Scrim - strongest at the bottom/left where the text sits, with a
           deliberate subtle rose tint (not pure black) matching the site's
           rose/maroon palette used elsewhere (cards, buttons, chat). */}
-      <div className="absolute inset-0 z-10 bg-linear-to-t from-rose-950/85 via-rose-950/55 to-rose-950/15 backdrop-blur-sm sm:bg-linear-to-br sm:from-rose-950/65 sm:via-rose-950/40 sm:to-rose-950/20" />
+      <div className="absolute inset-0 z-10 bg-linear-to-t from-rose-950/95 via-rose-950/70 to-rose-950/25 backdrop-blur-sm sm:bg-linear-to-br sm:from-rose-950/80 sm:via-rose-950/55 sm:to-rose-950/30" />
 
       {/* Content wrapper */}
       <div className="relative z-20 mx-auto w-full max-w-4xl">
@@ -62,7 +62,8 @@ const HeroSection = () => {
               onClick={scrollTo("cars")}
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
-              className="inline-flex items-center justify-center gap-2 rounded-full bg-linear-to-br from-rose-700 via-rose-600 to-rose-800 px-7 py-3.5 text-base font-semibold text-white shadow-lg shadow-rose-950/50 transition-shadow hover:shadow-[0_0_30px_rgba(244,63,94,0.5)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-300"
+              transition={{ duration: 0.25, ease: "easeOut" }}
+              className="inline-flex items-center justify-center gap-2 rounded-full bg-linear-to-br from-rose-700 via-rose-600 to-rose-800 px-7 py-3.5 text-base font-semibold text-white shadow-lg shadow-rose-950/50 transition-shadow duration-300 ease-out hover:shadow-[0_0_30px_rgba(244,63,94,0.5)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-300"
             >
               View Our Cars
               <FaChevronRight className="text-sm" />
@@ -73,7 +74,8 @@ const HeroSection = () => {
               onClick={scrollTo("contact")}
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
-              className="inline-flex items-center justify-center gap-2 rounded-full border border-white/25 bg-white/5 px-7 py-3.5 text-base font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
+              transition={{ duration: 0.25, ease: "easeOut" }}
+              className="inline-flex items-center justify-center gap-2 rounded-full border border-white/25 bg-white/5 px-7 py-3.5 text-base font-semibold text-white backdrop-blur-sm transition-colors duration-300 ease-out hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
             >
               Get in Touch
             </motion.button>

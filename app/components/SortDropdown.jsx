@@ -1,7 +1,9 @@
 "use client";
 
-import { useRef, useEffect } from "react";
+import { useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
+import { useOutsideClick } from "@/lib/useOutsideClick";
+import { useEscapeKey } from "@/lib/useEscapeKey";
 
 const dropdownVariants = {
   hidden: { opacity: 0, y: -10, scale: 0.95 },
@@ -13,30 +15,11 @@ const SortDropdown = ({ options, selected, onSelect, isOpen, onToggle }) => {
   const dropdownRef = useRef(null);
   const buttonRef = useRef(null);
 
-  useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
-        onToggle(false);
-      }
-    };
-
-    const handleEsc = (e) => {
-      if (e.key === "Escape") {
-        onToggle(false);
-        buttonRef.current?.focus();
-      }
-    };
-
-    if (isOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-      document.addEventListener("keydown", handleEsc);
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-      document.removeEventListener("keydown", handleEsc);
-    };
-  }, [isOpen, onToggle]);
+  useOutsideClick(dropdownRef, () => onToggle(false), isOpen);
+  useEscapeKey(() => {
+    onToggle(false);
+    buttonRef.current?.focus();
+  }, isOpen);
 
   return (
     <div className="relative" ref={dropdownRef}>

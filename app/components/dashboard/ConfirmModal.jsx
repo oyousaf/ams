@@ -5,9 +5,12 @@ import { motion, AnimatePresence } from "motion/react";
 import { createPortal } from "react-dom";
 import { FaTimes } from "react-icons/fa";
 import { useHasMounted } from "@/lib/useHasMounted";
+import { useEscapeKey } from "@/lib/useEscapeKey";
 
 const ConfirmModal = ({ isOpen, onClose, onConfirm, title, message }) => {
   const mounted = useHasMounted();
+
+  useEscapeKey(onClose, isOpen);
 
   if (!mounted) return null;
 

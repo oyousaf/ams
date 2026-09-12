@@ -7,6 +7,7 @@ import { navLinks, socialLinks } from "../constants";
 import logo from "public/logo.png";
 import { motion, AnimatePresence, LayoutGroup } from "motion/react";
 import { usePathname } from "next/navigation";
+import { useEscapeKey } from "@/lib/useEscapeKey";
 
 const springNav = { type: "spring", stiffness: 600, damping: 28 };
 const springIcon = { type: "spring", stiffness: 500, damping: 30 };
@@ -55,12 +56,7 @@ export default function Navbar() {
   }, [pathname]);
 
   /* Escape close */
-  useEffect(() => {
-    if (!menuOpen) return;
-    const onKey = (e) => e.key === "Escape" && closeMenu();
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [menuOpen]);
+  useEscapeKey(closeMenu, menuOpen);
 
   /* Focus trap */
   useEffect(() => {

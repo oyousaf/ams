@@ -15,6 +15,11 @@ function toArray(v) {
   return [];
 }
 
+function toNum(v) {
+  const n = Number(v);
+  return Number.isFinite(n) ? n : 0;
+}
+
 function toBool(v) {
   if (typeof v === "boolean") return v;
   if (typeof v === "number") return v === 1;
@@ -39,9 +44,13 @@ export function normalizeCar(raw) {
 
     imageUrls,
 
+    price: toNum(raw.price),
+    mileage: toNum(raw.mileage),
+    year: toNum(raw.year),
+
     engineType: raw.engineType ?? raw.engine_type ?? raw.engine,
 
-    engineSize: raw.engineSize ?? raw.engine_size ?? raw.engine_capacity,
+    engineSize: toNum(raw.engineSize ?? raw.engine_size ?? raw.engine_capacity),
 
     carType: raw.carType ?? raw.car_type ?? raw.body_type,
 

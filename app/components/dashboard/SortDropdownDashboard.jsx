@@ -1,9 +1,11 @@
 "use client";
 
-import { useRef, useEffect, useLayoutEffect, useState } from "react";
+import { useRef, useLayoutEffect, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { createPortal } from "react-dom";
 import { useHasMounted } from "@/lib/useHasMounted";
+import { useOutsideClick } from "@/lib/useOutsideClick";
+import { useEscapeKey } from "@/lib/useEscapeKey";
 
 export default function SortDropdownDashboard({
   options,
@@ -16,28 +18,8 @@ export default function SortDropdownDashboard({
   const mounted = useHasMounted();
   const [rect, setRect] = useState(null);
 
-  /* Close on outside click / ESC */
-  useEffect(() => {
-    if (!isOpen) return;
-
-    const onPointerDown = (e) => {
-      if (rootRef.current && !rootRef.current.contains(e.target)) {
-        onToggle(false);
-      }
-    };
-
-    const onEsc = (e) => {
-      if (e.key === "Escape") onToggle(false);
-    };
-
-    document.addEventListener("pointerdown", onPointerDown);
-    document.addEventListener("keydown", onEsc, true);
-
-    return () => {
-      document.removeEventListener("pointerdown", onPointerDown);
-      document.removeEventListener("keydown", onEsc, true);
-    };
-  }, [isOpen, onToggle]);
+  useOutsideClick(rootRef, () => onToggle(false), isOpen);
+  useEscapeKey(() => onToggle(false), isOpen);
 
   /* Track trigger position for the portaled menu */
   useLayoutEffect(() => {

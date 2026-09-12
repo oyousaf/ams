@@ -13,6 +13,7 @@ import CarList from "./CarList";
 import SortDropdownDashboard from "./SortDropdownDashboard";
 import LoadingSpinner from "./LoadingSpinner";
 import { useHasMounted } from "@/lib/useHasMounted";
+import { normalizeCar } from "@/lib/normaliseCar";
 
 /* --------------------------------------------------
 CONFIG
@@ -38,50 +39,6 @@ const tabs = [
   { key: "carList", label: "Cars" },
   { key: "addCar", label: "Add Car" },
 ];
-
-/* --------------------------------------------------
-UTILS
--------------------------------------------------- */
-
-function num(v) {
-  const n = Number(v);
-  return Number.isFinite(n) ? n : 0;
-}
-
-function normaliseImages(c) {
-  if (Array.isArray(c.image_urls)) return c.image_urls;
-
-  if (Array.isArray(c.imageUrls)) return c.imageUrls;
-
-  if (c.imageUrl) return [c.imageUrl];
-
-  return [];
-}
-
-function mapCar(c) {
-  return {
-    id: c.id,
-    title: c.title,
-    description: c.description,
-    price: num(c.price),
-
-    engineType: c.engineType ?? c.engine_type,
-    engineSize: num(c.engineSize ?? c.engine_size),
-
-    transmission: c.transmission,
-    mileage: num(c.mileage),
-    year: num(c.year),
-
-    carType: c.carType ?? c.car_type,
-
-    createdAt: c.createdAt ?? c.created_at,
-
-    isFeatured: c.isFeatured ?? c.is_featured ?? false,
-    isSold: c.isSold ?? c.is_sold ?? false,
-
-    image_urls: normaliseImages(c),
-  };
-}
 
 /* --------------------------------------------------
 DASHBOARD
@@ -143,7 +100,7 @@ FETCH CARS
       const data = await res.json();
       const rows = Array.isArray(data) ? data : data.cars ?? [];
 
-      const mapped = rows.map(mapCar);
+      const mapped = rows.map(normalizeCar);
 
       setCars(mapped);
     } catch {

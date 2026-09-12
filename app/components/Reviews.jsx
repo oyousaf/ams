@@ -89,13 +89,13 @@ const Reviews = () => {
         </h2>
       </div>
 
-      <div className="mx-auto grid max-w-7xl grid-cols-1 items-start gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="mx-auto grid max-w-6xl grid-cols-1 items-start gap-6 md:grid-cols-2">
         {reviews.map(({ name, feedback }, index) => (
           <ReviewCard
             key={index}
             name={name}
             feedback={feedback}
-            delay={(index % 3) * 0.08}
+            delay={(index % 2) * 0.08}
           />
         ))}
       </div>

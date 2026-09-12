@@ -48,7 +48,7 @@ const HeroSection = () => {
             id="hero-heading"
             className="mb-5 text-4xl font-extrabold leading-[1.05] tracking-tight text-white text-balance [text-shadow:0_2px_24px_rgba(0,0,0,0.6)] sm:mx-auto sm:max-w-3xl md:text-6xl lg:text-7xl"
           >
-            Quality Without Compromise
+            Quality Used Cars, Without Compromise
           </h1>
 
           <p className="max-w-xl text-lg leading-relaxed text-white/85 [text-shadow:0_1px_12px_rgba(0,0,0,0.5)] sm:mx-auto sm:max-w-2xl md:text-xl">

@@ -5,14 +5,14 @@ import { RiMenu3Line, RiCloseLine } from "react-icons/ri";
 import Image from "next/image";
 import { navLinks, socialLinks } from "../constants";
 import logo from "public/logo.png";
-import { motion, AnimatePresence, LayoutGroup } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 import { usePathname } from "next/navigation";
 import { useEscapeKey } from "@/lib/useEscapeKey";
 import { useBodyScrollLock } from "@/lib/useBodyScrollLock";
 
 const springNav = { type: "spring", stiffness: 600, damping: 28 };
 const springIcon = { type: "spring", stiffness: 500, damping: 30 };
-const springMorph = { type: "spring", stiffness: 420, damping: 34 };
+const springPanel = { type: "spring", stiffness: 320, damping: 32, mass: 0.8 };
 
 const listVariants = {
   hidden: {},
@@ -102,9 +102,9 @@ export default function Navbar() {
   }, [menuOpen]);
 
   return (
-    <LayoutGroup>
+    <>
       {/* ================= FLOATING NAV ================= */}
-      <nav className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2rem)] max-w-7xl rounded-2xl bg-black border border-white/10 backdrop-blur-xl shadow-xl text-white">
+      <nav className="fixed top-4 left-1/2 -translate-x-1/2 z-60 w-[calc(100%-2rem)] max-w-7xl rounded-2xl bg-black border border-white/10 backdrop-blur-xl shadow-xl text-white">
         <div className="flex items-center justify-between px-4 py-3 sm:px-6">
           <motion.div
             whileHover={{ scale: 1.05 }}
@@ -156,7 +156,6 @@ export default function Navbar() {
           </div>
 
           <motion.button
-            layoutId="mobile-menu-anchor"
             onClick={toggleMenu}
             className="md:hidden"
             aria-expanded={menuOpen}
@@ -187,24 +186,19 @@ export default function Navbar() {
               ref={panelRef}
               role="dialog"
               aria-modal="true"
-              className="fixed inset-0 z-50 md:hidden flex items-center justify-center px-4"
-              initial={{ opacity: 0, scale: 0.94 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.94 }}
-              transition={springMorph}
+              className="fixed inset-0 z-50 md:hidden flex items-start justify-center px-4 pt-24"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
             >
               <motion.div
-                layoutId="mobile-menu-anchor"
-                className="relative w-full max-w-md rounded-3xl bg-zinc-900/95 border border-white/10 shadow-2xl px-6 pt-10 pb-12"
+                initial={{ opacity: 0, y: -28, scale: 0.92 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -20, scale: 0.94 }}
+                transition={springPanel}
+                className="relative w-full max-w-md origin-top rounded-3xl bg-zinc-900/95 border border-white/10 shadow-2xl px-6 pt-10 pb-12"
               >
-                <button
-                  onClick={closeMenu}
-                  aria-label="Close menu"
-                  className="absolute right-4 top-4 h-10 w-10 rounded-full grid place-items-center bg-rose-600/20 hover:bg-rose-600/30"
-                >
-                  <RiCloseLine className="text-2xl text-rose-600" />
-                </button>
-
                 {/* Nav links */}
                 <motion.ul
                   className="mt-6 space-y-8 text-center"
@@ -259,6 +253,6 @@ export default function Navbar() {
           </>
         )}
       </AnimatePresence>
-    </LayoutGroup>
+    </>
   );
 }

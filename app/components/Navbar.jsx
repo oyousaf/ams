@@ -28,6 +28,7 @@ const itemVariants = {
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [pendingScrollId, setPendingScrollId] = useState(null);
   const panelRef = useRef(null);
   const pathname = usePathname();
 
@@ -35,14 +36,32 @@ export default function Navbar() {
   const closeMenu = () => setMenuOpen(false);
 
   const handleScroll = (id) => {
-    const el = document.getElementById(id);
-    if (!el) return;
-    el.scrollIntoView({ behavior: "smooth" });
-    closeMenu();
+    if (menuOpen) {
+      // Closing the mobile menu releases the body scroll-lock, which
+      // restores whatever scroll position was captured when the menu
+      // opened - if we scrollIntoView() first, that restore immediately
+      // cancels it. Defer the scroll until after the close/unlock has
+      // actually committed (see the pendingScrollId effect below).
+      setPendingScrollId(id);
+      closeMenu();
+      return;
+    }
+
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
   };
 
   /* Scroll lock */
   useBodyScrollLock(menuOpen);
+
+  /* Run a scroll deferred by handleScroll once the menu has actually closed */
+  useEffect(() => {
+    if (menuOpen || pendingScrollId === null) return;
+    document.getElementById(pendingScrollId)?.scrollIntoView({ behavior: "smooth" });
+    // Clearing a one-shot flag after consuming it - same class of pattern as
+    // the route-change-close effect below, just flagged by the strict rule.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setPendingScrollId(null);
+  }, [menuOpen, pendingScrollId]);
 
   /* Route change close */
   useEffect(() => {

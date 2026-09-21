@@ -6,6 +6,7 @@ import Image from "next/image";
 import { toast } from "sonner";
 import { AiOutlineLoading } from "react-icons/ai";
 import Toggle from "./Toggle";
+import { compressImages } from "@/lib/compressImage";
 
 const shakeVariant = {
   idle: { x: 0 },
@@ -55,6 +56,7 @@ export default function AddCarForm({ setCars, fetchCars, setActiveTab }) {
   const [car, setCar] = useState(initial);
   const [previews, setPreviews] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [compressing, setCompressing] = useState(false);
   const [shake, setShake] = useState(false);
 
   const carTypes = useMemo(
@@ -91,42 +93,47 @@ export default function AddCarForm({ setCars, fetchCars, setActiveTab }) {
     }));
   }
 
-  function onImages(e) {
+  async function onImages(e) {
     if (!e.target.files?.length) return;
 
     const selected = Array.from(e.target.files);
-
-    setCar((prev) => {
-      const existing = new Set(
-        prev.images.map((f) => `${f.name}-${f.size}-${f.lastModified}`),
-      );
-
-      const unique = selected.filter(
-        (f) => !existing.has(`${f.name}-${f.size}-${f.lastModified}`),
-      );
-
-      const combined = [...prev.images, ...unique].slice(0, MAX_IMAGES);
-
-      return {
-        ...prev,
-        images: combined,
-      };
-    });
-
-    setPreviews((prev) => {
-      const existing = new Set(prev.map((p) => p.key));
-
-      const next = selected
-        .map((file) => ({
-          key: `${file.name}-${file.size}-${file.lastModified}`,
-          url: URL.createObjectURL(file),
-        }))
-        .filter((p) => !existing.has(p.key));
-
-      return [...prev, ...next].slice(0, MAX_IMAGES);
-    });
-
     e.target.value = "";
+
+    const keyOf = (f) => `${f.name}-${f.size}-${f.lastModified}`;
+    const existingKeys = new Set(car.images.map((f) => f.__sourceKey ?? keyOf(f)));
+
+    const toAdd = selected
+      .filter((f) => !existingKeys.has(keyOf(f)))
+      .slice(0, MAX_IMAGES - car.images.length);
+
+    if (!toAdd.length) return;
+
+    setCompressing(true);
+    try {
+      // Resize/re-encode before they ever touch state or FormData - see
+      // compressImage.js for why (Vercel's serverless body-size limit).
+      const compressed = await compressImages(toAdd);
+      compressed.forEach((file, i) => {
+        file.__sourceKey = keyOf(toAdd[i]);
+      });
+
+      setCar((prev) => ({
+        ...prev,
+        images: [...prev.images, ...compressed].slice(0, MAX_IMAGES),
+      }));
+
+      setPreviews((prev) =>
+        [
+          ...prev,
+          ...compressed.map((file) => ({
+            key: file.__sourceKey,
+            url: URL.createObjectURL(file),
+          })),
+        ].slice(0, MAX_IMAGES),
+      );
+    } finally {
+      setCompressing(false);
+    }
   }
 
   function removeImage(index) {
@@ -351,14 +358,24 @@ export default function AddCarForm({ setCars, fetchCars, setActiveTab }) {
             multiple
             accept="image/*"
             onChange={onImages}
+            disabled={compressing}
             className="sr-only"
           />
 
           <label
             htmlFor="car-images"
-            className="flex h-11 cursor-pointer items-center justify-center rounded-lg border border-white/20 bg-rose-800/60 text-white"
+            className={`flex h-11 items-center justify-center gap-2 rounded-lg border border-white/20 bg-rose-800/60 text-white ${
+              compressing ? "cursor-wait opacity-70" : "cursor-pointer"
+            }`}
           >
-            Add images ({car.images.length}/{MAX_IMAGES})
+            {compressing ? (
+              <>
+                <AiOutlineLoading className="animate-spin" />
+                Optimising images...
+              </>
+            ) : (
+              `Add images (${car.images.length}/${MAX_IMAGES})`
+            )}
           </label>
 
           {previews.length > 0 && (

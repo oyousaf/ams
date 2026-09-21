@@ -8,6 +8,7 @@ import Toggle from "./Toggle";
 import Image from "next/image";
 import { FiEdit2, FiTrash2, FiSave, FiX } from "react-icons/fi";
 import { resolveImage } from "@/lib/resolveImage";
+import { compressImages } from "@/lib/compressImage";
 
 const API_BASE = "";
 const FALLBACK_IMAGE = "/fallback.webp";
@@ -52,6 +53,7 @@ const CarListItem = forwardRef(function CarListItem(
   const [isEditing, setIsEditing] = useState(false);
   const [saving, setSaving] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
+  const [compressing, setCompressing] = useState(false);
 
   const dragIndex = useRef(null);
 
@@ -232,24 +234,40 @@ const CarListItem = forwardRef(function CarListItem(
                 multiple
                 accept="image/*"
                 className="sr-only"
-                onChange={(e) => {
+                disabled={compressing}
+                onChange={async (e) => {
                   const files = Array.from(e.target.files || []);
-                  const previews = files.map((f) => URL.createObjectURL(f));
-
-                  setEditedCar((p) => ({
-                    ...p,
-                    imageUrls: [...p.imageUrls, ...previews],
-                  }));
-
                   e.target.value = "";
+                  if (!files.length) return;
+
+                  setCompressing(true);
+                  try {
+                    // Resize/re-encode before storage - see compressImage.js
+                    // for why (Vercel's serverless body-size limit).
+                    const compressedFiles = await compressImages(files);
+                    const previews = compressedFiles.map((f) =>
+                      URL.createObjectURL(f),
+                    );
+
+                    setEditedCar((p) => ({
+                      ...p,
+                      imageUrls: [...p.imageUrls, ...previews],
+                    }));
+                  } finally {
+                    setCompressing(false);
+                  }
                 }}
               />
 
               <label
                 htmlFor={`edit-images-${car.id}`}
-                className="flex h-9 cursor-pointer items-center justify-center rounded-lg border border-white/20 bg-rose-800/60 text-white text-sm hover:bg-rose-700/70"
+                className={`flex h-9 items-center justify-center rounded-lg border border-white/20 bg-rose-800/60 text-white text-sm ${
+                  compressing
+                    ? "cursor-wait opacity-70"
+                    : "cursor-pointer hover:bg-rose-700/70"
+                }`}
               >
-                Add images
+                {compressing ? "Optimising..." : "Add images"}
               </label>
 
               <div className="flex gap-2 overflow-x-auto">

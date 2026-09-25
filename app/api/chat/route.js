@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { generateChatReply } from "@/lib/gemini";
+import { fetchCarsServer } from "@/lib/fetchCars";
 
 export const maxDuration = 30;
 
@@ -78,7 +79,8 @@ export async function POST(request) {
     .slice(-MAX_HISTORY_TURNS);
 
   try {
-    const reply = await generateChatReply({ history, message });
+    const cars = await fetchCarsServer();
+    const reply = await generateChatReply({ history, message, cars });
     return NextResponse.json({ reply });
   } catch (error) {
     console.error("Chat API error:", error);

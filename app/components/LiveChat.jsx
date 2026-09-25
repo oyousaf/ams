@@ -10,8 +10,7 @@ import {
 } from "react-icons/ri";
 import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 
-const GREETING =
-  "Hello, I'm AMS - your virtual mechanic. Ask me about what to look for on a used car, common mechanical faults, or how our process works.";
+const GREETING = "Hello, I'm AMS - how can I help you today?";
 
 const MAX_MESSAGE_LENGTH = 800;
 

@@ -1,6 +1,7 @@
-const DEFAULT_MODEL = "gemini-3.5-flash";
+const DEFAULT_MODEL = "gemini-3.1-flash-lite";
 // Tried in order when the primary model is overloaded (429/5xx) or too slow.
-const FALLBACK_MODELS = ["gemini-3.1-flash-lite", "gemini-flash-latest"];
+// Each model has its own free-tier daily quota, so fallbacks also add capacity.
+const FALLBACK_MODELS = ["gemini-3.7-flash", "gemini-flash-latest", "gemini-3.5-flash"];
 const API_VERSION = "v1beta";
 const ATTEMPT_TIMEOUT_MS = 12_000;
 const TOTAL_BUDGET_MS = 25_000;
@@ -73,7 +74,7 @@ export async function generateChatReply({ history, message, cars }) {
     { role: "user", parts: [{ text: message }] },
   ];
 
-  const body = JSON.stringify({
+  const body = {
     contents,
     systemInstruction: {
       role: "system",
@@ -82,7 +83,6 @@ export async function generateChatReply({ history, message, cars }) {
     generationConfig: {
       temperature: 0.6,
       maxOutputTokens: 600,
-      thinkingConfig: { thinkingBudget: 0 },
     },
     safetySettings: [
       { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
@@ -90,7 +90,7 @@ export async function generateChatReply({ history, message, cars }) {
       { category: "HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
       { category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
     ],
-  });
+  };
 
   const models = [...new Set([model, ...FALLBACK_MODELS])];
   const deadline = Date.now() + TOTAL_BUDGET_MS;

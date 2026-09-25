@@ -1,7 +1,24 @@
-const DEFAULT_MODEL = "gemini-3.1-flash-lite";
-// Tried in order when the primary model is overloaded (429/5xx) or too slow.
-// Each model has its own free-tier daily quota, so fallbacks also add capacity.
-const FALLBACK_MODELS = ["gemini-3.7-flash", "gemini-flash-latest", "gemini-3.5-flash"];
+const DEFAULT_MODEL = "gemini-3.5-flash-lite";
+// Tried in order (most reliable first) when a model is overloaded, over quota or
+// too slow. Each model has its own free-tier daily quota, so fallbacks also add
+// capacity. Avoid "-latest" aliases here - they share quota with the model they
+// point to.
+const FALLBACK_MODELS = [
+  "gemini-3.5-flash",
+  "gemini-3.1-flash-lite",
+  "gemini-3.1-flash",
+  "gemini-flash-latest",
+];
+// Newer lite models reject thinkingBudget: 0 and need a thinking level instead;
+// the others reject the "minimal" level. Either way, keep thinking to a minimum
+// for fast chat replies.
+const MINIMAL_THINKING_LEVEL_MODELS = new Set(["gemini-3.5-flash-lite"]);
+
+function thinkingConfigFor(model) {
+  return MINIMAL_THINKING_LEVEL_MODELS.has(model)
+    ? { thinkingLevel: "minimal" }
+    : { thinkingBudget: 0 };
+}
 const API_VERSION = "v1beta";
 const ATTEMPT_TIMEOUT_MS = 12_000;
 const TOTAL_BUDGET_MS = 25_000;
@@ -19,7 +36,7 @@ You help visitors with:
 - Used-car buying advice and mechanical questions (common faults, warning signs, maintenance, running costs).
 
 How to reply:
-- Keep it short and natural, like a text from a helpful person. Greetings get one line, e.g. "Hello, I'm AMS - how can I help you today?". Simple questions get 1-3 sentences. Only detailed mechanical questions get more (a short list or at most 2 short paragraphs).
+- Keep it short and natural, like a text from a helpful person. If the message is only a greeting (e.g. "hi"), reply with one line, e.g. "Hello, I'm AMS - how can I help you today?". Otherwise, never greet or introduce yourself - answer the question straight away. Simple questions get 1-3 sentences. Only detailed mechanical questions get more (a short list or at most 2 short paragraphs).
 - Plain text only: no markdown, headers, bold or asterisks. Short dash lists are fine when listing cars.
 - No filler like "Great question!", no sign-offs offering more help, and don't repeat the dealership name, location or phone number unless asked or needed.
 - Answer the question directly. Don't push the visitor to call unless they want to view, test drive, reserve, buy or negotiate, or you genuinely can't answer.
@@ -131,7 +148,10 @@ async function requestReply({ model, apiKey, body, timeoutMs }) {
       {
         method: "POST",
         headers: { "content-type": "application/json", "x-goog-api-key": apiKey },
-        body,
+        body: JSON.stringify({
+          ...body,
+          generationConfig: { ...body.generationConfig, thinkingConfig: thinkingConfigFor(model) },
+        }),
         cache: "no-store",
         signal: AbortSignal.timeout(timeoutMs),
       },
@@ -145,7 +165,9 @@ async function requestReply({ model, apiKey, body, timeoutMs }) {
   if (!response.ok) {
     const errorBody = await response.text().catch(() => "");
     const error = new Error(`Gemini API error ${response.status} (${model}): ${errorBody.slice(0, 300)}`);
-    error.retryable = response.status === 429 || response.status >= 500;
+    // 400/404 are usually model-specific (unsupported option, retired model), so
+    // another model may still work. Auth failures (401/403) won't be fixed by retrying.
+    error.retryable = response.status !== 401 && response.status !== 403;
     throw error;
   }
 

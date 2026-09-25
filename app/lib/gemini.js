@@ -1,12 +1,11 @@
 const DEFAULT_MODEL = "gemini-3.5-flash-lite";
-// Tried in order (most reliable first) when a model is overloaded, over quota or
-// too slow. Each model has its own free-tier daily quota, so fallbacks also add
+// Tried in order (newest first, lite before full) when a model is overloaded,
+// over quota or too slow. Each model has its own free-tier daily quota, so fallbacks also add
 // capacity. Avoid "-latest" aliases here - they share quota with the model they
 // point to.
 const FALLBACK_MODELS = [
   "gemini-3.5-flash",
   "gemini-3.1-flash-lite",
-  "gemini-3.1-flash",
   "gemini-flash-latest",
 ];
 // Newer lite models reject thinkingBudget: 0 and need a thinking level instead;

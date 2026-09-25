@@ -1,5 +1,9 @@
 const DEFAULT_MODEL = "gemini-3.5-flash";
+// Tried in order when the primary model is overloaded (429/5xx) or too slow.
+const FALLBACK_MODELS = ["gemini-3.1-flash-lite", "gemini-flash-latest"];
 const API_VERSION = "v1beta";
+const ATTEMPT_TIMEOUT_MS = 12_000;
+const TOTAL_BUDGET_MS = 25_000;
 
 const SYSTEM_INSTRUCTION = `You are AMS, the virtual assistant for Ace Motor Sales, an independent used car dealership at 4 Westgate, Heckmondwike, West Yorkshire, WF16 0EH. Opening hours are 9am-8pm, every day. Phone: 07809 107655.
 
@@ -32,36 +36,74 @@ export async function generateChatReply({ history, message }) {
     { role: "user", parts: [{ text: message }] },
   ];
 
-  const response = await fetch(
-    `https://generativelanguage.googleapis.com/${API_VERSION}/models/${model}:generateContent?key=${apiKey}`,
-    {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({
-        contents,
-        systemInstruction: {
-          role: "system",
-          parts: [{ text: SYSTEM_INSTRUCTION }],
-        },
-        generationConfig: {
-          temperature: 0.6,
-          maxOutputTokens: 600,
-          thinkingConfig: { thinkingBudget: 0 },
-        },
-        safetySettings: [
-          { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
-          { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
-          { category: "HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
-          { category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
-        ],
-      }),
-      cache: "no-store",
+  const body = JSON.stringify({
+    contents,
+    systemInstruction: {
+      role: "system",
+      parts: [{ text: SYSTEM_INSTRUCTION }],
     },
-  );
+    generationConfig: {
+      temperature: 0.6,
+      maxOutputTokens: 600,
+      thinkingConfig: { thinkingBudget: 0 },
+    },
+    safetySettings: [
+      { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
+      { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
+      { category: "HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
+      { category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
+    ],
+  });
+
+  const models = [...new Set([model, ...FALLBACK_MODELS])];
+  const deadline = Date.now() + TOTAL_BUDGET_MS;
+  let lastError;
+
+  for (const candidateModel of models) {
+    const remaining = deadline - Date.now();
+    if (remaining <= 1000) break;
+
+    try {
+      return await requestReply({
+        model: candidateModel,
+        apiKey,
+        body,
+        timeoutMs: Math.min(ATTEMPT_TIMEOUT_MS, remaining),
+      });
+    } catch (error) {
+      lastError = error;
+      if (!error.retryable) throw error;
+      console.warn(`Gemini model ${candidateModel} unavailable, trying next:`, error.message);
+    }
+  }
+
+  throw lastError || new Error("Gemini request timed out");
+}
+
+async function requestReply({ model, apiKey, body, timeoutMs }) {
+  let response;
+  try {
+    response = await fetch(
+      `https://generativelanguage.googleapis.com/${API_VERSION}/models/${model}:generateContent`,
+      {
+        method: "POST",
+        headers: { "content-type": "application/json", "x-goog-api-key": apiKey },
+        body,
+        cache: "no-store",
+        signal: AbortSignal.timeout(timeoutMs),
+      },
+    );
+  } catch (error) {
+    const wrapped = new Error(`Gemini request to ${model} failed: ${error.message}`);
+    wrapped.retryable = true;
+    throw wrapped;
+  }
 
   if (!response.ok) {
     const errorBody = await response.text().catch(() => "");
-    throw new Error(`Gemini API error ${response.status}: ${errorBody.slice(0, 300)}`);
+    const error = new Error(`Gemini API error ${response.status} (${model}): ${errorBody.slice(0, 300)}`);
+    error.retryable = response.status === 429 || response.status >= 500;
+    throw error;
   }
 
   const data = await response.json();

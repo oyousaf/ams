@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { generateChatReply } from "@/lib/gemini";
 
+export const maxDuration = 30;
+
 const MAX_MESSAGE_LENGTH = 800;
 const MAX_HISTORY_TURNS = 12;
 const RATE_LIMIT_WINDOW_MS = 5 * 60 * 1000;

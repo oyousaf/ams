@@ -48,6 +48,7 @@ export const socialLinks = [
       <FaFacebook className="text-4xl md:text-3xl hover:text-rose-600 transition-all ease-in-out duration-300" />
     ),
     name: "Facebook",
+    external: true,
   },
   {
     id: 2,
@@ -56,6 +57,7 @@ export const socialLinks = [
       <FaInstagram className="text-4xl md:text-3xl hover:text-rose-600 transition-all ease-in-out duration-300" />
     ),
     name: "Instagram",
+    external: true,
   },
   {
     id: 3,
@@ -76,12 +78,30 @@ export const socialLinks = [
 ];
 
 export const gallery = [
-  "/forecourt1.webp",
-  "/forecourt2.webp",
-  "/forecourt3.webp",
-  "/forecourt4.webp",
-  "/forecourt5.webp",
-  "/forecourt6.webp",
+  {
+    src: "/forecourt1.webp",
+    alt: "Ace Motor Sales sign on the corner of Barrack Street, Heckmondwike",
+  },
+  {
+    src: "/forecourt2.webp",
+    alt: "Ace Motor Sales forecourt on Westgate, with cars for sale behind the railings",
+  },
+  {
+    src: "/forecourt3.webp",
+    alt: "AMS banner on the forecourt railings advertising warranty, part exchange and finance",
+  },
+  {
+    src: "/forecourt4.webp",
+    alt: "Row of white used cars with Approved Dealer roof signs on the forecourt",
+  },
+  {
+    src: "/forecourt5.webp",
+    alt: "White Volkswagen and BMW cars for sale behind the forecourt railings",
+  },
+  {
+    src: "/forecourt6.webp",
+    alt: "Digital instrument cluster of a BMW M135i",
+  },
 ];
 
 export const reviews = [
@@ -229,5 +249,3 @@ export const carLogos = {
   volvo: <SiVolvo className="w-12 h-12" />,
   vauxhall: <SiVauxhall className="w-12 h-12" />,
 };
-
-export const carMakes = Object.keys(carLogos);

@@ -1,14 +1,87 @@
 "use client";
 
 import { useRef } from "react";
+import Link from "next/link";
 import { motion, useInView } from "motion/react";
+import { FaMapMarkerAlt } from "react-icons/fa";
 import { socialLinks } from "../constants";
 import EnquiryForm from "./EnquiryForm";
+import { useConsent, grantConsent, openConsentSettings } from "@/lib/consent";
+import { useHasMounted } from "@/lib/useHasMounted";
+import { PHONE_DISPLAY, PHONE_E164 } from "@/lib/carMeta";
 
-const Footer = () => {
+const MAP_EMBED_URL =
+  "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d631.5462629097879!2d-1.6783367301941519!3d53.70835050988343!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x487bdf983824d755%3A0x1ccbf3963f34d05a!2sAce%20Motor%20Sales!5e0!3m2!1sen!2suk!4v1729510614154!5m2!1sen!2suk";
+
+// Opening Google Maps in a new tab needs no consent - nothing loads on our page.
+const MAP_LINK_URL =
+  "https://www.google.com/maps/search/?api=1&query=Ace+Motor+Sales+4+Westgate+Heckmondwike+WF16+0EH";
+
+const mapBox = "w-full h-100 md:h-112.5 rounded-xl";
+
+// The Google embed sets third-party cookies, so it only loads once the visitor
+// has allowed it (from the cookie jar, or the button on this placeholder).
+function LocationMap() {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, amount: 0.2 });
+  const mounted = useHasMounted();
+  const consent = useConsent();
 
+  if (!mounted || !inView) {
+    return <div ref={ref} className={`${mapBox} bg-black/20 animate-pulse`} />;
+  }
+
+  if (consent?.maps) {
+    return (
+      <iframe
+        title="Map showing Ace Motor Sales at 4 Westgate, Heckmondwike"
+        src={MAP_EMBED_URL}
+        className={`${mapBox} shadow-lg`}
+        loading="lazy"
+        referrerPolicy="strict-origin-when-cross-origin"
+        style={{ border: 0 }}
+        allowFullScreen
+      />
+    );
+  }
+
+  return (
+    <div
+      className={`${mapBox} flex flex-col items-center justify-center gap-5 border border-white/10 bg-black/25 p-8 text-center`}
+    >
+      <span className="surface-primary grid h-16 w-16 place-items-center rounded-full">
+        <FaMapMarkerAlt className="text-2xl text-white" aria-hidden="true" />
+      </span>
+      <div>
+        <p className="text-xl font-semibold text-white">Find us on Westgate</p>
+        <p className="mt-1 text-white/80">4 Westgate, Heckmondwike, WF16 0EH</p>
+      </div>
+      <p className="max-w-xs text-sm text-white/70">
+        The interactive map is provided by Google, which sets its own cookies.
+      </p>
+      <div className="flex flex-wrap justify-center gap-3">
+        <button
+          type="button"
+          onClick={() => grantConsent("maps")}
+          className="rounded-full bg-linear-to-r from-rose-600 to-rose-500 px-5 py-2.5 font-semibold text-white shadow-lg transition-shadow hover:shadow-[0_0_25px_rgba(244,63,94,0.55)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-300"
+        >
+          Show interactive map
+        </button>
+        <a
+          href={MAP_LINK_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="rounded-full border border-white/25 bg-white/5 px-5 py-2.5 font-semibold text-white transition-colors hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
+        >
+          Open in Google Maps
+          <span className="sr-only"> (opens in a new tab)</span>
+        </a>
+      </div>
+    </div>
+  );
+}
+
+const Footer = () => {
   return (
     <footer id="contact" className="py-28 px-4 lg:px-8 text-white relative">
       <div className="space-y-20">
@@ -42,24 +115,12 @@ const Footer = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
             {/* Map */}
             <motion.div
-              ref={ref}
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
             >
-              {inView ? (
-                <iframe
-                  title="Ace Motor Sales Location"
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d631.5462629097879!2d-1.6783367301941519!3d53.70835050988343!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x487bdf983824d755%3A0x1ccbf3963f34d05a!2sAce%20Motor%20Sales!5e0!3m2!1sen!2suk!4v1729510614154!5m2!1sen!2suk"
-                  className="w-full h-100 md:h-112.5 rounded-xl shadow-lg"
-                  loading="lazy"
-                  style={{ border: 0 }}
-                  allowFullScreen
-                />
-              ) : (
-                <div className="w-full h-100 md:h-112.5 rounded-xl bg-black/20 animate-pulse" />
-              )}
+              <LocationMap />
             </motion.div>
 
             {/* Enquiry */}
@@ -81,19 +142,20 @@ const Footer = () => {
             text-center space-y-4
           "
         >
-          <h3 className="text-2xl font-semibold">
-            © {new Date().getFullYear()} Ace Motor Sales
-          </h3>
+          <p className="text-2xl font-semibold">Ace Motor Sales</p>
 
-          <p className="text-white/85">4 Westgate, Heckmondwike, WF16 0EH</p>
+          <address className="not-italic text-white/85">
+            4 Westgate, Heckmondwike, West Yorkshire, WF16 0EH
+          </address>
 
-          <p className="text-white/70">
-            Keys in the ignition from 9am to 8pm. Cruise on in anytime.
+          <p className="text-white/80">
+            Keys in the ignition from 9am to 8pm, every day. Cruise on in
+            anytime.
           </p>
 
           <a
-            href="tel:+447809107655"
-            aria-label="Call Ace Motor Sales on 07809 107655"
+            href={`tel:${PHONE_E164}`}
+            aria-label={`Call Ace Motor Sales on ${PHONE_DISPLAY}`}
             className="
               inline-block text-3xl font-bold
               text-rose-300 hover:text-rose-200 transition
@@ -101,25 +163,47 @@ const Footer = () => {
               focus-visible:ring-2 focus-visible:ring-rose-300/50
             "
           >
-            07809 107655
+            {PHONE_DISPLAY}
           </a>
 
           <div className="flex justify-center gap-5 pt-3">
-            {socialLinks.map(({ id, href, icon, name }) => (
+            {socialLinks.map(({ id, href, icon, name, external }) => (
               <motion.a
                 key={id}
                 href={href}
-                target="_blank"
-                rel="nofollow noopener noreferrer"
-                aria-label={name}
+                {...(external && {
+                  target: "_blank",
+                  rel: "noopener noreferrer",
+                })}
+                aria-label={external ? `${name} (opens in a new tab)` : name}
                 whileHover={{ y: -3 }}
                 transition={{ type: "spring", stiffness: 260 }}
-                className="text-2xl text-white/80 hover:text-rose-300"
+                className="rounded text-2xl text-white/80 hover:text-rose-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-300"
               >
                 {icon}
               </motion.a>
             ))}
           </div>
+
+          <nav
+            aria-label="Legal"
+            className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 border-t border-white/10 pt-5 text-sm text-white/75"
+          >
+            <Link
+              href="/privacy"
+              className="underline-offset-4 hover:text-white hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-300 rounded"
+            >
+              Privacy policy
+            </Link>
+            <button
+              type="button"
+              onClick={openConsentSettings}
+              className="underline-offset-4 hover:text-white hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-300 rounded"
+            >
+              Cookie settings
+            </button>
+            <span>&copy; {new Date().getFullYear()} Ace Motor Sales</span>
+          </nav>
         </motion.div>
 
         {/* Signature */}
@@ -144,6 +228,7 @@ const Footer = () => {
               className="font-medium text-white/80 hover:text-white transition"
             >
               Legxcy Solutions
+              <span className="sr-only"> (opens in a new tab)</span>
             </a>
           </span>
         </div>

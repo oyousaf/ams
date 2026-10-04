@@ -19,10 +19,11 @@ const normalizeFeedback = (text) =>
 const TRUNCATE_THRESHOLD = 220;
 
 const StarRow = () => (
-  <div className="mb-4 flex justify-center gap-1" aria-hidden="true">
+  <div className="mb-4 flex justify-center gap-1">
     {Array.from({ length: 5 }).map((_, i) => (
-      <FaStar key={i} className="text-sm text-amber-400" />
+      <FaStar key={i} className="text-sm text-amber-400" aria-hidden="true" />
     ))}
+    <span className="sr-only">Rated 5 out of 5</span>
   </div>
 );
 
@@ -32,7 +33,7 @@ function ReviewCard({ name, feedback, delay }) {
   const canTruncate = text.length > TRUNCATE_THRESHOLD;
 
   return (
-    <motion.blockquote
+    <motion.figure
       layout
       initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
@@ -44,7 +45,7 @@ function ReviewCard({ name, feedback, delay }) {
 
       <StarRow />
 
-      <motion.p
+      <motion.blockquote
         layout
         transition={{ duration: 0.35, ease: "easeInOut" }}
         className={`flex-1 whitespace-pre-line text-center text-base leading-relaxed text-white/90 md:text-lg ${
@@ -52,28 +53,30 @@ function ReviewCard({ name, feedback, delay }) {
         }`}
       >
         &ldquo;{text}&rdquo;
-      </motion.p>
+      </motion.blockquote>
 
       {canTruncate && (
         <button
           type="button"
           onClick={() => setExpanded((prev) => !prev)}
+          aria-expanded={expanded}
           className="mx-auto mt-3 text-sm font-semibold text-rose-300 transition-colors duration-200 hover:text-rose-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-300 rounded"
         >
           {expanded ? "Read less" : "Read more"}
         </button>
       )}
 
-      <footer className="mt-6 text-center text-base font-semibold text-rose-200 md:text-lg">
+      <figcaption className="mt-6 text-center text-base font-semibold text-rose-200 md:text-lg">
         &mdash; {name}
-      </footer>
-    </motion.blockquote>
+      </figcaption>
+    </motion.figure>
   );
 }
 
 const Reviews = () => {
   return (
     <section
+      id="reviews"
       aria-labelledby="reviews-heading"
       className="py-24 px-4 sm:px-6 md:px-8 lg:px-12"
     >

@@ -6,7 +6,11 @@ import { motion } from "motion/react";
 
 const About = () => {
   return (
-    <section aria-labelledby="about-heading" className="py-24 px-4 lg:px-8">
+    <section
+      id="about"
+      aria-labelledby="about-heading"
+      className="py-24 px-4 lg:px-8"
+    >
       <div className="mx-auto mb-12 max-w-2xl text-center">
         <span className="mb-3 inline-block text-xs font-semibold uppercase tracking-[0.2em] text-rose-400">
           Why Ace Motor Sales
@@ -43,10 +47,10 @@ const About = () => {
             className="flex flex-col items-center rounded-2xl border border-white/10 bg-white/4 p-6 backdrop-blur-sm transition-colors duration-200 hover:border-rose-500/50 hover:bg-white/6"
           >
             <div className="surface-primary mb-4 grid h-16 w-16 shrink-0 place-items-center rounded-full">
-              <tile.icon className="text-2xl text-white" />
+              <tile.icon className="text-2xl text-white" aria-hidden="true" />
             </div>
             <h3 className="mb-2 text-xl font-bold text-white">{tile.title}</h3>
-            <p className="text-base leading-relaxed text-white/65">
+            <p className="text-base leading-relaxed text-white/75">
               {tile.description}
             </p>
           </motion.div>
@@ -68,7 +72,7 @@ const About = () => {
             },
           }}
         >
-          {gallery.map((src, index) => {
+          {gallery.map(({ src, alt }, index) => {
             const isWide = index === 1 || index === 4;
             const isFirst = index === 0;
 
@@ -86,7 +90,7 @@ const About = () => {
               >
                 <ImageTile
                   src={src}
-                  alt={`Gallery image ${index + 1}`}
+                  alt={alt}
                   priority={isFirst}
                   isWide={isWide}
                   isFirst={isFirst}

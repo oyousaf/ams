@@ -12,7 +12,7 @@ export default function ScrollToTop() {
       setShow(window.scrollY > 500);
     };
 
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -20,6 +20,7 @@ export default function ScrollToTop() {
     <AnimatePresence>
       {show && (
         <motion.button
+          type="button"
           initial={{ opacity: 0, y: 40, scale: 0.8 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: 40, scale: 0.8 }}
@@ -30,9 +31,10 @@ export default function ScrollToTop() {
             fixed bottom-6 right-6 z-40 w-12 h-12 rounded-full flex items-center justify-center  text-white
             surface-primary border border-white/10 backdrop-blur-md shadow-lg transition-all duration-300
             hover:scale-110 hover:shadow-[0_0_25px_rgba(244,63,94,0.45)]
+            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-300
           `}
         >
-          <FaArrowUp size={25} />
+          <FaArrowUp size={25} aria-hidden="true" />
         </motion.button>
       )}
     </AnimatePresence>

@@ -1,29 +1,28 @@
 "use client";
 
-import { useEffect, useState, useMemo } from "react";
+import { useState, useMemo } from "react";
+import dynamic from "next/dynamic";
 import { motion, AnimatePresence } from "motion/react";
-import { carMakes, carLogos } from "../constants";
+import { FaChevronDown } from "react-icons/fa";
+import { carLogos } from "../constants";
 import CarCard from "./CarCard";
-import CarModal from "./CarModal";
-import SkeletonCarCard from "./SkeletonCarCard";
-import SortDropdown from "./SortDropdown";
-import { normalizeCar } from "@/lib/normaliseCar";
+import { detectMake, carPath, PHONE_DISPLAY, PHONE_E164 } from "@/lib/carMeta";
 
-const API = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") || "";
-const API_ENDPOINT = API ? `${API}/api/cars` : "/api/cars";
+// Embla + the dialog only download when someone actually opens a car.
+const CarModal = dynamic(() => import("./CarModal"), { ssr: false });
 
 const sortOptions = [
-  { key: "mileage", label: "Mileage" },
-  { key: "priceLow", label: "Price ↑" },
-  { key: "priceHigh", label: "Price ↓" },
-  { key: "newest", label: "Recently Added" },
-  { key: "oldest", label: "Oldest" },
-  { key: "automatic", label: "Automatic" },
-  { key: "manual", label: "Manual" },
-  { key: "engineLow", label: "Engine ↑" },
-  { key: "engineHigh", label: "Engine ↓" },
-  { key: "titleAsc", label: "A-Z" },
-  { key: "titleDesc", label: "Z-A" },
+  { key: "newest", label: "Recently added" },
+  { key: "oldest", label: "Oldest listings" },
+  { key: "priceLow", label: "Price: low to high" },
+  { key: "priceHigh", label: "Price: high to low" },
+  { key: "mileage", label: "Lowest mileage" },
+  { key: "engineLow", label: "Engine: smallest first" },
+  { key: "engineHigh", label: "Engine: largest first" },
+  { key: "automatic", label: "Automatic only" },
+  { key: "manual", label: "Manual only" },
+  { key: "titleAsc", label: "Name: A-Z" },
+  { key: "titleDesc", label: "Name: Z-A" },
 ];
 
 const safeNum = (v) => {
@@ -31,66 +30,27 @@ const safeNum = (v) => {
   return Number.isFinite(n) ? n : 0;
 };
 
-function enrichCar(car) {
-  const title = car.title?.toLowerCase().replace(/\s+/g, "") || "";
+const byNewest = (a, b) =>
+  new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime();
 
-  const make = carMakes.find((m) =>
-    title.includes(m.toLowerCase().replace(/\s+/g, "")),
-  );
+function enrichCar(car) {
+  const make = detectMake(car.title);
 
   return {
     ...car,
     make,
+    href: carPath(car),
     logo: make ? carLogos[make] : null,
   };
 }
 
+// Stock arrives from the server (cached + revalidated whenever the dashboard
+// edits a car), so there's no client refetch - no double request, no reshuffle.
 const LatestCars = ({ initialCars = [] }) => {
-  const [rawCars, setRawCars] = useState(initialCars);
-  const [isRefreshing, setIsRefreshing] = useState(false);
-  const [error, setError] = useState(null);
   const [sortOption, setSortOption] = useState("newest");
   const [selectedCar, setSelectedCar] = useState(null);
-  const [isDropdownOpen, setDropdownOpen] = useState(false);
 
-  useEffect(() => {
-    let cancelled = false;
-
-    const fetchCars = async () => {
-      try {
-        setIsRefreshing(true);
-        setError(null);
-
-        const res = await fetch(API_ENDPOINT, {
-          cache: "no-store",
-        });
-
-        if (!res.ok) throw new Error("Failed to fetch cars");
-
-        const data = await res.json();
-        const rows = Array.isArray(data) ? data : (data.cars ?? []);
-
-        if (!cancelled) setRawCars(rows.map(normalizeCar));
-      } catch (err) {
-        console.error(err);
-        if (!cancelled) {
-          setError("Unable to load vehicles. Please try again shortly.");
-        }
-      } finally {
-        if (!cancelled) setIsRefreshing(false);
-      }
-    };
-
-    fetchCars();
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
-  const cars = useMemo(() => rawCars.map(enrichCar), [rawCars]);
-  const showSkeleton = isRefreshing && cars.length === 0;
-  const showError = Boolean(error) && cars.length === 0;
+  const cars = useMemo(() => initialCars.map(enrichCar), [initialCars]);
 
   const sortedCars = useMemo(() => {
     let result = [...cars];
@@ -101,11 +61,7 @@ const LatestCars = ({ initialCars = [] }) => {
         result = result.filter(
           (car) => car.transmission?.toLowerCase() === sortOption,
         );
-        result.sort(
-          (a, b) =>
-            new Date(b.createdAt || 0).getTime() -
-            new Date(a.createdAt || 0).getTime(),
-        );
+        result.sort(byNewest);
         break;
 
       case "priceLow":
@@ -129,11 +85,7 @@ const LatestCars = ({ initialCars = [] }) => {
         break;
 
       case "oldest":
-        result.sort(
-          (a, b) =>
-            new Date(a.createdAt || 0).getTime() -
-            new Date(b.createdAt || 0).getTime(),
-        );
+        result.sort((a, b) => byNewest(b, a));
         break;
 
       case "titleAsc":
@@ -145,11 +97,7 @@ const LatestCars = ({ initialCars = [] }) => {
         break;
 
       default:
-        result.sort(
-          (a, b) =>
-            new Date(b.createdAt || 0).getTime() -
-            new Date(a.createdAt || 0).getTime(),
-        );
+        result.sort(byNewest);
     }
 
     return result.sort((a, b) => {
@@ -159,7 +107,11 @@ const LatestCars = ({ initialCars = [] }) => {
   }, [cars, sortOption]);
 
   return (
-    <section aria-labelledby="cars-heading" className="py-24 px-6 md:px-12">
+    <section
+      id="cars"
+      aria-labelledby="cars-heading"
+      className="py-24 px-6 md:px-12"
+    >
       <div className="mx-auto mb-12 max-w-2xl text-center">
         <span className="mb-3 inline-block text-xs font-semibold uppercase tracking-[0.2em] text-rose-400">
           Fresh On The Forecourt
@@ -172,59 +124,81 @@ const LatestCars = ({ initialCars = [] }) => {
         </h2>
       </div>
 
-      <div className="mb-12 flex justify-center">
-        <SortDropdown
-          options={sortOptions}
-          selected={sortOption}
-          onSelect={(key) => {
-            setSortOption(key);
-            setDropdownOpen(false);
-          }}
-          isOpen={isDropdownOpen}
-          onToggle={setDropdownOpen}
-        />
-      </div>
-
-      {showSkeleton ? (
-        <div
-          role="status"
-          aria-live="polite"
-          className="mx-auto grid max-w-7xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
-        >
-          {Array.from({ length: 6 }).map((_, i) => (
-            <SkeletonCarCard key={i} />
-          ))}
-        </div>
-      ) : showError ? (
-        <p className="mx-auto max-w-md text-center text-red-400">{error}</p>
+      {cars.length === 0 ? (
+        <p className="mx-auto max-w-md text-center text-lg text-white/80">
+          New stock is on its way. Call us on{" "}
+          <a
+            href={`tel:${PHONE_E164}`}
+            className="font-semibold text-rose-300 underline underline-offset-4 hover:text-rose-200"
+          >
+            {PHONE_DISPLAY}
+          </a>{" "}
+          to hear about cars before they&apos;re listed.
+        </p>
       ) : (
-        <motion.ul
-          layout
-          className="mx-auto grid max-w-7xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
-        >
-          <AnimatePresence>
-            {sortedCars.map((car) => (
-              <motion.li
-                key={car.id}
-                layout
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
+        <>
+          {/* Native select: keyboard, screen-reader and mobile pickers for free */}
+          <div className="mb-12 flex justify-center">
+            <div className="surface-primary relative flex w-72 items-center rounded-full shadow-md transition-shadow focus-within:ring-2 focus-within:ring-rose-300 hover:shadow-[0_0_20px_rgba(244,63,94,0.35)]">
+              <label
+                htmlFor="sort-cars"
+                className="shrink-0 pl-5 text-base font-semibold text-white/80"
               >
-                <CarCard
-                  car={car}
-                  logo={car.logo}
-                  onOpen={() => setSelectedCar(car)}
-                />
-              </motion.li>
-            ))}
-          </AnimatePresence>
-        </motion.ul>
+                Sort by
+              </label>
+              <select
+                id="sort-cars"
+                value={sortOption}
+                onChange={(e) => setSortOption(e.target.value)}
+                className="w-full cursor-pointer appearance-none bg-transparent py-3 pl-2 pr-10 text-base font-semibold text-white focus:outline-none [&>option]:bg-neutral-900"
+              >
+                {sortOptions.map(({ key, label }) => (
+                  <option key={key} value={key}>
+                    {label}
+                  </option>
+                ))}
+              </select>
+              <FaChevronDown
+                aria-hidden="true"
+                className="pointer-events-none absolute right-4 text-sm text-white/80"
+              />
+            </div>
+          </div>
+
+          <p className="sr-only" aria-live="polite">
+            Showing {sortedCars.length}{" "}
+            {sortedCars.length === 1 ? "vehicle" : "vehicles"}
+          </p>
+
+          <motion.ul
+            layout
+            className="mx-auto grid max-w-7xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
+          >
+            <AnimatePresence>
+              {sortedCars.map((car) => (
+                <motion.li
+                  key={car.id}
+                  layout
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                >
+                  <CarCard
+                    car={car}
+                    logo={car.logo}
+                    onOpen={() => setSelectedCar(car)}
+                  />
+                </motion.li>
+              ))}
+            </AnimatePresence>
+          </motion.ul>
+        </>
       )}
 
       <AnimatePresence>
         {selectedCar && (
           <CarModal
+            key={selectedCar.id}
             car={selectedCar}
             logo={selectedCar.logo}
             onClose={() => setSelectedCar(null)}

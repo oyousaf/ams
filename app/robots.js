@@ -1,11 +1,12 @@
+import { SITE_URL } from "@/lib/carMeta";
+
 export default function robots() {
   return {
     rules: {
       userAgent: "*",
       allow: "/",
-      disallow: "/dashboard",
+      disallow: ["/dashboard", "/api/"],
     },
-    sitemap: "https://acemotorsales.uk/sitemap.xml",
-    host: "https://acemotorsales.uk",
+    sitemap: `${SITE_URL}/sitemap.xml`,
   };
 }

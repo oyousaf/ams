@@ -9,6 +9,8 @@ import {
   RiCarLine,
 } from "react-icons/ri";
 import { motion, AnimatePresence, useReducedMotion } from "motion/react";
+import Link from "next/link";
+import { useConsent, grantConsent } from "@/lib/consent";
 
 const GREETING = "Hello, I'm AMS - how can I help you today?";
 
@@ -33,7 +35,7 @@ function ChatBubble({ role, text }) {
 
 function TypingIndicator() {
   return (
-    <div className="flex justify-start" aria-live="polite">
+    <div className="flex justify-start">
       <div className="flex items-center gap-1 rounded-2xl rounded-bl-sm bg-white/10 px-4 py-3">
         {[0, 1, 2].map((i) => (
           <span
@@ -56,50 +58,41 @@ export default function LiveChat() {
   const [input, setInput] = useState("");
   const [isSending, setIsSending] = useState(false);
 
-  const panelRef = useRef(null);
   const scrollRef = useRef(null);
   const inputRef = useRef(null);
+  const launcherRef = useRef(null);
+  const consentButtonRef = useRef(null);
   const titleId = useId();
   const shouldReduceMotion = useReducedMotion();
 
+  // Messages go to Google Gemini, so the chat only starts once the visitor
+  // has agreed (here, or in the cookie jar).
+  const consent = useConsent();
+  const chatAllowed = Boolean(consent?.chat);
+
   const toggleOpen = () => setIsOpen((prev) => !prev);
-  const close = () => setIsOpen(false);
+  const close = () => {
+    setIsOpen(false);
+    launcherRef.current?.focus();
+  };
 
-  /* Autofocus input + scroll lock isn't needed (panel doesn't cover viewport), but focus input on open */
-  useEffect(() => {
-    if (isOpen) inputRef.current?.focus();
-  }, [isOpen]);
-
-  /* Escape to close */
+  /* Move focus into the panel on open (or once chat is enabled) */
   useEffect(() => {
     if (!isOpen) return;
-    const onKey = (e) => e.key === "Escape" && close();
+    (chatAllowed ? inputRef : consentButtonRef).current?.focus();
+  }, [isOpen, chatAllowed]);
+
+  /* Escape closes and returns focus to the launcher. The panel is a
+     non-modal dialog - it doesn't cover the page, so focus isn't trapped. */
+  useEffect(() => {
+    if (!isOpen) return;
+    const onKey = (e) => {
+      if (e.key !== "Escape") return;
+      setIsOpen(false);
+      launcherRef.current?.focus();
+    };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [isOpen]);
-
-  /* Focus trap */
-  useEffect(() => {
-    if (!isOpen || !panelRef.current) return;
-    const trap = (e) => {
-      if (e.key !== "Tab") return;
-      const focusables = panelRef.current.querySelectorAll(
-        'button, input, textarea, [tabindex]:not([tabindex="-1"])',
-      );
-      if (!focusables.length) return;
-      const first = focusables[0];
-      const last = focusables[focusables.length - 1];
-
-      if (e.shiftKey && document.activeElement === first) {
-        e.preventDefault();
-        last.focus();
-      } else if (!e.shiftKey && document.activeElement === last) {
-        e.preventDefault();
-        first.focus();
-      }
-    };
-    document.addEventListener("keydown", trap);
-    return () => document.removeEventListener("keydown", trap);
   }, [isOpen]);
 
   /* Auto-scroll to latest message */
@@ -171,6 +164,7 @@ export default function LiveChat() {
   return (
     <>
       <motion.button
+        ref={launcherRef}
         type="button"
         onClick={toggleOpen}
         aria-expanded={isOpen}
@@ -197,7 +191,6 @@ export default function LiveChat() {
         {isOpen && (
           <motion.div
             id="live-chat-panel"
-            ref={panelRef}
             role="dialog"
             aria-modal="false"
             aria-labelledby={titleId}
@@ -219,7 +212,7 @@ export default function LiveChat() {
                 >
                   AMS
                 </h2>
-                <p className="truncate text-xs text-white/50">
+                <p className="truncate text-xs text-white/70">
                   Expert mechanical guidance, powered by AI
                 </p>
               </div>
@@ -233,11 +226,52 @@ export default function LiveChat() {
               </button>
             </div>
 
+            {!chatAllowed ? (
+              <div className="flex flex-1 flex-col justify-center gap-4 px-5 py-6 text-sm leading-relaxed text-white/85">
+                <p className="text-base font-semibold text-white">
+                  Before we chat
+                </p>
+                <p>
+                  AMS is an AI assistant. Your messages are sent to Google&apos;s
+                  Gemini service to generate replies, so please don&apos;t share
+                  personal details like your address or bank information.
+                </p>
+                <p>
+                  Read more in our{" "}
+                  <Link
+                    href="/privacy#ai-chat"
+                    className="font-semibold text-rose-300 underline underline-offset-2 hover:text-rose-200"
+                  >
+                    privacy policy
+                  </Link>
+                  .
+                </p>
+                <div className="flex flex-wrap gap-2 pt-1">
+                  <button
+                    ref={consentButtonRef}
+                    type="button"
+                    onClick={() => grantConsent("chat")}
+                    className="surface-primary rounded-full px-5 py-2.5 font-semibold text-white transition hover:shadow-[0_0_25px_rgba(244,63,94,0.45)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-300"
+                  >
+                    Start chatting
+                  </button>
+                  <button
+                    type="button"
+                    onClick={close}
+                    className="rounded-full border border-white/20 px-5 py-2.5 font-semibold text-white/85 transition hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-300"
+                  >
+                    Not now
+                  </button>
+                </div>
+              </div>
+            ) : (
+            <>
             {/* Messages */}
             <div
               ref={scrollRef}
+              role="log"
+              aria-label="Conversation"
               className="flex-1 space-y-3 overflow-y-auto px-4 py-4 scrollbar-hide"
-              aria-live="polite"
             >
               {messages.map((m, i) => (
                 <ChatBubble key={i} role={m.role} text={m.text} />
@@ -246,7 +280,7 @@ export default function LiveChat() {
             </div>
 
             {/* Disclaimer */}
-            <p className="px-4 pb-1 text-[11px] leading-tight text-white/40">
+            <p className="px-4 pb-1 text-xs leading-tight text-white/65">
               AI-generated guidance - not a substitute for a full inspection or
               our team&apos;s advice.
             </p>
@@ -271,7 +305,7 @@ export default function LiveChat() {
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}
                 placeholder="Ask about buying, checks, or our process…"
-                className="max-h-24 flex-1 resize-none rounded-xl bg-white/10 px-3 py-2 text-sm text-white placeholder-white/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-300"
+                className="max-h-24 flex-1 resize-none rounded-xl bg-white/10 px-3 py-2 text-sm text-white placeholder-white/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-300"
               />
               <button
                 type="submit"
@@ -279,9 +313,11 @@ export default function LiveChat() {
                 aria-label="Send message"
                 className="surface-primary grid h-10 w-10 shrink-0 place-items-center rounded-full text-white transition disabled:cursor-not-allowed disabled:opacity-40 hover:enabled:shadow-[0_0_25px_rgba(244,63,94,0.45)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-300"
               >
-                <RiSendPlaneFill className="text-lg" />
+                <RiSendPlaneFill className="text-lg" aria-hidden="true" />
               </button>
             </form>
+            </>
+            )}
           </motion.div>
         )}
       </AnimatePresence>

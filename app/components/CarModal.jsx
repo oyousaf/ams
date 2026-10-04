@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState, useCallback } from "react";
 import Image from "next/image";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
-import { motion, AnimatePresence } from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
 import {
   FaTimes,
   FaGasPump,
@@ -12,6 +12,8 @@ import {
   FaCarSide,
   FaShareAlt,
   FaPlay,
+  FaPause,
+  FaArrowRight,
 } from "react-icons/fa";
 import { PiEngineFill } from "react-icons/pi";
 import { GiGearStickPattern } from "react-icons/gi";
@@ -19,6 +21,7 @@ import { BiSolidTachometer } from "react-icons/bi";
 import Divider from "./Divider";
 import { resolveImages } from "@/lib/resolveImage";
 import { useBodyScrollLock } from "@/lib/useBodyScrollLock";
+import { formatPrice } from "@/lib/carMeta";
 
 const AUTOPLAY_MS = 5000;
 
@@ -39,23 +42,27 @@ const modal = {
   exit: { opacity: 0, scale: 0.94, y: 60 },
 };
 
+function preload(src) {
+  if (!src) return;
+  const img = new window.Image();
+  img.src = src;
+  img.decode?.().catch(() => {});
+}
+
 export default function CarModal({ car, logo, onClose }) {
+  const dialogRef = useRef(null);
+  const prefersReducedMotion = useReducedMotion();
+
   const images = useMemo(() => {
     return resolveImages(car.imageUrls);
   }, [car.imageUrls]);
 
-  /* preload */
-  useEffect(() => {
-    images.forEach((src) => {
-      const img = new window.Image();
-      img.src = src;
-      img.decode?.().catch(() => {});
-    });
-  }, [images]);
-
+  // Autoplay is allowed (there's always a visible pause control - WCAG 2.2.2)
+  // but never starts on its own for people who've asked for reduced motion.
   const [autoplay] = useState(() =>
     Autoplay({
       delay: AUTOPLAY_MS,
+      playOnInit: !prefersReducedMotion,
       stopOnInteraction: false,
       stopOnMouseEnter: false,
     }),
@@ -72,7 +79,7 @@ export default function CarModal({ car, logo, onClose }) {
 
   const [active, setActive] = useState(0);
   const [progressKey, setProgressKey] = useState(0);
-  const [paused, setPaused] = useState(false);
+  const [paused, setPaused] = useState(Boolean(prefersReducedMotion));
 
   const userInteracted = useRef(false);
 
@@ -115,61 +122,94 @@ export default function CarModal({ car, logo, onClose }) {
     };
   }, [emblaApi, pauseAutoplay, autoplay]);
 
+  // Warm only the neighbouring photos rather than the whole set at once.
+  useEffect(() => {
+    if (images.length < 2) return;
+    preload(images[(active + 1) % images.length]);
+    preload(images[(active - 1 + images.length) % images.length]);
+  }, [active, images]);
+
   const close = useCallback(() => onClose?.(), [onClose]);
 
   useBodyScrollLock(true);
 
+  // Native modal dialog: focus is moved inside, trapped, and everything
+  // behind it becomes inert. Focus goes back to the card when it closes
+  // (after the exit animation, when AnimatePresence unmounts us).
   useEffect(() => {
-    const onKey = (e) => {
-      if (e.key === "Escape") close();
-      if (e.key === "ArrowRight") emblaApi?.scrollNext();
-      if (e.key === "ArrowLeft") emblaApi?.scrollPrev();
+    const dialog = dialogRef.current;
+    const opener = document.activeElement;
+    if (!dialog.open) dialog.showModal();
+
+    return () => {
+      if (dialog.open) dialog.close();
+      opener?.focus?.({ preventScroll: true });
     };
-
-    window.addEventListener("keydown", onKey);
-
-    return () => window.removeEventListener("keydown", onKey);
-  }, [emblaApi, close]);
+  }, []);
 
   const mileage = Number(car.mileage) || 0;
-  const price = Number(car.price) || 0;
 
   const formattedMileage =
     mileage >= 1000
       ? `${(mileage / 1000).toFixed(0)}K`
       : mileage.toLocaleString("en-GB");
 
-  const formattedPrice = price ? price.toLocaleString("en-GB") : "POA";
+  const price = formatPrice(car.price);
 
   const [copied, setCopied] = useState(false);
 
   const share = async () => {
+    const url = new URL(car.href, location.origin).toString();
     try {
-      await navigator.share?.({
+      if (!navigator.share) throw new Error("Web Share unavailable");
+      await navigator.share({
         title: car.title,
-        text: `Check out this ${car.title} for £${formattedPrice}`,
-        url: location.href,
+        text: `Check out this ${car.title} for ${price}`,
+        url,
       });
-    } catch {
-      await navigator.clipboard.writeText(location.href);
+    } catch (err) {
+      if (err?.name === "AbortError") return; // user dismissed the share sheet
+      await navigator.clipboard.writeText(url);
       setCopied(true);
       setTimeout(() => setCopied(false), 1500);
     }
   };
 
+  const specs = [
+    { label: "Fuel", value: car.engineType, Icon: PiEngineFill },
+    { label: "Engine size", value: car.engineSize ? `${car.engineSize}L` : null, Icon: FaGasPump },
+    { label: "Gearbox", value: car.transmission, Icon: GiGearStickPattern },
+    { label: "Body type", value: car.carType, Icon: FaCarSide },
+    { label: "Year", value: car.year || null, Icon: FaRegCalendarAlt },
+    { label: "Mileage", value: `${formattedMileage} miles`, Icon: BiSolidTachometer },
+  ];
+
   return (
-    <AnimatePresence>
+    <dialog
+      ref={dialogRef}
+      aria-labelledby="car-modal-title"
+      onCancel={(e) => {
+        // Esc: let AnimatePresence play the exit animation, then unmount closes it.
+        e.preventDefault();
+        close();
+      }}
+      onKeyDown={(e) => {
+        if (e.key === "ArrowRight") emblaApi?.scrollNext();
+        if (e.key === "ArrowLeft") emblaApi?.scrollPrev();
+      }}
+      className="fixed inset-0 m-0 h-dvh max-h-none w-screen max-w-none overflow-hidden bg-transparent p-0 text-white backdrop:bg-transparent"
+    >
       <motion.div
-        className="fixed inset-0 z-100 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
+        className="flex h-full w-full items-center justify-center bg-black/80 backdrop-blur-sm p-4"
         variants={overlay}
         initial="hidden"
         animate="visible"
         exit="exit"
+        onClick={(e) => {
+          if (e.target === e.currentTarget) close();
+        }}
       >
         <motion.div
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="car-modal-title"
           className="relative flex max-h-[92dvh] w-full max-w-3xl flex-col overflow-hidden rounded-xl
            bg-linear-to-br from-rose-900 via-rose-800 to-rose-950 text-white shadow-xl"
           variants={modal}
@@ -178,40 +218,53 @@ export default function CarModal({ car, logo, onClose }) {
           exit="exit"
         >
           <button
+            type="button"
             onClick={close}
             aria-label="Close"
-            className="absolute right-4 top-4 z-50 rounded-full bg-white/10 p-3 transition-colors duration-200 hover:bg-white/20"
+            autoFocus
+            className="absolute right-4 top-4 z-50 rounded-full bg-white/10 p-3 transition-colors duration-200 hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-300"
           >
-            <FaTimes />
+            <FaTimes aria-hidden="true" />
           </button>
 
           <div className="sticky top-0 z-40 bg-linear-to-b from-rose-950/90 to-transparent backdrop-blur px-6 pt-4 pb-4 text-center">
-            {logo && <div className="mx-auto mb-2 h-12 w-12">{logo}</div>}
-            <h3
+            {logo && (
+              <div className="mx-auto mb-2 h-12 w-12" aria-hidden="true">
+                {logo}
+              </div>
+            )}
+            <h2
               id="car-modal-title"
               className="text-xl md:text-2xl font-bold uppercase tracking-wide text-rose-100"
             >
               {car.title}
-            </h3>
+            </h2>
+            <p className="mt-1 text-lg font-semibold text-rose-200">
+              {car.isSold ? "Sold" : price}
+            </p>
           </div>
 
           <div className="flex-1 overflow-y-auto overscroll-contain scrollbar-hide px-6 pb-6">
             {/* carousel */}
-            <div className="mb-6">
-              <div
-                ref={emblaRef}
-                className="overflow-hidden"
-                onClick={pauseAutoplay}
-              >
+            <section
+              className="mb-6"
+              aria-roledescription="carousel"
+              aria-label={`${car.title} photos`}
+            >
+              <div ref={emblaRef} className="overflow-hidden">
                 <div className="flex">
                   {images.map((src, i) => (
                     <div
                       key={i}
+                      role="group"
+                      aria-roledescription="slide"
+                      aria-label={`Photo ${i + 1} of ${images.length}`}
+                      aria-hidden={i !== active}
                       className="relative flex-[0_0_100%] h-72 md:h-105"
                     >
                       <Image
                         src={src}
-                        alt={`${car.title} ${i + 1}`}
+                        alt={`${car.title}, photo ${i + 1}`}
                         fill
                         priority={i === 0}
                         sizes="(max-width:768px) 100vw, 800px"
@@ -222,50 +275,58 @@ export default function CarModal({ car, logo, onClose }) {
                 </div>
               </div>
 
-              {/* dots */}
-              <div className="mt-4 flex items-center justify-center gap-3">
-                <div className="flex gap-2 rounded-full bg-white/10 px-3 py-2 backdrop-blur">
-                  {images.map((_, i) => {
-                    const isActive = i === active;
+              {images.length > 1 && (
+                <div className="mt-4 flex items-center justify-center gap-3">
+                  <div className="flex gap-2 rounded-full bg-white/10 px-3 py-2 backdrop-blur">
+                    {images.map((_, i) => {
+                      const isActive = i === active;
 
-                    return (
-                      <button
-                        key={i}
-                        onClick={() => {
-                          userInteracted.current = true;
-                          emblaApi?.scrollTo(i);
-                          pauseAutoplay();
-                        }}
-                        className={`relative h-2.5 overflow-hidden transition-all duration-300 ease-out
-                          ${isActive ? "w-6" : "w-2.5"}`}
-                      >
-                        <span
-                          className={`absolute inset-0 rounded-full
-                            ${isActive ? "bg-rose-300/30" : "bg-rose-300/40"}`}
-                        />
-
-                        {isActive && !paused && (
+                      return (
+                        <button
+                          key={i}
+                          type="button"
+                          aria-label={`Show photo ${i + 1} of ${images.length}`}
+                          aria-current={isActive ? "true" : undefined}
+                          onClick={() => {
+                            userInteracted.current = true;
+                            emblaApi?.scrollTo(i);
+                            pauseAutoplay();
+                          }}
+                          className={`relative h-2.5 overflow-hidden rounded-full transition-all duration-300 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-200
+                            ${isActive ? "w-6" : "w-2.5"}`}
+                        >
                           <span
-                            key={`${i}-${progressKey}`}
-                            className="absolute inset-0 origin-left rounded-full bg-rose-400 animate-progress"
-                            style={{ animationDuration: `${AUTOPLAY_MS}ms` }}
+                            className={`absolute inset-0 rounded-full
+                              ${isActive ? "bg-rose-300/30" : "bg-rose-300/40"}`}
                           />
-                        )}
-                      </button>
-                    );
-                  })}
-                </div>
 
-                {paused && (
+                          {isActive && !paused && (
+                            <span
+                              key={`${i}-${progressKey}`}
+                              className="absolute inset-0 origin-left rounded-full bg-rose-400 animate-progress"
+                              style={{ animationDuration: `${AUTOPLAY_MS}ms` }}
+                            />
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+
                   <button
-                    onClick={resumeAutoplay}
-                    className="rounded-full bg-white/10 p-2 text-rose-200 transition-colors duration-200 hover:bg-white/20"
+                    type="button"
+                    onClick={paused ? resumeAutoplay : pauseAutoplay}
+                    aria-label={paused ? "Play slideshow" : "Pause slideshow"}
+                    className="rounded-full bg-white/10 p-2 text-rose-200 transition-colors duration-200 hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-300"
                   >
-                    <FaPlay className="text-sm" />
+                    {paused ? (
+                      <FaPlay className="text-sm" aria-hidden="true" />
+                    ) : (
+                      <FaPause className="text-sm" aria-hidden="true" />
+                    )}
                   </button>
-                )}
-              </div>
-            </div>
+                </div>
+              )}
+            </section>
 
             <Divider />
 
@@ -273,45 +334,43 @@ export default function CarModal({ car, logo, onClose }) {
 
             <Divider />
 
-            <div className="mb-6 grid grid-cols-3 gap-6 text-center text-lg text-zinc-200">
-              <div>
-                <PiEngineFill className="mx-auto mb-1 text-rose-300" />
-                {car.engineType}
-              </div>
-              <div>
-                <FaGasPump className="mx-auto mb-1 text-rose-300" />
-                {car.engineSize}L
-              </div>
-              <div>
-                <GiGearStickPattern className="mx-auto mb-1 text-rose-300" />
-                {car.transmission}
-              </div>
-              <div>
-                <FaCarSide className="mx-auto mb-1 text-rose-300" />
-                {car.carType}
-              </div>
-              <div>
-                <FaRegCalendarAlt className="mx-auto mb-1 text-rose-300" />
-                {car.year}
-              </div>
-              <div>
-                <BiSolidTachometer className="mx-auto mb-1 text-rose-300" />
-                {formattedMileage} miles
-              </div>
-            </div>
+            <dl className="mb-6 grid grid-cols-3 gap-6 text-center text-lg text-zinc-200">
+              {specs.map(({ label, value, Icon }) => (
+                <div key={label}>
+                  <dt>
+                    <Icon className="mx-auto mb-1 text-rose-300" aria-hidden="true" />
+                    <span className="sr-only">{label}</span>
+                  </dt>
+                  <dd>{value ?? "-"}</dd>
+                </div>
+              ))}
+            </dl>
 
             <Divider />
 
-            <button
-              onClick={share}
-              className="mx-auto mt-4 flex items-center gap-2 rounded-full bg-rose-400/15 px-6 py-2 text-rose-100 transition-colors duration-200 hover:bg-rose-400/25"
-            >
-              <FaShareAlt />
-              {copied ? "Link copied" : "Share"}
-            </button>
+            <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
+              {/* Plain <a>: a full page load avoids the modal's scroll-lock
+                  restore fighting the new page's scroll position. */}
+              <a
+                href={car.href}
+                className="flex items-center gap-2 rounded-full bg-rose-400/25 px-6 py-2 font-semibold text-white transition-colors duration-200 hover:bg-rose-400/35 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-300"
+              >
+                Full details
+                <FaArrowRight aria-hidden="true" />
+              </a>
+
+              <button
+                type="button"
+                onClick={share}
+                className="flex items-center gap-2 rounded-full bg-rose-400/15 px-6 py-2 text-rose-100 transition-colors duration-200 hover:bg-rose-400/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-300"
+              >
+                <FaShareAlt aria-hidden="true" />
+                <span aria-live="polite">{copied ? "Link copied" : "Share"}</span>
+              </button>
+            </div>
           </div>
         </motion.div>
       </motion.div>
-    </AnimatePresence>
+    </dialog>
   );
 }

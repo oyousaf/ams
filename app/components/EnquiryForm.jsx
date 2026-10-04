@@ -1,23 +1,50 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import emailjs from "@emailjs/browser";
 
 const formSchema = z.object({
-  name: z.string().min(1, "Name is required"),
-  email: z.string().email("Invalid email address"),
+  name: z.string().trim().min(1, "Enter your name"),
+  email: z.email("Enter a valid email address"),
   phone: z
     .string()
-    .regex(/^(?:0|\+44)(?:\d\s?){9,10}$/, "Invalid UK phone number"),
-  message: z.string().min(1, "Message is required"),
+    .regex(
+      /^(?:0|\+44)(?:\d\s?){9,10}$/,
+      "Enter a valid UK phone number, e.g. 07123 456789",
+    ),
+  message: z.string().trim().min(1, "Tell us what you're looking for"),
 });
 
 const SERVICE_ID = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID;
 const TEMPLATE_ID = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID;
 const PUBLIC_KEY = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY;
+
+const fields = [
+  {
+    id: "name",
+    label: "Name",
+    placeholder: "Your full name",
+    autoComplete: "name",
+  },
+  {
+    id: "email",
+    label: "Email",
+    type: "email",
+    placeholder: "you@example.com",
+    autoComplete: "email",
+  },
+  {
+    id: "phone",
+    label: "Phone",
+    type: "tel",
+    placeholder: "07xxx xxxxxx",
+    autoComplete: "tel",
+  },
+];
 
 const EnquiryForm = () => {
   const [status, setStatus] = useState({ type: "", message: "" });
@@ -60,7 +87,7 @@ const EnquiryForm = () => {
 
       setStatus({
         type: "success",
-        message: "Message sent successfully!",
+        message: "Message sent - we'll be in touch shortly.",
       });
 
       reset();
@@ -69,80 +96,59 @@ const EnquiryForm = () => {
 
       setStatus({
         type: "error",
-        message: "Failed to send. Please try again.",
+        message: "Failed to send. Please try again, or give us a call.",
       });
     }
   };
 
   const fieldClass =
-    "w-full rounded-lg border border-white/15 bg-white/10 px-4 py-3 text-white placeholder-white/35 transition focus:border-rose-300 focus:outline-none focus:ring-2 focus:ring-rose-300/60";
-  const labelClass = "mb-1.5 block text-sm font-medium text-white/70";
+    "w-full rounded-lg border border-white/15 bg-white/10 px-4 py-3 text-white placeholder-white/55 transition focus:border-rose-300 focus:outline-none focus:ring-2 focus:ring-rose-300/60 aria-invalid:border-red-300";
+  const labelClass = "mb-1.5 block text-sm font-medium text-white/85";
+
+  // Wires a field to its error text so screen readers read the message with
+  // the field. react-hook-form already focuses the first invalid field.
+  const a11yProps = (id) => ({
+    "aria-invalid": errors[id] ? true : undefined,
+    "aria-describedby": errors[id] ? `${id}-error` : undefined,
+    required: true,
+  });
+
+  const errorText = (id) =>
+    errors[id] && (
+      <p id={`${id}-error`} className="mt-1 text-sm text-red-300">
+        {errors[id].message}
+      </p>
+    );
 
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
+      noValidate
+      aria-labelledby="enquiry-heading"
       className="w-full max-w-md space-y-4 rounded-2xl border border-white/10 bg-black/20 p-6 shadow-lg backdrop-blur-sm sm:p-8"
-      autoComplete="off"
-      aria-describedby="form-status"
     >
       <div>
-        <label htmlFor="name" className={labelClass}>
-          Name
-        </label>
-        <input
-          id="name"
-          {...register("name")}
-          placeholder="Your full name"
-          autoComplete="name"
-          aria-invalid={!!errors.name}
-          className={fieldClass}
-        />
-        {errors.name && (
-          <p className="mt-1 text-sm text-red-300" role="alert">
-            {errors.name.message}
-          </p>
-        )}
+        <h3 id="enquiry-heading" className="text-xl font-semibold text-white">
+          Send us an enquiry
+        </h3>
+        <p className="mt-1 text-sm text-white/75">All fields are required.</p>
       </div>
 
-      <div>
-        <label htmlFor="email" className={labelClass}>
-          Email
-        </label>
-        <input
-          id="email"
-          {...register("email")}
-          type="email"
-          placeholder="you@example.com"
-          autoComplete="email"
-          aria-invalid={!!errors.email}
-          className={fieldClass}
-        />
-        {errors.email && (
-          <p className="mt-1 text-sm text-red-300" role="alert">
-            {errors.email.message}
-          </p>
-        )}
-      </div>
-
-      <div>
-        <label htmlFor="phone" className={labelClass}>
-          Phone
-        </label>
-        <input
-          id="phone"
-          {...register("phone")}
-          type="tel"
-          placeholder="07xxx xxxxxx"
-          autoComplete="tel"
-          aria-invalid={!!errors.phone}
-          className={fieldClass}
-        />
-        {errors.phone && (
-          <p className="mt-1 text-sm text-red-300" role="alert">
-            {errors.phone.message}
-          </p>
-        )}
-      </div>
+      {fields.map(({ id, label, ...inputProps }) => (
+        <div key={id}>
+          <label htmlFor={id} className={labelClass}>
+            {label}
+          </label>
+          <input
+            id={id}
+            {...register(id)}
+            {...inputProps}
+            {...a11yProps(id)}
+            className={fieldClass}
+          />
+          {errorText(id)}
+        </div>
+      ))}
 
       <div>
         <label htmlFor="message" className={labelClass}>
@@ -152,27 +158,22 @@ const EnquiryForm = () => {
           id="message"
           {...register("message")}
           placeholder="Tell us what you're looking for..."
-          aria-invalid={!!errors.message}
+          {...a11yProps("message")}
           className={`h-32 resize-none ${fieldClass}`}
         />
-        {errors.message && (
-          <p className="mt-1 text-sm text-red-300" role="alert">
-            {errors.message.message}
-          </p>
-        )}
+        {errorText("message")}
       </div>
 
-      {status.message && (
-        <p
-          id="form-status"
-          aria-live="polite"
-          className={`text-sm mt-2 ${
-            status.type === "success" ? "text-green-300" : "text-red-300"
-          }`}
-        >
-          {status.message}
-        </p>
-      )}
+      {/* Always rendered so screen readers reliably announce updates */}
+      <p
+        id="form-status"
+        role="status"
+        className={`text-sm empty:hidden ${
+          status.type === "success" ? "text-green-300" : "text-red-300"
+        }`}
+      >
+        {status.message}
+      </p>
 
       <button
         type="submit"
@@ -186,13 +187,27 @@ const EnquiryForm = () => {
       >
         {isSubmitting ? (
           <>
-            <span className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+            <span
+              aria-hidden="true"
+              className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin"
+            />
             Sending...
           </>
         ) : (
           "Submit Enquiry"
         )}
       </button>
+
+      <p className="text-xs leading-relaxed text-white/75">
+        We only use your details to reply to this enquiry. See our{" "}
+        <Link
+          href="/privacy"
+          className="underline underline-offset-2 hover:text-white"
+        >
+          privacy policy
+        </Link>
+        .
+      </p>
     </form>
   );
 };

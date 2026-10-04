@@ -11,6 +11,13 @@
   --foreground: #ededed;
 }
 
+html {
+  color-scheme: dark;
+  /* Clears the fixed floating navbar for #anchor jumps and for keyboard
+     focus scrolling (WCAG 2.2 Focus Not Obscured). */
+  scroll-padding-top: 7rem;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);

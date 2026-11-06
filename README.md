@@ -9,7 +9,7 @@ Designed for smooth browsing, rich motion, and a premium automotive feel while m
 
 - ⚡ **Next.js 16 (App Router)** — fast routing, modern architecture
 - 🎞️ **Advanced image carousel** — Embla-powered with autoplay, progress indicators, and user-controlled playback
-- 🎨 **Framer Motion animations** — subtle, spring-based motion
+- 🎨 **Motion animations** — subtle, spring-based motion
 - 📱 **Responsive & mobile-first** — optimised for touch and small screens
 - 🧠 **User-intent aware UX** — autoplay pauses on interaction and resumes manually
 - 🖼️ **High-quality imagery** — Next/Image with preloading and decoding
@@ -26,7 +26,7 @@ Designed for smooth browsing, rich motion, and a premium automotive feel while m
 - ⚛️ **React 18**
 - ▲ **Next.js 16 (App Router)**
 - 💨 **Tailwind CSS v4**
-- 🎬 **Framer Motion**
+- 🎬 **Motion**
 
 ### UI & Interaction
 
